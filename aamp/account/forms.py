@@ -14,6 +14,7 @@ class MobileNoForm(forms.Form):
 class SignUpForm(forms.ModelForm):
 	otp = forms.CharField(required=True, label ='Verification Code', widget=forms.TextInput(attrs={'id': 'otp'}))
 	password = forms.CharField(label='Password', widget=forms.PasswordInput)
+	
 	class Meta:
 		model = SignUp
 		fields = ("mobile_no",)

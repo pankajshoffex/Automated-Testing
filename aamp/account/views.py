@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 # Create your views here.
 
 from .forms import SignUpForm, MobileNoForm
@@ -8,9 +9,18 @@ import urllib2
 import urllib
 import hmac, base64, struct, time
 import hashlib, random, datetime
+from .models import SignUp, HomePageSlider
 
 
 
+
+def index(request):
+	context = {}
+	slider = True
+	image = HomePageSlider.objects.all().order_by("-id")
+	context['slider'] = slider
+	context['himage'] = image 
+	return render(request, "home.html", context)
 
 
 
@@ -40,11 +50,16 @@ def signup_mobile(request):
 		form = MobileNoForm(request.POST)
 		if form.is_valid():
 			mobile = form.cleaned_data["mobile"]
-			request.session['mobile'] = mobile
-			token = get_token()
-			msg_token = str(token)
-			request.session['var'] = msg_token
-			# sendSMS('sotari.biz@gmail.com', 'da1e1331d30c4dcff5a4780b52fa9fb327764bb1', mobile,'TXTLCL', msg_token)
+			data = SignUp.objects.filter(mobile_no=mobile).count()
+			if data > 0:
+				messages.error(request, 'This Mobile No is already exist.')
+				return HttpResponseRedirect(reverse('account:signup_mobile'))
+			else:
+				request.session['mobile'] = mobile
+				token = get_token()
+				msg_token = str(token)
+				request.session['var'] = msg_token
+				sendSMS('sotari.biz@gmail.com', 'da1e1331d30c4dcff5a4780b52fa9fb327764bb1', mobile,'TXTLCL', msg_token)
 			return HttpResponseRedirect("/account/signup/")
 	else:
 		form = MobileNoForm()
