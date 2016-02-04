@@ -3,15 +3,87 @@
 	{
 		"selected_items":
 		[
+			[
+				"re",
+				"return"
+			],
+			[
+				"mo",
+				"mobile"
+			],
+			[
+				"Http",
+				"HttpRedirect"
+			],
+			[
+				"__",
+				"__init__"
+			],
+			[
+				"mobile",
+				"mobile_no"
+			],
+			[
+				"fo",
+				"forms"
+			],
+			[
+				"in",
+				"input	Tag"
+			],
+			[
+				"a",
+				"account"
+			],
+			[
+				"pass",
+				"pass_word"
+			],
+			[
+				"S",
+				"SignUpForm"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "aamp/aamp/settings.py",
+			"file": "aamp/account/views.py",
 			"settings":
 			{
-				"buffer_size": 3632,
+				"buffer_size": 2311,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "aamp/aamp/urls.py",
+			"settings":
+			{
+				"buffer_size": 1098,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "aamp/templates/base.html",
+			"settings":
+			{
+				"buffer_size": 534,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "aamp/templates/account/signup.html",
+			"settings":
+			{
+				"buffer_size": 1549,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "aamp/account/forms.py",
+			"settings":
+			{
+				"buffer_size": 916,
 				"line_ending": "Unix"
 			}
 		}
@@ -48,6 +120,22 @@
 	},
 	"file_history":
 	[
+		"/home/pankaj/ShoffexProject/aamp/templates/javascript.html",
+		"/home/pankaj/ShoffexProject/aamp/templates/head_css.html",
+		"/home/pankaj/ShoffexProject/aamp/aamp/settings.py",
+		"/home/pankaj/ShoffexProject/aamp/account/forms.py",
+		"/home/pankaj/ShoffexProject/aamp/account/models.py",
+		"/home/pankaj/ShoffexProject/aamp/account/admin.py",
+		"/home/pankaj/ShoffexProject/aamp/account/views.py",
+		"/home/pankaj/ShoffexProject/aamp/templates/account/mobile_no.html",
+		"/home/pankaj/ShoffexProject/aamp/account/urls.py",
+		"/home/pankaj/ShoffexProject/aamp/aamp/urls.py",
+		"/home/pankaj/ShoffexProject/aamp/templates/base.html",
+		"/home/pankaj/ShoffexProject/aamp/templates/account/signup.html",
+		"/home/pankaj/ShoffexProject/aamp/templates/navbar.html",
+		"/home/pankaj/ShoffexProject/aamp/static/css/base.css",
+		"/media/pankaj/Entertainment/backup2/djangoproject/BlogProject/static/css/base.css",
+		"/home/pankaj/ShoffexProject/aamp/account/templates/signup.html",
 		"/home/pankaj/.config/sublime-text-2/Packages/SublimeREPL/SublimeREPL.sublime-settings",
 		"/home/pankaj/.config/sublime-text-2/Packages/User/SublimeREPL.sublime-settings"
 	],
@@ -84,23 +172,49 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "aamp/aamp/settings.py",
+					"file": "aamp/account/views.py",
 					"settings":
 					{
-						"buffer_size": 3632,
+						"buffer_size": 2311,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2536,
-								2536
+								2101,
+								2101
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 765.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "aamp/aamp/urls.py",
+					"settings":
+					{
+						"buffer_size": 1098,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								907,
+								907
 							]
 						],
 						"settings":
@@ -110,7 +224,86 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1173.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "aamp/templates/base.html",
+					"settings":
+					{
+						"buffer_size": 534,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								236,
+								236
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 51.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "aamp/templates/account/signup.html",
+					"settings":
+					{
+						"buffer_size": 1549,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1271,
+								1271
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 594.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "aamp/account/forms.py",
+					"settings":
+					{
+						"buffer_size": 916,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								354,
+								354
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -124,7 +317,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 33.0
 	},
 	"layout":
 	{

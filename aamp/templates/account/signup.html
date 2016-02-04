@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+<style>
+{% block style %}
+.ok {
+	color: green;
+	display: none;
+}
+.remove{
+	color: red;
+	display: none;
+}
+{% endblock style %}
+</style>
+
+{% block content %}
+<div class="row" >
+<form method="POST" action="">{% csrf_token %}
+<div class="fieldWrapper">
+    {{ form.mobile_no.errors }}
+    <label for="{{ form.mobile_no.id_for_label }}">Mobile No:</label>
+    {{ form.mobile_no }}
+</div>
+<br />
+<div class="fieldWrapper">
+    {{ form.otp.errors }}
+    <label for="{{ form.otp.id_for_label }}">Otp:</label>
+    {{ form.otp }}<span class="glyphicon glyphicon-ok ok" aria-hidden=true></span>
+    <span class="glyphicon glyphicon-remove remove" aria-hidden=true></span>
+</div>
+<br/>
+<div class="fieldWrapper">
+    {{ form.password.errors }}
+    <label for="{{ form.password.id_for_label }}">Password:</label>
+    {{ form.password }}
+</div>
+<br />
+<input type="submit" class="btn btn-success" value="Sign Up">
+</form>
+</div>
+{% endblock content %}
+
+<script>
+{% block jquery %}
+$("#otp").change(function(){
+	$.ajax({
+		type: "GET",
+		url: "{% url 'account:signup' %}",
+		data: {
+			'data': $("#otp").val(),
+		},
+		success: function(data){
+
+			if (data.token == "yes")
+			{
+				$(".ok").css('display', 'inline-block');
+				$(".remove").css('display', 'none');
+			}
+			else
+			{
+				$(".ok").css('display', 'none');
+				$(".remove").css('display', 'inline-block');
+			}
+			console.log(data.token);
+		},
+		error: function(response, error){
+			console.log(response);
+			console.log(error);
+		},
+
+	});
+});
+{% endblock jquery %}
+</script>
