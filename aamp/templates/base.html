@@ -1,4 +1,5 @@
 {% load staticfiles %}
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -6,6 +7,7 @@
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	    <link rel="shortcut icon" type="image/png" href="#"/>
 		<title>{% block head_title %}Shoffex Online Shopping Website{% endblock head_title %}</title>
 
 		{% include "head_css.html" %}
@@ -23,11 +25,13 @@
 
 		{% if messages %}
 		  <div class="container">
-		    <div class="alert alert-danger text-center">
-		      {% for message in messages %}
-		      <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+		      {% for message in messages %}		      	
+			    <div class='alert alert-{% if message.tags == "success" %}success{% else %}error{% endif %} text-center alert-dismissible'>
+			    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			      <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+			    </div>		    
 		      {% endfor %}
-		    </div>
+		   
 		  </div>
 		{% endif %}
 

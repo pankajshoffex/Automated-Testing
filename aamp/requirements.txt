@@ -1,4 +1,6 @@
 Django==1.9.2
+django-ckeditor==5.0.3
+django-wysiwyg==0.7.1
 Pillow==3.1.0
 psycopg2==2.6.1
 wheel==0.26.0

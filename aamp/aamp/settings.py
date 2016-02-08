@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account',
     'products',
+    'django_wysiwyg',
+    'ckeditor',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -135,5 +137,10 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
+
+DJANGO_WYSIWYG_FLAVOR = "ckeditor"
+
+CKEDITOR_UPLOAD_PATH = MEDIA_ROOT
+
 
 

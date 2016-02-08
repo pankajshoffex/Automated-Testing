@@ -2,12 +2,15 @@
 
 <style>
 {% block style %}
-
+.home_products{
+	padding-top: 20px;
+}
 {% endblock style %}
 </style>
 
 {% block content %}
-<div class="row">
-	<h1>Hello</h1>
+<div class="home_products">
+	<h3>Recommended Products</h3>
+{% include "products/products.html" with object_list=products col_class_set="col-sm-3" %}
 </div>
 {% endblock content %}

@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 # Create your views here.
 
+from products.models import Product
 from .forms import SignUpForm, MobileNoForm
 import urllib2
 import urllib
@@ -18,8 +19,12 @@ def index(request):
 	context = {}
 	slider = True
 	image = HomePageSlider.objects.all().order_by("-id")
+
+	products = Product.objects.all().order_by("?")[:20]
+
 	context['slider'] = slider
-	context['himage'] = image 
+	context['himage'] = image
+	context['products'] = products 
 	return render(request, "home.html", context)
 
 
