@@ -30,9 +30,15 @@
 </div>
 <br/>
 <div class="fieldWrapper">
-    {{ form.password.errors }}
+    {{ form.password1.errors }}
     <label for="{{ form.password.id_for_label }}">Password:</label>
-    {{ form.password }}
+    {{ form.password1 }}
+</div>
+<br />
+<div class="fieldWrapper">
+    {{ form.password2.errors }}
+    <label for="{{ form.password.id_for_label }}">Confirm Password:</label>
+    {{ form.password2 }}
 </div>
 <br />
 <input type="submit" class="btn btn-success" value="Sign Up">

@@ -4,6 +4,62 @@
 		"selected_items":
 		[
 			[
+				"re",
+				"return〔keyword〕"
+			],
+			[
+				"H",
+				"HttpResponseRedirect"
+			],
+			[
+				"s",
+				"script	Tag"
+			],
+			[
+				"lo",
+				"login_user〔module〕"
+			],
+			[
+				"mess",
+				"messages〔module〕"
+			],
+			[
+				"me",
+				"messages〔module〕"
+			],
+			[
+				"au",
+				"authenticate〔module〕"
+			],
+			[
+				"margin-",
+				"margin-bottom: 〔property〕"
+			],
+			[
+				"User",
+				"UserAdmin〔module〕"
+			],
+			[
+				"ma",
+				"max_num〔variable〕"
+			],
+			[
+				"add",
+				"addClass〔function〕"
+			],
+			[
+				"option",
+				"option:selected"
+			],
+			[
+				"d",
+				"django"
+			],
+			[
+				"border-c",
+				"border-color"
+			],
+			[
 				"S",
 				"ShoesSize"
 			],
@@ -22,10 +78,6 @@
 			[
 				"chan",
 				"change_form_template"
-			],
-			[
-				"re",
-				"request"
 			],
 			[
 				"Pr",
@@ -108,10 +160,6 @@
 				"i	Tag"
 			],
 			[
-				"d",
-				"dispatch"
-			],
-			[
 				"for",
 				"formset"
 			],
@@ -138,14 +186,6 @@
 			[
 				"op",
 				"option	Tag"
-			],
-			[
-				"ma",
-				"max_length"
-			],
-			[
-				"H",
-				"HomePageSlider"
 			],
 			[
 				"mobile",
@@ -180,35 +220,50 @@
 	"buffers":
 	[
 		{
+			"file": "aamp/account/views.py",
+			"settings":
+			{
+				"buffer_size": 4016,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "aamp/templates/navbar.html",
+			"settings":
+			{
+				"buffer_size": 3319,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "aamp/account/templatetags/incrypt_tags.py",
+			"settings":
+			{
+				"buffer_size": 190,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "aamp/account/urls.py",
+			"settings":
+			{
+				"buffer_size": 268,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "aamp/products/templates/products/product_detail.html",
 			"settings":
 			{
-				"buffer_size": 4618,
+				"buffer_size": 5915,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "\n    <html>\n<head>\n  <link href=\"http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css\" rel=\"stylesheet\" />\n  <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js\"></script>\n  <script src=\"http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js\"></script>\n</head>\n      <div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-sm-6\">\n        <div id=\"carousel\" class=\"carousel slide\" data-ride=\"carousel\">\n            <div class=\"carousel-inner\">\n                <div class=\"item active\">\n                    <img src=\"http://placehold.it/350x250/e8117f/fff&amp;text=Product+Main\">\n                </div>\n                <div class=\"item\">\n                    <img src=\"http://placehold.it/350x250/00ffff/000&amp;text=Product+Image+2\">\n                </div>\n                <div class=\"item\">\n                    <img src=\"http://placehold.it/350x250/ff00ff/fff&amp;text=Product+Image+3\">\n                </div>\n                <div class=\"item\">\n                    <img src=\"http://placehold.it/350x250/ffff00/000&amp;text=Product+Image+4\">\n                </div>\n                <div class=\"item\">\n                    <img src=\"http://placehold.it/350x250/612b65/fff&amp;text=Product+Image+5\">\n                </div>\n                <div class=\"item\">\n                    <img src=\"http://placehold.it/350x250/00ffff/000&amp;text=Product+Image+6\">\n                </div>\n                <div class=\"item\">\n                    <img src=\"http://placehold.it/350x250/db371b/fff&amp;text=Product+Image+7\">\n                </div>\n                <div class=\"item\">\n                    <img src=\"http://placehold.it/350x250/feb8aa/000&amp;text=Product+Image+8\">\n                </div>\n            </div>\n        </div> \n    <div class=\"clearfix\">\n        <div id=\"thumbcarousel\" class=\"carousel slide\" data-interval=\"false\">\n            <div class=\"carousel-inner\">\n                <div class=\"item active\">\n                    <div data-target=\"#carousel\" data-slide-to=\"0\" class=\"thumb\"><img src=\"http://placehold.it/100/e8117f/fff&amp;text=Product+Main\"></div>\n                    <div data-target=\"#carousel\" data-slide-to=\"1\" class=\"thumb\"><img src=\"http://placehold.it/100/00ffff/000&amp;text=Product+Image+2\"></div>\n                    <div data-target=\"#carousel\" data-slide-to=\"2\" class=\"thumb\"><img src=\"http://placehold.it/100/ff00ff/fff&amp;text=Product+Image+3\"></div>\n                    <div data-target=\"#carousel\" data-slide-to=\"3\" class=\"thumb\"><img src=\"http://placehold.it/100/ffff00/000&amp;text=Product+Image+4\"></div>\n                </div><!-- /item -->\n                <div class=\"item\">\n                    <div data-target=\"#carousel\" data-slide-to=\"4\" class=\"thumb\"><img src=\"http://placehold.it/100/612b65/fff&amp;text=Product+Image+5\"></div>\n                    <div data-target=\"#carousel\" data-slide-to=\"5\" class=\"thumb\"><img src=\"http://placehold.it/100/00ffcc/000&amp;text=Product+Image+6\"></div>\n                    <div data-target=\"#carousel\" data-slide-to=\"6\" class=\"thumb\"><img src=\"http://placehold.it/100/db371b/fff&amp;text=Product+Image+7\"></div>\n                    <div data-target=\"#carousel\" data-slide-to=\"7\" class=\"thumb\"><img src=\"http://placehold.it/100/feb8aa/000&amp;text=Product+Image+8\"></div>\n                </div><!-- /item -->\n            </div><!-- /carousel-inner -->\n            <a class=\"left carousel-control\" href=\"#thumbcarousel\" role=\"button\" data-slide=\"prev\">\n                <span class=\"glyphicon glyphicon-chevron-left\"></span>\n            </a>\n            <a class=\"right carousel-control\" href=\"#thumbcarousel\" role=\"button\" data-slide=\"next\">\n                <span class=\"glyphicon glyphicon-chevron-right\"></span>\n            </a>\n        </div> <!-- /thumbcarousel -->\n    </div><!-- /clearfix -->\n    </div> <!-- /col-sm-6 -->\n    <div class=\"col-sm-6\">\n        <h2>Products</h2>\n        <h3>Some product subhead</h3>\n        <p>Product description goes here.  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>\n        <p>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.</p>\n\n    </div> <!-- /col-sm-6 -->\n  </div> <!-- /row -->\n</div> <!-- /container -->\n",
+			"file": "aamp/templates/javascript.html",
 			"settings":
 			{
-				"buffer_size": 4594,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "/* CSS used here will be applied after bootstrap.css */\n.carousel {\n    margin-top: 20px;\n}\n.item .thumb {\n	width: 25%;\n	cursor: pointer;\n	float: left;\n}\n.item .thumb img {\n	width: 100%;\n	margin: 2px;\n}\n.item img {\n	width: 100%;	\n}\n",
-			"settings":
-			{
-				"buffer_size": 232,
-				"line_ending": "Unix",
-				"name": "/* CSS used here will be applied after bootstrap.c"
-			}
-		},
-		{
-			"file": "aamp/products/models.py",
-			"settings":
-			{
-				"buffer_size": 4594,
+				"buffer_size": 619,
 				"line_ending": "Unix"
 			}
 		},
@@ -221,10 +276,35 @@
 			}
 		},
 		{
-			"file": "aamp/templates/javascript.html",
+			"file": "aamp/templates/account/login.html",
 			"settings":
 			{
-				"buffer_size": 536,
+				"buffer_size": 2569,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "aamp/static/css/login.css",
+			"settings":
+			{
+				"buffer_size": 1608,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "aamp/static/js/login.js",
+			"settings":
+			{
+				"buffer_size": 2478,
+				"line_ending": "Unix",
+				"name": "$( document ).ready(function() {"
+			}
+		},
+		{
+			"file": "aamp/templates/base.html",
+			"settings":
+			{
+				"buffer_size": 1547,
 				"line_ending": "Unix"
 			}
 		}
@@ -232,9 +312,13 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 138.0,
+		"height": 96.0,
 		"selected_items":
 		[
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
 			[
 				"Package Control: in",
 				"Package Control: Install Package"
@@ -244,7 +328,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 449.0
+		"width": 575.0
 	},
 	"console":
 	{
@@ -261,19 +345,27 @@
 	},
 	"file_history":
 	[
-		"/home/pankaj/ShoffexProject/aamp/products/models.py",
+		"/home/pankaj/ShoffexProject/aamp/account/templatetags/__init__.py",
+		"/home/pankaj/ShoffexProject/aamp/account/models.py",
+		"/home/pankaj/ShoffexProject/aamp/templates/account/login.html",
+		"/home/pankaj/ShoffexProject/aamp/account/views.py",
+		"/home/pankaj/ShoffexProject/aamp/account/forms.py",
+		"/home/pankaj/ShoffexProject/aamp/templates/account/signup.html",
+		"/home/pankaj/ShoffexProject/aamp/account/admin.py",
 		"/home/pankaj/ShoffexProject/aamp/products/admin.py",
+		"/home/pankaj/ShoffexProject/aamp/templates/navbar.html",
 		"/home/pankaj/ShoffexProject/aamp/aamp/urls.py",
+		"/home/pankaj/ShoffexProject/aamp/products/templates/products/product_detail.html",
+		"/home/pankaj/ShoffexProject/aamp/products/models.py",
+		"/home/pankaj/ShoffexProject/aamp/templates/javascript.html",
+		"/home/pankaj/ShoffexProject/aamp/products/views.py",
+		"/home/pankaj/ShoffexProject/aamp/products/urls.py",
 		"/home/pankaj/ShoffexProject/aamp/requirements.txt",
 		"/home/pankaj/ShoffexProject/aamp/aamp/settings.py",
-		"/home/pankaj/ShoffexProject/aamp/products/templates/products/product_detail.html",
 		"/home/pankaj/ShoffexProject/aamp/templates/demo.html",
 		"/home/pankaj/ShoffexProject/aamp/templates/base.html",
-		"/home/pankaj/ShoffexProject/aamp/products/views.py",
 		"/home/pankaj/ShoffexProject/aamp/templates/admin_copies/editor/change_form.html",
-		"/home/pankaj/ShoffexProject/aamp/templates/navbar.html",
 		"/home/pankaj/ShoffexProject/aamp/static/css/custom.css",
-		"/home/pankaj/ShoffexProject/aamp/account/views.py",
 		"/home/pankaj/ShoffexProject/aamp/products/templates/products/products.html",
 		"/home/pankaj/ShoffexProject/aamp/products/templates/products/product_list.html",
 		"/home/pankaj/ShoffexProject/aamp/templates/home.html",
@@ -285,15 +377,9 @@
 		"/home/pankaj/ShoffexProject/aamp/products/templates/products/variation_list.html",
 		"/home/pankaj/ShoffexProject/aamp/products/forms.py",
 		"/home/pankaj/ShoffexProject/aamp/templates/head_css.html",
-		"/home/pankaj/ShoffexProject/aamp/products/urls.py",
 		"/home/pankaj/ShoffexProject/aamp/static/css/base.css",
-		"/home/pankaj/ShoffexProject/aamp/account/models.py",
-		"/home/pankaj/ShoffexProject/aamp/account/admin.py",
 		"/home/pankaj/ShoffexProject/aamp/templates/bootstrap_slider.html",
-		"/home/pankaj/ShoffexProject/aamp/templates/account/signup.html",
-		"/home/pankaj/ShoffexProject/aamp/account/forms.py",
 		"/home/pankaj/ShoffexProject/aamp/templates/account/mobile_no.html",
-		"/home/pankaj/ShoffexProject/aamp/templates/javascript.html",
 		"/home/pankaj/ShoffexProject/aamp/account/urls.py",
 		"/media/pankaj/Entertainment/backup2/djangoproject/BlogProject/static/css/base.css",
 		"/home/pankaj/ShoffexProject/aamp/account/templates/signup.html",
@@ -316,6 +402,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"				$("
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -333,82 +420,85 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 7,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "aamp/products/templates/products/product_detail.html",
+					"file": "aamp/account/views.py",
 					"settings":
 					{
-						"buffer_size": 4618,
+						"buffer_size": 4016,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								287,
-								287
+								827,
+								827
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"auto_complete": false,
+							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 570.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "aamp/templates/navbar.html",
 					"settings":
 					{
-						"buffer_size": 4594,
+						"buffer_size": 3319,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1771,
-								1771
+								2374,
+								2406
 							]
 						],
 						"settings":
 						{
+							"auto_complete": false,
 							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 108.0,
+						"translation.y": 741.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
+					"file": "aamp/account/templatetags/incrypt_tags.py",
 					"settings":
 					{
-						"buffer_size": 232,
+						"buffer_size": 190,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								232,
-								232
+								139,
+								139
 							]
 						],
 						"settings":
 						{
-							"auto_name": "/* CSS used here will be applied after bootstrap.c",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"auto_complete": false,
+							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -418,33 +508,87 @@
 				},
 				{
 					"buffer": 3,
-					"file": "aamp/products/models.py",
+					"file": "aamp/account/urls.py",
 					"settings":
 					{
-						"buffer_size": 4594,
+						"buffer_size": 268,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3433,
-								3433
+								75,
+								75
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"auto_complete": false,
+							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 864.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
+					"file": "aamp/products/templates/products/product_detail.html",
+					"settings":
+					{
+						"buffer_size": 5915,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								185,
+								185
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "aamp/templates/javascript.html",
+					"settings":
+					{
+						"buffer_size": 619,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								619,
+								619
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
 					"file": "aamp/products/admin.py",
 					"settings":
 					{
@@ -455,44 +599,131 @@
 						"selection":
 						[
 							[
-								1637,
-								1637
+								336,
+								336
 							]
 						],
 						"settings":
 						{
+							"auto_complete": false,
 							"syntax": "Packages/Python/Python.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "aamp/templates/javascript.html",
+					"buffer": 7,
+					"file": "aamp/templates/account/login.html",
 					"settings":
 					{
-						"buffer_size": 536,
+						"buffer_size": 2569,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								536,
-								536
+								1513,
+								1513
 							]
 						],
 						"settings":
 						{
+							"auto_complete": false,
 							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
+						"translation.y": 684.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "aamp/static/css/login.css",
+					"settings":
+					{
+						"buffer_size": 1608,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1608,
+								1608
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "aamp/static/js/login.js",
+					"settings":
+					{
+						"buffer_size": 2478,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2478,
+								2478
+							]
+						],
+						"settings":
+						{
+							"auto_name": "$( document ).ready(function() {",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "aamp/templates/base.html",
+					"settings":
+					{
+						"buffer_size": 1547,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1529,
+								1529
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 741.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

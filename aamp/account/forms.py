@@ -1,6 +1,6 @@
 from django import forms
-from django.core.signing import Signer
-
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
 from .models import SignUp
 
 
@@ -13,7 +13,12 @@ class MobileNoForm(forms.Form):
 
 class SignUpForm(forms.ModelForm):
 	otp = forms.CharField(required=True, label ='Verification Code', widget=forms.TextInput(attrs={'id': 'otp'}))
-	password = forms.CharField(label='Password', widget=forms.PasswordInput)
+	password1 = forms.CharField(widget=forms.PasswordInput(
+		attrs=dict(required=True, max_length=30, render_value=False)), label=_("Password")
+	)
+	password2 = forms.CharField(widget=forms.PasswordInput(
+		attrs=dict(required=True, max_length=30, render_value=False)), label=_("Password (again)")
+	)
 	
 	class Meta:
 		model = SignUp
@@ -27,13 +32,17 @@ class SignUpForm(forms.ModelForm):
 
 
 	def save(self, commit=True):
-		user = super(SignUpForm, self).save(commit=False)
-		signer = Signer()
-		pass_word = signer.sign(self.cleaned_data['password'])
-		user.password = pass_word
+		data = super(SignUpForm, self).save(commit=False)
+		mobile = self.cleaned_data['mobile_no']
+		password = self.cleaned_data['password1']
+		try:
+			user = User.objects.create_user(username=mobile, password=password)
+			data.user = user
+		except:
+			pass
 		if commit:
-			user.save()
-		return user
+			data.save()
+		return data
 
 
 

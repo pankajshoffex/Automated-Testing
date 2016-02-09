@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^account/', include('account.urls', namespace="account")),
     url(r'^products/', include('products.urls', namespace="products")),
     url(r'^categories/', include('products.urls_categories', namespace="categories")),
+    url('', include('django.contrib.auth.urls', namespace='auth')),
 ]
 
 if settings.DEBUG:

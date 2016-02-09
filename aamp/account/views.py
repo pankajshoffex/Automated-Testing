@@ -2,16 +2,17 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 # Create your views here.
 
 from products.models import Product
 from .forms import SignUpForm, MobileNoForm
 import urllib2
 import urllib
+import base64
 import hmac, base64, struct, time
 import hashlib, random, datetime
 from .models import SignUp, HomePageSlider
-
 
 
 
@@ -27,6 +28,35 @@ def index(request):
 	context['products'] = products 
 	return render(request, "home.html", context)
 
+
+def login_user(request):
+	if not request.user.is_authenticated():
+		if request.POST:
+			username = request.POST.get('username')
+			password = request.POST.get('password')
+
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				if user.is_active:
+					login(request, user)
+					print request.GET.get('next')
+					print "hello"
+					if request.GET.get('next') is not None and request.GET.get('next') != 'None':
+						data = base64.urlsafe_b64decode(str(request.GET.get('next')))
+						print data
+						return HttpResponseRedirect(data)
+					else:
+						return HttpResponseRedirect('/')
+					# if request.POST.get('next') is not None and request.POST.get('next') != 'None':
+					# 	return HttpResponseRedirect(request.POST.get('next'))
+				else:
+					messages.error(request, "Your account is not active.")
+			else:
+				messages.error(request, "Your Username and/or Password were incorrect")
+	else:
+		return HttpResponseRedirect('/')
+
+	return render(request, "account/login.html", {})
 
 
 def get_token():

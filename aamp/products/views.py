@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.db.models import Q
+from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -15,6 +17,12 @@ import random
 def demo(request):
 	return render(request, "demo.html", {})
 
+class ProductColorView(View):
+	def get(self, request, *args, **kwargs):
+		if request.is_ajax():
+			color = request.GET.get('data')
+			request.session['color'] = color
+			return JsonResponse({"color":color})
 
 class CategoryListView(ListView):
 	model = Category
@@ -104,5 +112,6 @@ class ProductDetailView(DetailView):
 		instance = self.get_object()
 		context["related"] = sorted(Product.objects.get_related(instance)[:6], key= lambda x: random.random())
 		return context
+
 
 

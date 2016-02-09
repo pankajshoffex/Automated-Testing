@@ -1,20 +1,27 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 <style>
 {% block style %}
-.carousel {
-    margin-top: 20px;
-}
-.item .thumb {
-	width: 25%;
-	cursor: pointer;
-	float: left;
-}
-.item .thumb img {
+.pro-image{
 	width: 100%;
-	margin: 2px;
+	height: auto;
+	border-width: 1px;
+    border-style: solid;
+    border-color: black;
 }
-.item img {
-	width: 100%;	
+.image-thumb{
+	float: left;
+	width: 80px;
+	height: 80px;
+    margin: 5px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+.image-thumb:hover{
+	border-width: 2px;
+    border-style: solid;
+    border-color: red;
 }
 
 .pro-color{
@@ -24,14 +31,80 @@
     margin: 5px;
     border-width: 1px;
     border-style: solid;
-    border-color: rgba(0,0,0,.2);
+    border-color: black;
 }
+.pro-color:hover{
+	border-width: 2px;
+	border-color: red;
+}
+.color-selected{
+	border-width: 2px;
+	border-color: red;
+}
+
+/* styles unrelated to zoom */
+
+/* these styles are for the demo, but are not required for the plugin */
+.zoom {
+	display:inline-block;
+	position: relative;
+}
+
+/* magnifying glass icon */
+.zoom:after {
+	content:'';
+	display:block; 
+	width:33px; 
+	height:33px; 
+	position:absolute; 
+	top:0;
+	right:0;
+	background:url({% static 'image/icon.png' %});
+}
+
+.zoom img {
+	display: block;
+}
+
+.zoom img::selection { background-color: transparent; }
+
+#ex2 img:hover { cursor: url({% static 'image/grab.cur' %}), default; }
+#ex2 img:active { cursor: url({% static 'image/grabbed.cur' %}), default; }
 
 {% endblock style %}
 </style>
-
 <script>
 {% block jquery %}
+
+$('#ex1').zoom();
+
+$(".image-thumb img").hover(function(){
+	var loc = $(this).attr("src");
+	$(".pro-image img").attr("src", loc);
+});
+
+
+$(".pro-color").click(function(){
+	var color = $(this).attr("data-color");
+	var col = $(this);
+	$(".pro-color").removeClass("color-selected");
+	$.ajax({
+		type: "GET",
+		url: "{% url 'products:color_view' %}",
+		data:{
+			"data": color,
+		},
+		success:function(data){
+			if(color == data.color){
+				$(col).addClass("color-selected");
+			}
+		},
+		error:function(response, error){
+			console.log(error);
+		}
+	});
+});
+
 function setPrice(){
 	var price = $(".variation_select option:selected").attr("data-price");
 
@@ -57,51 +130,24 @@ $(".variation_select").change(function(){
 
 <div class="row">
 
-	<div class="col-sm-5">
-		{% if object.productimage_set.count <= 1 %}
+	<div class="col-sm-4">
+		<span class="pro-image zoom" id='ex1'>
 		{% if object.get_image_url %}
-		<img src="{{ object.get_image_url }}" class="img-responsive"/>
+		<img src="{{ object.get_image_url }}" width='300' height='300' alt='Daisy'/>
 		{% endif %}
-		{% else %}
-		<div id="carousel" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-            	{% for img in object.productimage_set.all %}
-            	{% if object.productimage_set.first.id == img.id %}
-                <div class="item active">
-                    <img src="{{ img.image.url }}" class="img-responsive" alt="product image">
-                </div>
-                {% else %}
-                <div class="item">
-                    <img src="{{ img.image.url }}" class="img-responsive" alt="product image">
-                </div>
-                {% endif %}
-
-                {% endfor %}
+		</span>
+		
+		<div class="clearfix" align="center">
+        {% for img in object.productimage_set.all %}
+            <div class="image-thumb">
+            	<img src="{{ img.image.url }}" alt="image thumbnail" class="thumb" width="76" height="76">
             </div>
-        </div> 
-
-		<div class="clearfix">
-        <div id="thumbcarousel" class="carousel slide" data-interval="false">
-            <div class="carousel-inner">
-                <div class="item active">
-                {% for img in object.productimage_set.all %}
-                    <div data-target="#carousel" data-slide-to="{{ forloop.counter0 }}" class="thumb"><img src="{{ img.image.url }}" alt="image thubnail"></div>
-                {% endfor %}
-                </div><!-- /item -->
-            </div><!-- /carousel-inner -->
-            <a class="left carousel-control" href="#thumbcarousel" role="button" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left"></span>
-            </a>
-            <a class="right carousel-control" href="#thumbcarousel" role="button" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </div> <!-- /thumbcarousel -->
-    </div><!-- /clearfix -->
-    {% endif %}
+        {% endfor %}
+		</div>
 	</div>
 
 	<div class="col-sm-4">
-		<h2>{{ object.title }}</h2>
+		<h3>{{ object.title }}</h3>
 
 		<p class="lead">
 			<h4>Short Description</h4>
@@ -110,7 +156,7 @@ $(".variation_select").change(function(){
 	</div>
 
 	<!-- Product Sidebar -->
-	<div class="col-sm-3">
+	<div class="col-sm-4">
 
 		{% if object.variation_set.count > 1 %}
 		<h4 id="price">Rs. {{ object.variation_set.first.price }}</h4>
@@ -148,7 +194,11 @@ $(".variation_select").change(function(){
 		<h4>Select Color:</h4>
 		<p class="lead">
 		{% for color in object.color.all %}
-			<span class="pro-color" style="background-color:{{ color.title }};"></span>
+			{% if color.title == request.session.color %}
+			<a href="javascript:void(0)"><span data-color="{{ color.title }}" class="pro-color color-selected" style="background-color:{{ color.title }};"></span></a>
+			{% else %}
+			<a href="javascript:void(0)"><span data-color="{{ color.title }}" class="pro-color" style="background-color:{{ color.title }};"></span></a>
+			{% endif %}			
 		{% endfor %}
 		</p>
 		{% endif %}

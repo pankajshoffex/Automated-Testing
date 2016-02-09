@@ -1,12 +1,14 @@
 from __future__ import unicode_literals
 from django.utils.text import slugify
 from django.db import models
+from django.contrib.auth.models import User
 
 
 
 class SignUp(models.Model):
+	user = models.OneToOneField(User, primary_key=True)
 	mobile_no = models.CharField(max_length=10, unique=True)
-	password = models.CharField(max_length=50)
+	is_user = models.BooleanField(default=True)
 
 	def __unicode__(self):  # __str__ python 3
 		return self.mobile_no

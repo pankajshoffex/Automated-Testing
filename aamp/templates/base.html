@@ -11,7 +11,7 @@
 		<title>{% block head_title %}Shoffex Online Shopping Website{% endblock head_title %}</title>
 
 		{% include "head_css.html" %}
-		
+		{% block style1 %} {% endblock style1 %}
 		<style>
 			{% block style %}{% endblock style %}
 		</style>
@@ -47,5 +47,6 @@
 		{% endblock jquery %}
 		});
 		</script>
+		{% block script %}{% endblock script %}
 	</body>
 </html>

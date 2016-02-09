@@ -14,7 +14,7 @@ class ProductImageInline(admin.TabularInline):
 	model = ProductImage
 	extra = 0
 	min_num = 1
-	max_num = 5
+	max_num = 4
 
 class VariationInline(admin.TabularInline):
 	model = Variation
