@@ -1,0 +1,48 @@
+{% load staticfiles %}
+
+	<div class="row"  style="background-color: #777">
+		<div class="col-lg-2" align="right" style="color: white; font-size: 25px;">
+			<p style=" margin-top: 4%";>Any Query</p>
+		</div>
+		<div class="col-lg-3" style="color:white">
+			<input class="form-control" type="text" placeholder="Enter Your Email" style="background-color: #515151;height: 40px; width:300px; margin-top: 3%; ">
+		</div>
+		<div class="col-lg-3" style="color:white;" align="right">
+			<h3>Follow Us</h3>
+		</div>
+		<div class="col-lg-4">
+			<p style="margin-top: 8px;">
+				<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+					<i class="fa fa-facebook-square fa-3x" style="color:black;"></i>
+				</a>
+				<a href="https://twitter.com/home?status={{ request.build_absolute_uri }}">
+					<i class="fa fa-twitter-square fa-3x" style="color:black;"></i>
+				</a>
+				<a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'>
+					<i class="fa fa-google-plus-square fa-3x" style="color:black;"></i>
+				</a>
+			</p>
+		</div>
+	</div>
+	<div class="row" style="background-color: #515151; color: #B5CAD1;">
+		<div class="col-lg-3">
+			<h3>Categories</h3>		
+		</div>
+		<div class="col-lg-3">
+			<h3>Information</h3>
+		</div>
+		<div class="col-lg-3">
+			<h3>My Account</h3>
+		</div>
+		<div class="col-lg-3">
+			<h3>Store Information</h3>
+				<p>Shoffex Online Retails India Pvt. Ltd, Flat no. 1, Sujit Complex, Near Vadgaon Bridge, Pune - 411030
+			</p>
+		</div>
+		<br>
+		<hr/>
+		<h6 style="color:white" align="center">&copy All Rights Reserverd By Shoffex.com</h6>		
+	</div>
+	
+		
+	

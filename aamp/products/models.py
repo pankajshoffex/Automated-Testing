@@ -58,6 +58,14 @@ class Product(models.Model):
 			return img.image.url
 		return img # None
 
+	def admin_thumbnail(self):
+		img = self.productimage_set.first()
+		
+		print img
+		if img:
+			img2 = mark_safe(u'<img src="' + str(img.image.url) +'" width="100" height="100" />')
+			return img2
+		return img
 
 
 class Variation(models.Model):
@@ -122,6 +130,9 @@ class ProductImage(models.Model):
 
 	def __unicode__(self):
 		return self.product.title
+
+	def admin_thumbnail(self):
+		return self.product.admin_thumbnail()
 
 
 class Category(models.Model):

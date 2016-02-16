@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'products',
     'django_wysiwyg',
     'ckeditor',
+    'import_export',
 ]
 
 MIDDLEWARE_CLASSES = [

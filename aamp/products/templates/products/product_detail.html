@@ -7,7 +7,7 @@
 	height: auto;
 	border-width: 1px;
     border-style: solid;
-    border-color: black;
+    border-color:  #111109;
 }
 .image-thumb{
 	float: left;
@@ -16,7 +16,7 @@
     margin: 5px;
     border-width: 1px;
     border-style: solid;
-    border-color: black;
+    border-color:  #111109;
 }
 .image-thumb:hover{
 	border-width: 2px;
@@ -130,17 +130,20 @@ $(".variation_select").change(function(){
 
 <div class="row">
 
-	<div class="col-sm-4">
+	<div class="col-sm-5" style="max-width: 500px;">
 		<span class="pro-image zoom" id='ex1'>
 		{% if object.get_image_url %}
-		<img src="{{ object.get_image_url }}" width='300' height='300' alt='Daisy'/>
+
+		<div style="width:470px; height:470px;" align="center"><!-- display: table-cell;vertical-align: middle; -->
+			<img class="center-block" src="{{ object.get_image_url }}" width='auto' height='auto'  style="max-width: 100%; max-height:100%;" alt='Daisy'/>
+		</div>
 		{% endif %}
 		</span>
 		
 		<div class="clearfix" align="center">
         {% for img in object.productimage_set.all %}
             <div class="image-thumb">
-            	<img src="{{ img.image.url }}" alt="image thumbnail" class="thumb" width="76" height="76">
+            	<img  src="{{ img.image.url }}" alt="image thumbnail" class="thumb" width="76" height="76">
             </div>
         {% endfor %}
 		</div>
@@ -150,13 +153,13 @@ $(".variation_select").change(function(){
 		<h3>{{ object.title }}</h3>
 
 		<p class="lead">
-			<h4>Short Description</h4>
+			<h4>Short Description:</h4>
 			{{ object.short_description|safe }}
 		</p>
 	</div>
 
 	<!-- Product Sidebar -->
-	<div class="col-sm-4">
+	<div class="col-sm-3" style="background-color:#e0e0d1;border: 1px solid #9C9393">
 
 		{% if object.variation_set.count > 1 %}
 		<h4 id="price">Rs. {{ object.variation_set.first.price }}</h4>
@@ -206,8 +209,9 @@ $(".variation_select").change(function(){
 		<br/>
 		<br/>
 
-		<a href="#">Add to Cart</a>
-		
+		<a href="#"><button class='fa fa-shopping-cart fa-navbar-cart fa-3x' style="background-color: #009AD0; color:white;border: 1px solid blue;height: 50px; width: 260px; font-size: 20px; border-radius: 5px;"> Add to Cart</button></a>
+		<br><br>
+		<a href=""><button style="background-color: #63a62f; color:white;border: 1px solid blue;height: 50px; width: 260px; font-size: 20px; border-radius: 5px;">Buy Now</button></a>
 		<br/>
 		<hr/>
 	<h4>Share</h4><br/>
@@ -246,5 +250,6 @@ $(".variation_select").change(function(){
 		{% cycle '' '</div><div class="row">' %} 
 		{% endfor %}
 	</div>
+</div>
 </div>
 {% endblock content %}
