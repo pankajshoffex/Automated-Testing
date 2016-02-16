@@ -61,7 +61,7 @@ class Product(models.Model):
 	def admin_thumbnail(self):
 		img = self.productimage_set.first()
 		
-		print img
+		
 		if img:
 			img2 = mark_safe(u'<img src="' + str(img.image.url) +'" width="100" height="100" />')
 			return img2
