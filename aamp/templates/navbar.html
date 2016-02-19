@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <style>
   .navbar-default {
-    background-image: linear-gradient(to bottom, #666633 0px, #666633 100%);
+    background-image: linear-gradient(to bottom, #4dc3ff 0px, #0099e6 100%);
   }
 </style>
 <!-- Fixed navbar -->
@@ -14,11 +14,17 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/" style="color:orange;">SHOFFEX</a>
+      {% if logo %}
+      <div>
+        <a class="navbar-brand" href="/" style="color:orange;"><img src="{{ logo }}" height="50" width="200" style="margin-top: -15px;"></a>
+      </div>
+      {% else %}
+      <a class="navbar-brand" href="/" style="color:white;">SHOFFEX</a>
+      {% endif %}
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
+        <!-- <li class="active"><a href="/">Home</a></li> -->
         <!-- <li><a href="#about">About</a></li>
         <li><a href="#contact">Contact</a></li>
          -->
@@ -36,7 +42,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Account</a></li>
+            <li><a href="/account/personal">Account</a></li>
             <li><a href="#">Orders</a></li>
             <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></li>
           </ul>

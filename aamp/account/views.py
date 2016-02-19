@@ -3,6 +3,8 @@ from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 from products.models import Product
@@ -13,7 +15,7 @@ import base64
 import hmac, base64, struct, time
 import hashlib, random, datetime
 from .models import SignUp, HomePageSlider
-
+from UI.models import UploadLogo
 
 
 def index(request):
@@ -23,9 +25,15 @@ def index(request):
 
 	products = Product.objects.all().order_by("?")[:20]
 
+	logo_data = UploadLogo.objects.all()
+	for i in logo_data:
+		logo1 = i
+		logo = "media/" + str(logo1)
+
 	context['slider'] = slider
 	context['himage'] = image
-	context['products'] = products 
+	context['products'] = products
+	context['logo'] = logo 
 	return render(request, "home.html", context)
 
 
@@ -125,4 +133,61 @@ def signup(request):
 		return HttpResponseRedirect(reverse('account:signup_mobile'))
 	return render(request, 'account/signup.html', {'form': form, 'mobile': mobile})
 
+@login_required(login_url='/account/login/')
+def user_account(request):
+	return render(request, 'account/User_Account.html', {})
+	
+@login_required(login_url='/account/login/')
+def order_history(request):
+	return render(request, 'account/order_history.html', {})
 
+@login_required(login_url='/account/login/')
+def user_settings(request):
+	context = {}
+	data = SignUp.objects.filter(user=request.user)
+	if data:
+		for mobile in data:
+			context['mobile_no'] = mobile.mobile_no
+	else:
+		context['mobile_no'] = "--"
+
+	if request.is_ajax():
+		name = request.GET.get('name')
+		email = request.GET.get('email')
+		mobile = request.GET.get('mobile')
+		password = request.GET.get('password')
+		new_password = request.GET.get('new_password')
+		token = "False"
+		user = User.objects.get(username=request.user.username)
+		if name:
+			user.first_name = name
+			user.save()
+			token = "True"
+			return JsonResponse({"data": token, "name": name})
+
+		elif email:
+			user.email = email
+			user.save()
+			token = "True"
+			return JsonResponse({"data": token, "email": email})
+
+		elif mobile:
+			up, mp = SignUp.objects.get_or_create(user=user)
+			if not mp:
+				up.mobile_no = mobile
+				up.save()
+				token = "True"
+				print "success"
+			return JsonResponse({"data": token, "mobile": mobile})
+
+		elif password:
+			if user.check_password(password):
+				user.set_password(new_password)
+				user.save()
+				token = "True"
+			return JsonResponse({"data": token, "new_password": new_password})
+
+		else:
+			token = "False"
+		return JsonResponse({"data": token})
+	return render(request, 'account/user_settings.html', context)

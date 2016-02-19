@@ -7,10 +7,30 @@
 }
 {% endblock style %}
 </style>
-
 {% block content %}
 <div class="home_products">
-	<h3>Recommended Products</h3>
+	<div class="row" style="background-color: #464646; font-family:  Arial, Helvetica, sans-serif; color: white; height: 30px; text-shadow:2px 1px black;">
+		<div class="col-lg-12 col-xs-12">
+			<h3 style="margin-top: 0%;"><b>Recommended Products</b></h3>
+		</div>
+	</div>
 {% include "products/products.html" with object_list=products col_class_set="col-sm-3" %}
+</div>
+<div class="row" style="background-color: #464646; font-family:  Arial, Helvetica, sans-serif; color: white; height: 30px; text-shadow:2px 1px black;">
+	<div class="col-lg-12 col-md-12 col-sm-12 col-sm-12">
+		<h3 style="margin-top: 0%;">New Offers</h3>
+	</div>
+</div>
+<!-- New Offers Div -->
+<div class="row">
+	<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="border: 1px solid #e0e0eb; border-left: 0px;max-width: 100%; height: auto; ">
+		<img src="/media/products/offers/offer1.jpg" align="left">
+	</div>
+	<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="border: 1px solid #e0e0eb; border-right: 0px;" align="center">
+		<img src="/media/products/offers/offer2.jpg">
+	</div>
+		<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="border: 1px solid #e0e0eb; border-left: 0px;">
+		<img src="/media/products/offers/offer1.jpg" align="left">
+	</div>
 </div>
 {% endblock content %}

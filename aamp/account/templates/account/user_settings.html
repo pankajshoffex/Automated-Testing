@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block style %}
+.acc_ok {
+	background-color:#009900;
+	height: 30px;
+	border: none;
+	border-radius: 5px;
+	color:white;
+}
+.acc_cancel {
+	background-color:rgb(221, 75, 57);
+	height: 30px;
+	border: none;
+	border-radius: 5px;
+	color:white;
+}
+{% endblock style %}
+
+{% block jquery %}
+
+<!--  first Div Hide Show -->
+$("#name").hide();
+   
+$("#edit").click(function(){
+	$("#default").hide(1000);
+    $("#name").show(1000);    
+});
+
+$("#acc_ok").click(function(){
+	$.ajax({
+		type: "GET",
+		url: "{% url 'account:user_settings' %}",
+		data:{
+			"name": $("#acc_name").val(),
+			"email": $("#acc_email").val(),
+		},
+		success:function(data){
+			if(data.data == "True" && data.name != "")
+			{
+				$("#acc_name1").html(data.name);
+				$("#name").hide(1000);
+				$("#default").show(1000);
+			}
+
+
+		},
+	});
+});
+
+$("#acc_email_ok").click(function(){
+	$.ajax({
+		type: "GET",
+		url: "{% url 'account:user_settings' %}",
+		data:{
+			"email": $("#acc_email").val(),
+		},
+		success:function(data){
+			if(data.data == "True" && data.email != "")
+			{
+				$("#acc_email1").html(data.email);
+				$("#email").hide(1000);
+				$("#default1").show(1000);
+			}
+			
+
+		},
+	});
+});
+
+$("#acc_mobile_ok").click(function(){
+	$.ajax({
+		type: "GET",
+		url: "{% url 'account:user_settings' %}",
+		data:{
+			"mobile": $("#acc_mobile").val(),
+		},
+		success:function(data){
+			if(data.data == "True" && data.mobile != "")
+			{
+				$("#acc_mobile1").html(data.mobile);
+				$("#mobile").hide(1000);
+				$("#default3").show(1000);
+			}
+			
+
+		},
+	});
+});
+
+$("#acc_password_ok").click(function(){
+	$.ajax({
+		type: "GET",
+		url: "{% url 'account:user_settings' %}",
+		data:{
+			"password": $("#acc_password").val(),
+			"new_password": $("#acc_new_password").val(),
+		},
+		success:function(data){
+			if(data.data == "True" && data.password != "")
+			{
+				$("#acc_password1").html(data.mobile);
+				$("#password").hide(1000);
+				$("#default2").show(1000);
+			}
+			
+
+		},
+	});
+});
+
+
+
+$("#cancel").click(function(){
+	$("#name").hide(1000);
+    $("#default").show(1000);
+});
+<!-- End of  first Div -->
+
+<!--  second Div Hide Show -->
+$("#email").hide();
+   
+$("#edit1").click(function(){
+	$("#default1").hide(1000);
+    $("#email").show(1000);    
+});
+
+$("#cancel1").click(function(){
+	$("#email").hide(1000);
+    $("#default1").show(1000);
+});
+<!-- End of  second Div -->
+
+<!--  third Div Hide Show -->
+$("#password").hide();
+   
+$("#change").click(function(){
+	$("#default2").hide(1000);
+    $("#password").show(1000);    
+});
+
+$("#cancel2").click(function(){
+	$("#password").hide(1000);
+    $("#default2").show(1000);
+});
+<!-- End of  third Div -->
+
+<!--  fourth Div Hide Show -->
+$("#mobile").hide();
+   
+$("#edit3").click(function(){
+	$("#default3").hide(1000);
+    $("#mobile").show(1000);    
+});
+
+$("#cancel3").click(function(){
+	$("#mobile").hide(1000);
+    $("#default3").show(1000);
+});
+<!-- End of fourth Div -->
+
+
+
+{% endblock jquery %}
+
+{% block content %}
+<div class="row">
+	<div class="col-lg-2"></div>
+	<div class="col-lg-7">
+		<h3 align="center">Your Account</h3>
+		<div class="panel-group">
+			<div class="panel panel-primary">
+			    <div class="panel-heading">User Name</div>
+			    <div id="default" class="panel-body">
+			      	<span id="acc_name1">{{ request.user.get_full_name }}</span><input id="edit" type="button" value="Edit">
+			    </div>
+			    <div id="name" class="panel-primary">
+			    <br>
+			      	<input id="acc_name" type="text" value="{{ request.user.get_full_name }}">
+			      	 <button id="acc_ok" class="acc_ok"><span class="glyphicon glyphicon-ok"></span></button>
+			       	 <button id="cancel"value="Cancel" class="acc_cancel"><span class="glyphicon glyphicon-remove"></span></button>
+			    <br>
+			    <br>
+			    </div>
+			</div>
+		</div>
+		<div class="panel-group">
+			<div class="panel panel-primary">
+			    <div class="panel-heading">Email Address</div>
+			    <div id="default1" class="panel-body">
+			      	<span id="acc_email1">{{ request.user.email }}</span><input id="edit1" type="button" value="Edit">
+			    </div>
+			    <div id="email" class="panel-primary">
+			    <br>
+			    <input id="acc_email" type="text" value="{{ request.user.email }}"><button id="acc_email_ok" class="acc_ok"><span class="glyphicon glyphicon-ok"></span></button>
+			       	 <button id="cancel1"value="Cancel" class="acc_cancel"><span class="glyphicon glyphicon-remove"></span></button>
+			    <br><br>
+			    </div>
+			</div>
+		</div>
+		<div class="panel-group">
+			<div class="panel panel-primary">
+			    <div class="panel-heading">Mobile Number</div>
+			    <div id="default3" class="panel-body">
+			      	<span id="acc_mobile1">{{ mobile_no }}</span><input id="edit3" type="button" value="Edit">
+			    </div>
+			    <div id="mobile" class="panel-primary">
+			    <br>
+   				    <input id="acc_mobile" type="text" value="{{ mobile_no }}"><button id="acc_mobile_ok" class="acc_ok"><span class="glyphicon glyphicon-ok"></span></button>
+			       	 <button id="cancel3"value="Cancel" class="acc_cancel"><span class="glyphicon glyphicon-remove"></span></button>
+			    <br><br>
+			    </div>
+			</div>
+		</div>
+		<div class="panel-group">
+			<div class="panel panel-primary">
+			    <div class="panel-heading">Password</div>
+			    <div id="default2" class="panel-body">
+			      	<span>******</span><input id="change" type="button" value="Change">
+			    </div>
+			    <div id="password" class="panel-primary">
+			    	<input id="acc_password" type="password" placeholder="Enter old Password"><br>
+			      	<input id="acc_new_password" type="password" placeholder="Enter New Password"><button id="acc_password_ok" class="acc_ok"><span class="glyphicon glyphicon-ok"></span></button>
+			       	 <button id="cancel2"value="Cancel" class="acc_cancel"><span class="glyphicon glyphicon-remove"></span></button>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
