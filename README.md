@@ -15,4 +15,6 @@ sudo pip install Pillow
 apt-get install wkhtmltopdf
 pip install pdfkit
 pip install markdown
+pip install django-easy-pdf
+
 
