@@ -112,7 +112,10 @@ function setPrice(){
 	if(sale_price != "" && sale_price != "None" && sale_price != null){
 		$("#price").html('<h3>Rs.' + sale_price + ' <small class="og-price">Rs.' + price + '</small></h3>');
 	}else{
-		$("#price").html('Rs. ' + price);
+		if(price != "" && price != "None" && price != null)
+		{
+			$("#price").html('Rs. ' + price);
+		}
 	}
 }
 
@@ -120,6 +123,32 @@ setPrice();
 
 $(".variation_select").change(function(){
 	setPrice();
+});
+
+$("#full_desc").hide();
+
+$("#show_more").click(function(){
+	$("#full_desc").toggle(1000);
+});
+
+// Add to cart
+$("#submit-btn").click(function(event){
+    event.preventDefault();
+    var formData = $("#add-form").serialize();
+    console.log(formData);
+    $.ajax({
+      type: "GET",
+      url: "{% url 'cart' %}",
+      data: formData,
+      success: function(data){
+        showFlashMessage(data.flash_message);
+        updateCartItemCount();
+      },
+      error: function(response, error){
+        $("#add-form").submit();
+      }
+    });
+    //$("#add-form").submit();
 });
 
 {% endblock jquery %}
@@ -159,14 +188,19 @@ $(".variation_select").change(function(){
 	</div>
 
 	<!-- Product Sidebar -->
-	<div class="col-sm-3" style="background-color:#e0e0d1;border: 1px solid #9C9393">
-
+	<div class="col-sm-3 well">
+		<form id='add-form' method="GET" action="{% url 'cart' %}">
+		<p id="jquery-message" class="lead">
+    
+  		</p>
 		{% if object.variation_set.count > 1 %}
 		<h4 id="price">Rs. {{ object.variation_set.first.price }}</h4>
+		
 		<h4>Select Size:</h4>
+		
 		<select class="form-control variation_select">
 		{% for vari_obj in object.variation_set.all %}
-		<option data-sale-price="{{ vari_obj.sale_price }}" data-price="{{ vari_obj.price }}" value="{{ vari_obj.id }}">{{ vari_obj }}</option>
+		<option name="item" data-sale-price="{{ vari_obj.sale_price }}" data-price="{{ vari_obj.price }}" value="{{ vari_obj.id }}">{{ vari_obj }}</option>
 		{% endfor %}
 		</select>
 		{% elif object.shoessizes.count > 0 %}
@@ -185,14 +219,18 @@ $(".variation_select").change(function(){
 			{% endfor %}
 		</select>
 		{% else %}
-		<h4 id="price">Rs. {% if object.variation_set.first.sale_price %}
+		<h4 id="price">{% if object.variation_set.first.sale_price %}
 			Rs. {{ object.variation_set.first.sale_price }}
 			<small class='og-price'>Rs. {{ object.variation_set.first.price }}</small>
 			{% else %}
+			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">
 			Rs. {{ object.variation_set.first.price }}
 			{% endif %}
 		</h4>
 		{% endif %}
+
+		<input class="form-control" type="number" name="qty" min="1" value="1" />
+
 		{% if object.color.count > 0 %}
 		<h4>Select Color:</h4>
 		<p class="lead">
@@ -209,9 +247,10 @@ $(".variation_select").change(function(){
 		<br/>
 		<br/>
 
-		<a href="#"><button class='fa fa-shopping-cart fa-navbar-cart fa-3x' style="background-color: #009AD0; color:white;border: 1px solid blue;height: 50px; width: 260px; font-size: 20px; border-radius: 5px;"> Add to Cart</button></a>
-		<br><br>
-		<a href=""><button style="background-color: #63a62f; color:white;border: 1px solid blue;height: 50px; width: 260px; font-size: 20px; border-radius: 5px;">Buy Now</button></a>
+		<input id="submit-btn" type="submit" value="Add to Cart" class='btn btn-lg btn-warning btn-block'>
+		</form>
+		<br/>
+		<a href="#" style="text-decoration:none;"><button class="btn btn-lg btn-success btn-block">Buy Now</button></a>
 		<br/>
 		<hr/>
 	<h4>Share</h4><br/>
@@ -233,14 +272,20 @@ $(".variation_select").change(function(){
 </div>
 
 <div class="row">
-	<hr/>
-	<div class="col-sm-8">
-		<p class="lead">
-			<h3>Long Description</h3>
-			{{ object.long_description|safe }}
-		</p>
+	<div class="col-sm-12">
+	<div class="text-center"><button class="btn btn-info" id="show_more">show more</button></div>
+		<div id="full_desc">
+			<p class="lead">
+				<h3>Long Description</h3>
+				{{ object.long_description|safe }}
+			</p>
+		</div>
 	</div>
-	<div class="col-sm-4">
+</div>
+
+<div class="row">
+	<hr/>
+	<div class="col-sm-12">
 		<h4>Related Products</h4>
 		<div class="row">
 		{% for product in related %}

@@ -15,34 +15,41 @@
 
 {% block content %}
 <div class="row">
-<form method="POST" action="">{% csrf_token %}
-<div class="fieldWrapper">
-    {{ form.mobile_no.errors }}
-    <label for="{{ form.mobile_no.id_for_label }}">Mobile No:</label>
-    {{ form.mobile_no }}
-</div>
-<br />
-<div class="fieldWrapper">
-    {{ form.otp.errors }}
-    <label for="{{ form.otp.id_for_label }}">Otp:</label>
-    {{ form.otp }}<span class="glyphicon glyphicon-ok ok" aria-hidden=true></span>
-    <span class="glyphicon glyphicon-remove remove" aria-hidden=true></span>
-</div>
-<br/>
-<div class="fieldWrapper">
-    {{ form.password1.errors }}
-    <label for="{{ form.password.id_for_label }}">Password:</label>
-    {{ form.password1 }}
-</div>
-<br />
-<div class="fieldWrapper">
-    {{ form.password2.errors }}
-    <label for="{{ form.password.id_for_label }}">Confirm Password:</label>
-    {{ form.password2 }}
-</div>
-<br />
-<input type="submit" class="btn btn-success" value="Sign Up">
-</form>
+	<div class="col-sm-6 well">
+	<form method="POST" action="">{% csrf_token %}
+	<div class="fieldWrapper">
+	    {{ form.mobile_no.errors }}
+	    <label for="{{ form.mobile_no.id_for_label }}">Mobile No:</label>
+	    {{ form.mobile_no }}
+	</div>
+	<br />
+	<div class="fieldWrapper">
+	    {{ form.otp.errors }}
+	    <label for="{{ form.otp.id_for_label }}">Otp:</label>
+	    {{ form.otp }}<span class="glyphicon glyphicon-ok ok" aria-hidden=true></span>
+	    <span class="glyphicon glyphicon-remove remove" aria-hidden=true></span>
+	</div>
+	<br/>
+	<div class="fieldWrapper">
+	    {{ form.password1.errors }}
+	    <label for="{{ form.password.id_for_label }}">Password:</label>
+	    {{ form.password1 }}
+	</div>
+	<br />
+	<div class="fieldWrapper">
+	    {{ form.password2.errors }}
+	    <label for="{{ form.password.id_for_label }}">Confirm Password:</label>
+	    {{ form.password2 }}
+	</div>
+	<br />
+	<input type="submit" class="btn btn-success" value="Sign Up">
+	</form>
+	</div>
+	<div class="col-sm-6 well">
+		<div>
+			hello
+		</div>
+	</div>
 </div>
 {% endblock content %}
 

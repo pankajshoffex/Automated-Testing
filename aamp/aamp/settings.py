@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'ckeditor',
     'import_export',
     'UI',
+    'carts',
+    'orders',
+    'easy_pdf',
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+
+<div class="col-sm-4 col-sm-offset-4 text-center">
+{% include "orders/order_summary_short.html" with order=order %}
+<p>
+<a href="{% url 'order_address' %}">Change an Address</a>	
+</p>
+<br/>
+
+<form method="POST" action="{% url 'checkout_final' %}">{% csrf_token %}
+<input type="hidden" name="payment_token" value="ABC" />
+<p><b><button type="submit">Complete Order</button></b></p>
+</form>
+</div>
+
+
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, Http404, JsonResponse
+from django.http import HttpResponseRedirect, Http404, JsonResponse, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -22,7 +22,7 @@ def index(request):
 	context = {}
 	slider = True
 	image = HomePageSlider.objects.all().order_by("-id")
-
+	logo = ""
 	products = Product.objects.all().order_by("?")[:20]
 
 	logo_data = UploadLogo.objects.all()
@@ -48,15 +48,12 @@ def login_user(request):
 				if user.is_active:
 					login(request, user)
 					print request.GET.get('next')
-					print "hello"
-					if request.GET.get('next') is not None and request.GET.get('next') != 'None':
-						data = base64.urlsafe_b64decode(str(request.GET.get('next')))
-						print data
-						return HttpResponseRedirect(data)
+					if request.GET.get('next') is not None or request.GET.get('next') != 'None':
+						print request.GET.get('next')
+						return HttpResponseRedirect(request.GET.get('next'))
 					else:
-						return HttpResponseRedirect('/')
-					# if request.POST.get('next') is not None and request.POST.get('next') != 'None':
-					# 	return HttpResponseRedirect(request.POST.get('next'))
+						print request.GET.get('next')
+						return HttpResponseRedirect("/")
 				else:
 					messages.error(request, "Your account is not active.")
 			else:
@@ -64,7 +61,7 @@ def login_user(request):
 	else:
 		return HttpResponseRedirect('/')
 
-	return render(request, "account/login.html", {})
+	return render(request, "account/login.html", {'next': request.GET.get('next') })
 
 
 def get_token():
@@ -102,14 +99,14 @@ def signup_mobile(request):
 				token = get_token()
 				msg_token = str(token)
 				request.session['var'] = msg_token
-				sendSMS('sotari.biz@gmail.com', 'da1e1331d30c4dcff5a4780b52fa9fb327764bb1', mobile,'TXTLCL', msg_token)
-			return HttpResponseRedirect("/account/signup/")
+				# sendSMS('sotari.biz@gmail.com', 'da1e1331d30c4dcff5a4780b52fa9fb327764bb1', mobile,'TXTLCL', msg_token)
+			return HttpResponseRedirect("/accounts/signup/")
 	else:
 		form = MobileNoForm()
-
 	return render(request, "account/mobile_no.html", {'form': form})
 
 def signup(request):
+	print request.session.get('next_url')
 	if request.is_ajax():
 		data = ""
 		token = request.GET.get('data')
@@ -124,24 +121,40 @@ def signup(request):
 		form = SignUpForm(request, request.POST)
 		if form.is_valid():
 			form.save()
+			username = form.cleaned_data['mobile_no']
+			password = form.cleaned_data['password1']
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				if user.is_active:
+					login(request, user)
+					print request.session.get('next_url')
+					if request.session.get('next_url') is not None or request.session.get('next_url') != 'None':
+						return HttpResponseRedirect("/checkout/")
+					else:
+						return HttpResponseRedirect("/")
 	else:
 		form = SignUpForm(request)
 
 	mobile = request.session.get('mobile')
 	print request.session.get('var')
 	if not request.session.get('var'):
-		return HttpResponseRedirect(reverse('account:signup_mobile'))
+		if request.GET.get('next') is not None:
+			url = "account:signup_mobile"
+			request.session['next_url'] = request.GET.get('next')
+		else:
+			url = "account:signup_mobile"
+		return HttpResponseRedirect(reverse(url))
 	return render(request, 'account/signup.html', {'form': form, 'mobile': mobile})
 
-@login_required(login_url='/account/login/')
+@login_required(login_url='/accounts/login/')
 def user_account(request):
 	return render(request, 'account/User_Account.html', {})
 	
-@login_required(login_url='/account/login/')
+@login_required(login_url='/accounts/login/')
 def order_history(request):
 	return render(request, 'account/order_history.html', {})
 
-@login_required(login_url='/account/login/')
+@login_required(login_url='/accounts/login/')
 def user_settings(request):
 	context = {}
 	data = SignUp.objects.filter(user=request.user)

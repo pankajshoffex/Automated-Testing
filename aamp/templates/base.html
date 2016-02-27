@@ -17,6 +17,7 @@
 		</style>
 	</head>
 	<body>
+	<div>
 		{% include "navbar.html" %}
 
 		{% if slider %}
@@ -35,11 +36,11 @@
 		  </div>
 		{% endif %}
 
-		<div class="container">
+		<div class="container" style="padding-bottom: 100px;">
 		{% block content %}{% endblock content %}
 		</div>
-
-		<div class="container-fluid">
+	</div>
+		<div id="footer" style="background-image: url({% static 'image/back.png' %});">
 			{% include "footer.html" %}
 		</div>
 		{% include "javascript.html" %}

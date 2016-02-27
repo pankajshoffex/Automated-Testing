@@ -2,11 +2,20 @@
 
 
 {% block content %}
-<div class="row">
-<form action="" method="post">{% csrf_token %}
-{{ form.as_p }}
+<div class="row" style="padding-top: 10%;">
+	<div class="col-sm-6 well">
+		<div>
+		<form action="" method="post">{% csrf_token %}
+		{{ form.as_p }}
 
-<input type="submit" class="btn btn-success" value="Next">
-</form>
+		<input type="submit" class="btn btn-success" value="Next">
+		</form>
+		</div>
+	</div>
+	<div class="col-sm-6 well">
+		<div>
+			Hello
+		</div>
+	</div>
 </div>
 {% endblock content %}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{% block title %} {% endblock title %}</title>
+<style type="text/css">
+body {
+    margin: 0;
+}    
+#wrapper {
+     width: 100%;
+     margin: 0 auto;
+}
+#leftcolumn {
+     width: 250px;
+     background-color: #111;
+}
+#rightcolumn {
+     width: 750px;
+     background-color: #777;
+}
+</style>
+</head>
+<body>
+{% include 'pdf/pdf_header.html' %}
+<div class="container">
+	{% block content %}
+
+	{% endblock content %}
+</div>
+{% include 'pdf/pdf_footer.html' %}
+</body>
+</html>

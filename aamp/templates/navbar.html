@@ -37,25 +37,25 @@
           <li><a href="/categories/electronic">Electronics</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a class="fa-navbar-cart" href="#"><i class="fa fa-shopping-cart fa-navbar-cart"></i> <span class="badge">0</span></a></li>
+        <li><a class="fa-navbar-cart" href='{% url "cart" %}'><i class="fa fa-shopping-cart fa-navbar-cart"></i> <span id="cart-count-badge" class="badge">{{ request.session.cart_item_count }}</span></a>
+        </li>
       {% if user and not user.is_anonymous %}
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/account/personal">Account</a></li>
-            <li><a href="#">Orders</a></li>
+            <li><a href="{% url 'account:user_account' %}">Account</a></li>
+            <li><a href="{% url 'orders' %}">Orders</a></li>
             <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></li>
           </ul>
         </li>
 
       {% else %}
-      {% load incrypt_tags %}
       <li><a href="{% url 'account:signup_mobile' %}">Signup</a></li>
-      {% if not "/account/login" in request.get_full_path %}
+      {% if not "/accounts/login" in request.get_full_path %}
        <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Login<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">              
-                  <form class='navbar-form' method='POST' action='{% url "account:login_user" %}?next={{ request.path|get_url }}'>{% csrf_token %}
+                  <form class='navbar-form' method='POST' action='{% url "account:login_user" %}?next={{ request.path }}'>{% csrf_token %}
                     {% if next %}
                     <input type="hidden" name="next" value="{{ next }}" />
                     {% endif %}
