@@ -22,18 +22,11 @@ def index(request):
 	context = {}
 	slider = True
 	image = HomePageSlider.objects.all().order_by("-id")
-	logo = ""
 	products = Product.objects.all().order_by("?")[:20]
-
-	logo_data = UploadLogo.objects.all()
-	for i in logo_data:
-		logo1 = i
-		logo = "media/" + str(logo1)
 
 	context['slider'] = slider
 	context['himage'] = image
 	context['products'] = products
-	context['logo'] = logo 
 	return render(request, "home.html", context)
 
 

@@ -16,14 +16,59 @@
 			{% block style %}{% endblock style %}
 		</style>
 	</head>
-	<body>
-	<div>
+<body>
+	<div style="background-color: #027cd5;width: 100%; height:auto;">
 		{% include "navbar.html" %}
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3 text-center">
+					{% load logo_tags %}
+					{% set_logo as logo %}
+					
+					<div class="navbar-collapse collapse">
+						<div><a href="/"><img src="{{ logo }}"></a></div>
+					</div>
 
-		{% if slider %}
-		{% include "bootstrap_slider.html" %}
-		{% endif %}
-
+					<div class="navbar-toggle collapsed" style="margin-top:13px;">
+					<form role="search" method="GET" action='{% url "products:product_list" %}'>
+			            <div class="input-group"> 
+			              	<input type="text" class="form-control" placeholder="Search" name="q">
+				            <span class="input-group-btn">
+				            <button type="submit" class="btn btn-warning" style="color: #565656;">SEARCH</button>
+				            </span>
+			            </div>
+			        </form>
+			        </div>
+				</div>
+				<div class="col-sm-6">
+					<div class="navbar-collapse collapse" style="margin-top:7px;">
+					<form role="search" method="GET" action='{% url "products:product_list" %}'>
+			            <div class="input-group"> 
+			              	<input type="text" class="form-control" placeholder="Search" name="q">
+				            <span class="input-group-btn">
+				            <button type="submit" class="btn btn-warning" style="color: #565656;">SEARCH</button>
+				            </span>
+			            </div>
+			        </form>
+			        </div>
+				</div>
+				<div class="col-sm-3 text-center">
+					<div class="navbar-collapse collapse">
+						<div class="btn" style="margin-top: 3px;background-color: #006cb4;">
+						<a class="fa-navbar-cart" href='{% url "cart" %}'>
+							<i class="fa fa-shopping-cart fa-navbar-cart" style="color: white; font-size: 24px;"></i> <span id="cart-count-badge" class="badge">{{ request.session.cart_item_count }}</span>
+						</a>
+						</div>
+					</div>
+				
+				</div>
+			</div>
+			
+		</div>
+		<div style="background-color: #006cb4;width: 100%;">
+		{% include "category_menu.html" %}
+		</div>
+	</div>	
 		{% if messages %}
 		  <div class="container">
 		      {% for message in messages %}		      	
@@ -35,14 +80,17 @@
 		   
 		  </div>
 		{% endif %}
+		<div class="hidden-xs" style="margin-top: 20px;">
+		{% if slider %}
+		{% include "bootstrap_slider.html" %}
+		{% endif %}
+		</div>
 
 		<div class="container" style="padding-bottom: 100px;">
 		{% block content %}{% endblock content %}
 		</div>
-	</div>
-		<div id="footer" style="background-image: url({% static 'image/back.png' %});">
-			{% include "footer.html" %}
-		</div>
+	
+		
 		{% include "javascript.html" %}
 
 		<script>
@@ -52,5 +100,5 @@
 		});
 		</script>
 		{% block script %}{% endblock script %}
-	</body>
+</body>
 </html>

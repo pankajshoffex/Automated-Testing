@@ -8,7 +8,7 @@ from django.db.models.signals import pre_save
 
 # Create your models here.
 from carts.models import Cart
-from account.models import SignUp
+from useraccount.models import SignUp
 
 
 ADDRESS_TYPE = (

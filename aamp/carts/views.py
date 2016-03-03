@@ -13,7 +13,7 @@ from orders.mixins import CartOrderMixin, LoginRequiredMixin
 from orders.models import  Order, UserAddress
 from products.models import Variation
 from .models import Cart, CartItem
-from account.models import SignUp
+from useraccount.models import SignUp
 
 
 class ItemCountView(View):
@@ -25,7 +25,6 @@ class ItemCountView(View):
 			else:
 				cart = Cart.objects.get(id=cart_id)
 				count = cart.items.count()
-
 			request.session["cart_item_count"] = count
 			return JsonResponse({"count": count})
 		else:
@@ -54,6 +53,7 @@ class CartView(SingleObjectMixin, View):
 	def get(self, request, *args, **kwargs):
 		cart = self.get_object()
 		item_id = request.GET.get("item")
+		print item_id
 		delete_item = request.GET.get("delete", False)
 		flash_message = ""
 		item_added = False

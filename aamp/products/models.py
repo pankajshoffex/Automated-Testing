@@ -158,8 +158,6 @@ class Category(models.Model):
 	def get_absolute_url(self):
 		return reverse("categories:category_detail", kwargs={"slug": self.slug})
 
-
-
 class ProductColor(models.Model):
 	title = models.CharField(max_length=120)
 	active = models.BooleanField(default=True, blank=True)

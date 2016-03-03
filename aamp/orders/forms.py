@@ -3,7 +3,7 @@ from django import forms
 from .models import UserAddress
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from account.models import SignUp
+from useraccount.models import SignUp
 
 
 

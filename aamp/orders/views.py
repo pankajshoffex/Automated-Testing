@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from .forms import AddressForm, UserAddressForm
 from .mixins import CartOrderMixin, LoginRequiredMixin
 from .models import UserAddress, Order
-from account.models import SignUp
+from useraccount.models import SignUp
 from easy_pdf.views import PDFTemplateView, PDFTemplateResponseMixin
 import easy_pdf
 

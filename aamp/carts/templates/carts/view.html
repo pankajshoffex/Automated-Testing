@@ -60,11 +60,13 @@
 <table class="table">
 {% for item in object.cartitem_set.all %}
 
-<tr id="item-{{ item.item.id }}">
+<tr id="item-{{ item.item.id }}" class="success">
+<td rowspan="2"><img src="{{ item.item.product.get_image_url }}" style="width:76px;height:76px;"/></td>
+<td colspan="3">{{ item.item.get_title }}</td>
+</tr>
+<tr class="success">
 
-<td>{{ item.item.get_title }}</td>
-
-<td><form action="." method="GET"><input type="hidden" name="item" value="{{ item.item.id }}" /><input type="number" class="item-qty" name="qty" min="1" value="{{ item.quantity }}" /><input type="submit" class="btn-update btn btn-link" value="Update item" style="display:none;"></form></td>
+<td><form action="." method="GET"><input type="hidden" name="item" value="{{ item.item.id }}" />Qty:<input type="number" class="item-qty" name="qty" min="1" value="{{ item.quantity }}" style="width:50px;" /><input type="submit" class="btn-update btn btn-link" value="Update item" style="display:none;"></form></td>
 <td id="item-line-total-{{ item.item.id }}">{{ item.line_item_total }}</td>
 <td class="text-right"><a href="{{ item.remove }}"><i class="fa fa-times"></i></a>
 </td>
@@ -72,17 +74,17 @@
 </tr>
 
 {% endfor %}
-<tr>
+<tr class="info">
 <td colspan="4" class="text-right">Subtotal: <span id="subtotal">{{ object.subtotal }}</span></td>
 </tr>
-<tr>
+<tr class="info">
 <td colspan="4" class="text-right">Total Tax (Estimated): <span id="taxtotal">{{ object.tax_total }}</span></td>
 </tr>
-<tr>
+<tr class="info">
 <td colspan="4" class="text-right">Total: <span id="carttotal">{{ object.total }}</span></td>
 </tr>
 
-<tr>
+<tr class="info">
 <td colspan="4" class="text-right"><a class="btn btn-warning" href="{% url 'checkout' %}">Checkout</a></td>
 </tr>
 

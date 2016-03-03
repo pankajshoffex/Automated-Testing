@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from account.views import index
+from useraccount.views import index
 
 from products.views import demo
 
@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^$', index, name="home"),
     url(r'^demo/$', demo, name="demo"),
     url(r'^admin/', admin.site.urls),
-    url(r'^accounts/', include('account.urls', namespace="account")),
+    url(r'^accounts/', include('useraccount.urls', namespace="account")),
     url(r'^products/', include('products.urls', namespace="products")),
     url(r'^ui/', include('UI.urls', namespace="ui")),
     url(r'^categories/', include('products.urls_categories', namespace="categories")),
@@ -46,7 +46,10 @@ urlpatterns = [
     url(r'^checkout/address/$', AddressSelectFormView.as_view(), name="order_address"),
     url(r'^checkout/address/add/$', UserAddressCreateView.as_view(), name="user_address_create"),
     url(r'^checkout/final/$', CheckoutFinalView.as_view(), name="checkout_final"),
-    url(r'^invoice/(?P<pk>\d+)/$', InvoicePDFView.as_view(), name='invoice')
+    url(r'^invoice/(?P<pk>\d+)/$', InvoicePDFView.as_view(), name='invoice'),
+
+    url(r'^social_accounts/', include('allauth.urls')),
+
 ]
 
 if settings.DEBUG:

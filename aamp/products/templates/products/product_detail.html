@@ -159,7 +159,7 @@ $("#submit-btn").click(function(event){
 
 <div class="row">
 
-	<div class="col-sm-5" style="max-width: 500px;">
+	<div class="col-sm-5 hidden-xs hidden-sm">
 		<span class="pro-image zoom" id='ex1'>
 		{% if object.get_image_url %}
 
@@ -168,6 +168,22 @@ $("#submit-btn").click(function(event){
 		</div>
 		{% endif %}
 		</span>
+		
+		<div class="clearfix" align="center">
+        {% for img in object.productimage_set.all %}
+            <div class="image-thumb">
+            	<img  src="{{ img.image.url }}" alt="image thumbnail" class="thumb" width="76" height="76">
+            </div>
+        {% endfor %}
+		</div>
+	</div>
+	<div class="col-sm-5 hidden-lg ">
+		{% if object.get_image_url %}
+
+		<div class="pro-image"><!-- display: table-cell;vertical-align: middle; -->
+			<img src="{{ object.get_image_url }}" class="img-responsive" alt='Daisy'/>
+		</div>
+		{% endif %}
 		
 		<div class="clearfix" align="center">
         {% for img in object.productimage_set.all %}
@@ -203,30 +219,34 @@ $("#submit-btn").click(function(event){
 		<option name="item" data-sale-price="{{ vari_obj.sale_price }}" data-price="{{ vari_obj.price }}" value="{{ vari_obj.id }}">{{ vari_obj }}</option>
 		{% endfor %}
 		</select>
-		{% elif object.shoessizes.count > 0 %}
+		{% else %}
+		<h4 id="price">{% if object.variation_set.first.sale_price %}
+			Rs. {{ object.variation_set.first.sale_price }}
+			<small class='og-price'>Rs. {{ object.variation_set.first.price }}</small>
+			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">
+			{% else %}
+			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">
+
+			Rs. {{ object.variation_set.first.price }}
+			{% endif %}
+		</h4>
+		{% endif %}
+		{% if object.shoessizes.count > 0 %}
 		<h4>Select Size:</h4>
 		<select class="form-control">
 			{% for shoessize in object.shoessizes.all %}
 				<option value="{{ shoessize.id }}">{{ shoessize.title }}</option>
 			{% endfor %}
 		</select>
-
-		{% elif object.shirtsizes.count > 0 %}
+		{% endif %}
+		{% if object.shirtsizes.count > 0 %}
 		<h4>Select Size:</h4>
 		<select class="form-control">
 			{% for shirtsize in object.shirtsizes.all %}
 				<option value="{{ shirtsize.id }}">{{ shirtsize.title }}</option>
 			{% endfor %}
 		</select>
-		{% else %}
-		<h4 id="price">{% if object.variation_set.first.sale_price %}
-			Rs. {{ object.variation_set.first.sale_price }}
-			<small class='og-price'>Rs. {{ object.variation_set.first.price }}</small>
-			{% else %}
-			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">
-			Rs. {{ object.variation_set.first.price }}
-			{% endif %}
-		</h4>
+		
 		{% endif %}
 
 		<input class="form-control" type="number" name="qty" min="1" value="1" />
