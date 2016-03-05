@@ -1,26 +1,21 @@
+{% load mptt_tags %}
+{% load logo_tags %}
+
+{% set_node as nodes %}
 <div class="container">
 	<div class="row">
 		<div id='cssmenu'>
 		<ul>
-		   <li><a href='#'>Home</a></li>
-		   <li class='active'><a href='#'>Products</a>
-		      <ul>
-		         <li><a href='#'>Product 1</a>
-		            <ul>
-		               <li><a href='#'>Sub Product</a></li>
-		               <li><a href='#'>Sub Product</a></li>
-		            </ul>
-		         </li>
-		         <li><a href='#'>Product 2</a>
-		            <ul>
-		               <li><a href='#'>Sub Product</a></li>
-		               <li><a href='#'>Sub Product</a></li>
-		            </ul>
-		         </li>
-		      </ul>
+			{% recursetree nodes %}
+		   <li><a href='#'>{{ node.name }}</a>
+		   		{% if not node.is_leaf_node %}
+		   		<ul>
+		        	{{ children }}
+			    </ul>
+			    {% endif %}
 		   </li>
-		   <li><a href='#'>About</a></li>
-		   <li><a href='#'>Contact</a></li>
+
+		    {% endrecursetree %}
 		</ul>
 		</div>
 

@@ -1,79 +1,197 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% block style1 %}
-{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
-{% endblock style1 %}
+
+<style>
+{% block style %}
+.ok {
+	color: green;
+	display: none;
+}
+.remove{
+	color: red;
+	display: none;
+}
+{% endblock style %}
+</style>
+
+<script>
+{% block jquery %}
+$("#mobile").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        $("#mobile_error").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+ });
+$("#username").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        $("#username-error").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+ });
+$('#signup_next').click(function(){
+
+	$.ajax({
+		type: "get",
+		url: "{% url 'account:signup_mobile' %}",
+		data:{
+			'mobile': $('#mobile').val(),
+		},
+		success:function(data){
+			if (data.data == "yes"){
+				$('#mobile_no').val($('#mobile').val());
+				$('#xyz').hide();
+				$('#abc').show();
+			}
+			if (data.data == "no" && data.count == "yes"){
+				$('#mobile_error').html("This mobile no already registered. please login..")
+			}
+		},
+		error:function(response, error){
+			console.log(error);
+		}
+	});
+});
+{% if request.session.mobile %}
+$('#xyz').hide();
+$('#abc').show();
+{% else %}
+$('#abc').hide();
+{% endif %}
+
+$("#otp").change(function(){
+	$.ajax({
+		type: "GET",
+		url: "{% url 'account:signup' %}",
+		data: {
+			'data': $("#otp").val(),
+		},
+		success: function(data){
+
+			if (data.token == "yes")
+			{
+				$(".ok").css('display', 'inline-block');
+				$(".remove").css('display', 'none');
+			}
+			else
+			{
+				$(".ok").css('display', 'none');
+				$(".remove").css('display', 'inline-block');
+			}
+			console.log(data.token);
+		},
+		error: function(response, error){
+			console.log(response);
+			console.log(error);
+		},
+
+	});
+});
+var password = document.getElementById("sign_password")
+var confirm_password = document.getElementById("sign_c_password");
+
+function validatePassword(){
+  if(password.value != confirm_password.value) {
+    confirm_password.setCustomValidity("Passwords Don't Match");
+  } else {
+    confirm_password.setCustomValidity('');
+  }
+}
+
+password.onchange = validatePassword;
+confirm_password.onkeyup = validatePassword;
+{% endblock jquery %}
+</script>
+
 {% block content %}
-<div class="container">
-    
-
-    <div class="omb_login">
-    	<h3 class="omb_authTitle">Login or <a href="{% url 'account:signup' %}{% if next %}?next='{{ next }}{% endif %}'">Sign up</a></h3> 
-		<div class="row omb_row-sm-offset-3 omb_socialButtons">
-    	    <div class="col-xs-4 col-sm-2">
-    	    	{% load socialaccount %}
-		        <a href='{% provider_login_url "facebook" method="oauth2" %}' class="btn btn-lg btn-block omb_btn-facebook">
-			        <i class="fa fa-facebook visible-xs"></i>
-			        <span class="hidden-xs">Facebook</span>
-		        </a>
-	        </div>
-        	<div class="col-xs-4 col-sm-2">
-		        <a href="#" class="btn btn-lg btn-block omb_btn-twitter">
-			        <i class="fa fa-twitter visible-xs"></i>
-			        <span class="hidden-xs">Twitter</span>
-		        </a>
-	        </div>	
-        	<div class="col-xs-4 col-sm-2">
-		        <a href="#" class="btn btn-lg btn-block omb_btn-google">
-			        <i class="fa fa-google-plus visible-xs"></i>
-			        <span class="hidden-xs">Google+</span>
-		        </a>
-	        </div>	
-		</div>
-
-		<div class="row omb_row-sm-offset-3 omb_loginOr">
-			<div class="col-xs-12 col-sm-6">
-				<hr class="omb_hrOr">
-				<span class="omb_spanOr">or</span>
-			</div>
-		</div>
-		<div class="row omb_row-sm-offset-3">
-			<div class="col-xs-12 col-sm-6">	
-			    <form class="omb_loginForm" action="{% url 'account:login_user' %}?next={{ next }}" autocomplete="off" method="POST">{% csrf_token %}
-			    <input type="hidden" name="next" value="{{ next }}" />
-					<div class="input-group">
+	<div class="row" style="margin-top: 20px;">
+		<div class="col-sm-6">
+			<div class="panel panel-primary">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">SIGNUP</h3>
+			  </div>
+			  <div class="panel-body">
+			  	<div id="xyz">
+				    <div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-user"></i></span>
-						<input type="text" maxlength="10" class="form-control" name="username" placeholder="Mobile No">
+						<input type="text" maxlength="10" class="form-control" id="mobile" name="mobile" placeholder="Mobile No" required>
 					</div>
 					<span class="help-block"></span>
+					<span id="mobile_error" style="color: red;"></span>
+
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="signup_next">Next</button>
+				</div>
+				<div id="abc">
+					<form method="POST" action="{% url 'account:signup' %}">{% csrf_token %}
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="text" maxlength="10" class="form-control" id="mobile_no" name="mobile_no" placeholder="Mobile No" value="{{ request.session.mobile }}" required>
+						</div>
+						<input type="hidden" name="next" value="{{ next }}" />
+						<span class="help-block"></span>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="text" maxlength="10" class="form-control" id="otp" name="otp" placeholder="Enter Otp send on your Mobile" required>
+							<span class="glyphicon glyphicon-ok ok" aria-hidden=true></span>
+	    					<span class="glyphicon glyphicon-remove remove" aria-hidden=true></span>
+						</div>
+						<span class="help-block"></span>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="password" maxlength="10" class="form-control" id="sign_password" name="sign_password" placeholder="Password" required>
+						</div>
+						<span class="help-block"></span>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="password" maxlength="10" class="form-control" id="sign_c_password" name="sign_c_password" placeholder="Confirm Password" required>
+						</div>
+						<span class="help-block"></span>
+						<button class="btn btn-lg btn-primary btn-block" type="submit">SIGNUP</button>
+					</form>
+				</div>
+			  </div>
+			  <div class="panel-footer">
+			  		{% load socialaccount %}
+			  		<a href='{% provider_login_url "facebook" method="oauth2" %}'>
+			        
+			        <i class="fa fa-facebook-square fa-3x"></i>
+
+		        	</a>
+		        	<a href="#" style="color: red;"><i class="fa fa-google-plus-square fa-3x"></i>
+					</a>
+			  </div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="panel panel-primary">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">LOGIN</h3>
+			  </div>
+			  <div class="panel-body">
+			   	<form action="{% url 'account:login_user' %}?next={{ next }}" autocomplete="off" method="POST">{% csrf_token %}
+			    	<input type="hidden" name="next" value="{{ next }}" />
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
+						<input type="text" maxlength="10" class="form-control" name="username" id="username" placeholder="Mobile No" required>
+					</div>
+					<span class="help-block"></span>
+					<span class="help-block" id="username-error" style="color: red;"></span>
 										
 					<div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-						<input  type="password" class="form-control" name="password" placeholder="Password">
+						<input  type="password" class="form-control" name="password" placeholder="Password" required>
 					</div>
                     <span class="help-block"></span>
 
 					<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 				</form>
+				<span class="help-block"></span>
+					<p><a href="#">Forgot Password ?</a></p>
+			  </div>
 			</div>
-    	</div>
-		<div class="row omb_row-sm-offset-3">
-			<div class="col-xs-12 col-sm-3">
-				<label class="checkbox">
-					<input type="checkbox" value="remember-me">Remember Me
-				</label>
-			</div>
-			<div class="col-xs-12 col-sm-3">
-				<p class="omb_forgotPwd">
-					<a href="#">Forgot password?</a>
-				</p>
-			</div>
-		</div>	    	
+		</div>
 	</div>
-
-
-
-        </div>
-
 {% endblock content %}

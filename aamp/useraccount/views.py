@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 from products.models import Product
-from .forms import SignUpForm, MobileNoForm
 import urllib2
 import urllib
 import base64
@@ -79,27 +78,33 @@ def sendSMS(uname, hashCode, numbers, sender, message):
     return(fr)
 
 def signup_mobile(request):
-	if request.method == 'POST':
-		form = MobileNoForm(request.POST)
-		if form.is_valid():
-			mobile = form.cleaned_data["mobile"]
-			data = SignUp.objects.filter(mobile_no=mobile).count()
-			if data > 0:
-				messages.error(request, 'This Mobile No is already exist.')
-				return HttpResponseRedirect(reverse('account:signup_mobile'))
+	if request.is_ajax():
+		data = ""
+		cnt = ""
+		mobile = request.GET.get('mobile')
+		if mobile:
+			cnt = SignUp.objects.filter(mobile_no=mobile).count()
+			if cnt > 0:
+				cnt = "yes"
+				data = "no"
 			else:
 				request.session['mobile'] = mobile
 				token = get_token()
+				print token
 				msg_token = str(token)
 				request.session['var'] = msg_token
 				# sendSMS('sotari.biz@gmail.com', 'da1e1331d30c4dcff5a4780b52fa9fb327764bb1', mobile,'TXTLCL', msg_token)
-			return HttpResponseRedirect("/accounts/signup/")
-	else:
-		form = MobileNoForm()
-	return render(request, "account/mobile_no.html", {'form': form})
+				data = "yes"
+				cnt = "no"
+		else:
+			data = "no"
+
+		return JsonResponse({'data': data, 'count': cnt})
+		
+	# return render(request, "account/mobile_no.html", {'form': form})
 
 def signup(request):
-	print request.session.get('next_url')
+	print request.POST.get('next')
 	if request.is_ajax():
 		data = ""
 		token = request.GET.get('data')
@@ -111,33 +116,25 @@ def signup(request):
 		return JsonResponse({'token': data})
 
 	if request.method == 'POST':
-		form = SignUpForm(request, request.POST)
-		if form.is_valid():
-			form.save()
-			username = form.cleaned_data['mobile_no']
-			password = form.cleaned_data['password1']
-			user = authenticate(username=username, password=password)
+		mobile = request.POST.get('mobile_no')
+		password = request.POST.get('sign_password')
+		new_user = User.objects.create_user(username=mobile)
+		new_user.set_password(password)
+		new_user.save()
+		if new_user:
+			data = SignUp(user=new_user)
+			data.mobile_no = mobile
+			data.save()	
+			user = authenticate(username=mobile, password=password)
 			if user is not None:
 				if user.is_active:
 					login(request, user)
-					print request.session.get('next_url')
-					if request.session.get('next_url') is not None or request.session.get('next_url') != 'None':
-						return HttpResponseRedirect("/checkout/")
+					if request.POST.get('next') is not None and request.POST.get('next') != 'None':
+						return HttpResponseRedirect(request.POST.get('next'))
 					else:
 						return HttpResponseRedirect("/")
-	else:
-		form = SignUpForm(request)
+	return HttpResponseRedirect("account:login")
 
-	mobile = request.session.get('mobile')
-	print request.session.get('var')
-	if not request.session.get('var'):
-		if request.GET.get('next') is not None:
-			url = "account:signup_mobile"
-			request.session['next_url'] = request.GET.get('next')
-		else:
-			url = "account:signup_mobile"
-		return HttpResponseRedirect(reverse(url))
-	return render(request, 'account/signup.html', {'form': form, 'mobile': mobile})
 
 @login_required(login_url='/accounts/login/')
 def user_account(request):

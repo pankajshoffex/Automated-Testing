@@ -3,6 +3,7 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from django.utils.safestring import mark_safe
 # Register your models here.
+from mptt.admin import DraggableMPTTAdmin
 from .models import (
         Product, 
         Variation, 
@@ -53,7 +54,7 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
             'fields': (('title', 'active'),),
         }),
         ('Product Price', {
-            'fields': ('price',),
+            'fields': (('price', 'sale_price'),),
         }),
         ('Product Description', {
             'classes': ('collapse',),
@@ -69,7 +70,11 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         }),
         ('Association', {
             'classes': ('collapse',),
-            'fields': (('categories', 'default'), ),
+            'fields': ('categories',),
+        }),
+        ('Search Engine Optimization', {
+            'classes': ('collapse',),
+            'fields': (('meta_keywords', 'meta_description'), ),
         }),
     )
     resource_class = ProductResource
@@ -87,8 +92,17 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductColor)
 # admin.site.register(ProductImage)
-admin.site.register(Category)
 admin.site.register(ShoesSize)
 admin.site.register(ShirtSize)
 admin.site.register(ProductImage)
+admin.site.register(Category, 
+    DraggableMPTTAdmin,
+    list_display=(
+        'tree_actions',
+        'indented_title',
+        # ...more fields if you feel like it...
+    ),
+    list_display_links=(
+        'indented_title',
+    ),)
 

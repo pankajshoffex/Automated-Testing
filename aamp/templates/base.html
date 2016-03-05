@@ -1,74 +1,32 @@
 {% load staticfiles %}
 
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
 		<meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-	    <link rel="shortcut icon" type="image/png" href="#"/>
-		<title>{% block head_title %}Shoffex Online Shopping Website{% endblock head_title %}</title>
+	    <title>{% block head_title %}Shoffex Online Shopping Website{% endblock head_title %}</title>
+	    <meta name="keywords" content="{% block meta_keyword %} {% endblock meta_keyword %}" />
+	    <meta name="description" content="{% block meta_description %} {% endblock meta_description %}"/>
+	    <link rel="shortcut icon" type="image/x-icon" href="#"/>
 
 		{% include "head_css.html" %}
 		{% block style1 %} {% endblock style1 %}
 		<style>
 			{% block style %}{% endblock style %}
+			.dropdown-menu{
+				margin-left: -135px;
+				width:200px;
+			}
 		</style>
 	</head>
 <body>
-	<div style="background-color: #027cd5;width: 100%; height:auto;">
 		{% include "navbar.html" %}
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-3 text-center">
-					{% load logo_tags %}
-					{% set_logo as logo %}
-					
-					<div class="navbar-collapse collapse">
-						<div><a href="/"><img src="{{ logo }}"></a></div>
-					</div>
-
-					<div class="navbar-toggle collapsed" style="margin-top:13px;">
-					<form role="search" method="GET" action='{% url "products:product_list" %}'>
-			            <div class="input-group"> 
-			              	<input type="text" class="form-control" placeholder="Search" name="q">
-				            <span class="input-group-btn">
-				            <button type="submit" class="btn btn-warning" style="color: #565656;">SEARCH</button>
-				            </span>
-			            </div>
-			        </form>
-			        </div>
-				</div>
-				<div class="col-sm-6">
-					<div class="navbar-collapse collapse" style="margin-top:7px;">
-					<form role="search" method="GET" action='{% url "products:product_list" %}'>
-			            <div class="input-group"> 
-			              	<input type="text" class="form-control" placeholder="Search" name="q">
-				            <span class="input-group-btn">
-				            <button type="submit" class="btn btn-warning" style="color: #565656;">SEARCH</button>
-				            </span>
-			            </div>
-			        </form>
-			        </div>
-				</div>
-				<div class="col-sm-3 text-center">
-					<div class="navbar-collapse collapse">
-						<div class="btn" style="margin-top: 3px;background-color: #006cb4;">
-						<a class="fa-navbar-cart" href='{% url "cart" %}'>
-							<i class="fa fa-shopping-cart fa-navbar-cart" style="color: white; font-size: 24px;"></i> <span id="cart-count-badge" class="badge">{{ request.session.cart_item_count }}</span>
-						</a>
-						</div>
-					</div>
-				
-				</div>
-			</div>
-			
-		</div>
 		<div style="background-color: #006cb4;width: 100%;">
 		{% include "category_menu.html" %}
 		</div>
-	</div>	
 		{% if messages %}
 		  <div class="container">
 		      {% for message in messages %}		      	
@@ -80,11 +38,13 @@
 		   
 		  </div>
 		{% endif %}
+		
+		{% if slider and himage %}
 		<div class="hidden-xs" style="margin-top: 20px;">
-		{% if slider %}
 		{% include "bootstrap_slider.html" %}
-		{% endif %}
 		</div>
+		{% endif %}
+		
 
 		<div class="container" style="padding-bottom: 100px;">
 		{% block content %}{% endblock content %}

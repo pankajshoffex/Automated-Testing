@@ -1,8 +1,7 @@
 from django.conf.urls import include, url
 
-from .views import CategoryListView, CategoryDetailView
+from .views import show_demo
 
 urlpatterns = [
-	url(r'^$', CategoryListView.as_view(), name="categories"),
-	url(r'^(?P<slug>[\w-]+)$', CategoryDetailView.as_view(), name="category_detail"),
+	url(r'^xyz/$', show_demo, name="xyz"),
 ]

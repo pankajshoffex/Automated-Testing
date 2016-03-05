@@ -14,6 +14,12 @@ from .models import Product, Variation, Category
 import random
 
 
+
+
+def show_demo(request):
+    return render(request, "demo.html", {'nodes':Category.objects.all()})
+
+
 def demo(request):
 	return render(request, "demo.html", {})
 
@@ -23,25 +29,6 @@ class ProductColorView(View):
 			color = request.GET.get('data')
 			request.session['color'] = color
 			return JsonResponse({"color":color})
-
-class CategoryListView(ListView):
-	model = Category
-	queryset = Category.objects.all()
-	template_name = "products/product_list.html"
-
-
-class CategoryDetailView(DetailView):
-	model = Category
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(CategoryDetailView, self).get_context_data(*args, **kwargs)
-		obj = self.get_object()
-		product_set = obj.product_set.all()
-		default_products = obj.default_category.all()
-		products = ( product_set | default_products ).distinct()
-		context["products"]	= products
-		return context
-
 
 class VariationListView(StaffRequiredMixin, ListView):
 	model = Variation

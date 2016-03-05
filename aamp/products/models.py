@@ -8,6 +8,7 @@ from django.utils.text import slugify
 
 
 # Create your models here.
+from mptt.models import MPTTModel, TreeForeignKey, TreeManyToManyField
 
 
 class ProductQuerySet(models.query.QuerySet):
@@ -24,22 +25,24 @@ class ProductManager(models.Manager):
 
 	def get_related(self, instance):
 		products_one = self.get_queryset().filter(categories__in=instance.categories.all())
-		products_two = self.get_queryset().filter(default=instance.default)
-		qs = (products_one | products_two).exclude(id=instance.id).distinct()
+		qs = (products_one).exclude(id=instance.id).distinct()
 		return qs
 
 
 class Product(models.Model):
 	title = models.CharField(max_length=120)
+	slug = models.SlugField(max_length=120, blank=True)
 	short_description = models.TextField(blank=True, null=True)
 	long_description = models.TextField(blank=True, null=True)
 	price = models.DecimalField(decimal_places=2, max_digits=20)
-	categories = models.ManyToManyField('Category')
+	sale_price = models.DecimalField(decimal_places=2, max_digits=20, null=True, blank=True)
+	categories = TreeManyToManyField('Category')
 	color = models.ManyToManyField('ProductColor', blank=True)
 	shoessizes = models.ManyToManyField('ShoesSize', blank=True)
 	shirtsizes = models.ManyToManyField('ShirtSize', blank=True)
-	default = models.ForeignKey('Category', related_name='default_category', null=True, blank=True)
 	active = models.BooleanField(default=True)
+	meta_keywords = models.CharField(max_length=250, blank=True, help_text="Maximum keywords should be 10 and seperate by comma")
+	meta_description = models.CharField(max_length=160, blank=True, help_text="Description should be within 160 characters.")
 
 	objects = ProductManager()
 
@@ -50,13 +53,18 @@ class Product(models.Model):
 		return self.title
 
 	def get_absolute_url(self):
-		return reverse("products:product_detail", kwargs={"pk": self.pk})
+		return reverse("products:product_detail", kwargs={"slug": self.slug})
 
 	def get_image_url(self): 
 		img = self.productimage_set.first()
 		if img:
 			return img.image.url
 		return img # None
+
+	def save(self, *args, **kwargs):
+		slug = slugify(self.title)
+		self.slug = "%s-%s" %(slug, self.pk)
+		super(Product, self).save(*args, **kwargs)
 
 	def admin_thumbnail(self):
 		img = self.productimage_set.first()
@@ -115,6 +123,7 @@ def product_post_saved_receiver(sender, instance, created, *args, **kwargs):
 		new_var.product = product
 		new_var.title = "Default"
 		new_var.price = product.price
+		new_var.sale_price = product.sale_price
 		new_var.save()
 
 
@@ -145,18 +154,16 @@ class ProductImage(models.Model):
 		return self.product.admin_thumbnail()
 
 
-class Category(models.Model):
-	title = models.CharField(max_length=120, unique=True)
-	slug = models.SlugField(unique=True)
-	description = models.TextField(null=True, blank=True)
-	active = models.BooleanField(default=True)
-	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+class Category(MPTTModel):
+    name = models.CharField(max_length=50, unique=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
-	def __unicode__(self):
-		return self.title
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
-	def get_absolute_url(self):
-		return reverse("categories:category_detail", kwargs={"slug": self.slug})
+    def __unicode__(self):
+    	return self.name	
+
 
 class ProductColor(models.Model):
 	title = models.CharField(max_length=120)

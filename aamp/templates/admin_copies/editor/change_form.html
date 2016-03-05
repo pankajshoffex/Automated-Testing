@@ -53,12 +53,12 @@ float: none;
 {# ... add more here... #}
 {% endblock %}
 {% block after_related_objects %}
-<p>
+<!-- <p>
 Editor is <span id="loaded-status"></span>. Testing:
 </p>
 <ul>
 <li><a href="javascript:toggleEditor();">enable/disable editor</a></li>
-</ul>
+</ul> -->
 <script type="text/javascript">
 document.getElementById('loaded-status').innerHTML = django_wysiwyg.is_loaded() ? 'loaded': 'not loaded!!';
 function toggleEditor() {

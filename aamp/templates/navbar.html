@@ -1,118 +1,74 @@
 {% load staticfiles %}
-<style>
-  .navbar-default {
-    background-image: linear-gradient(to bottom, #006cb4 0px, #006cb4 100%);
-    border-radius: 0px;
-  }
-  .navbar {
-    min-height: 20px;
-    margin-bottom: 0px;
-    border: none;
-}
-.navbar-nav > li > a {
-    padding-top: 0px;
-    padding-bottom: 1px;
-    text-align: right;
-    }
-.navbar-default .navbar-nav > li > a {
-    color: #FFF;
-}
-.navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
-    color: #EFA82E;
-    background-color: transparent;
-    text-decoration: underline;
-}
-.navbar-toggle {
-    position: relative;
-    float: right;
-    padding: 5px 11px;
-    margin-top: 2px;
-    margin-right: 8px;
-    margin-bottom: 8px;
-    background-color: transparent;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
-}
-.badge_mobile {
-    display: inline-block;
-    min-width: 10px;
-    padding: 3px 7px;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1;
-    color: #fff;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    background-color: #777;
-    border-radius: 10px;
-    position: absolute;
-    margin-left: 5px;
-    margin-top: -2px;
-}
-</style>
-<!-- Fixed navbar -->
-<nav class="navbar navbar-default navbar-fixed-top"  >
-  <div class="container">
-      <div>
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="fa-navbar-cart navbar-toggle collapsed" href='{% url "cart" %}'>
-            <div style="background-color: #006cb4;width:40px; height: 14px;">
-              <i class="fa fa-shopping-cart fa-navbar-cart" style="color: white; font-size: 14px;margin-top: -12px;"></i> <span id="cart-count-badge1" class="badge_mobile">{{ request.session.cart_item_count }}</span>
-            </div>
-        </a>
-        <a href="/">
-        <div class="navbar-toggle collapsed" style="border:none;width:100px;height: auto;margin-top:0px;position: absolute;color:orange;font-size: large;">
-             <b>SHOFFEX</b>
+<nav class="nav navbar-fixed-top" style="max-height: 50px; background-color: rgb(2, 124, 213); height: 50px;">
+    <div class="container">
+      <div class="row" style="padding-top: 5px;">
+        <div class="col-sm-3 text-center col-xs-6">
+            {% load logo_tags %}
+            {% set_logo as logo %}
+            {% if logo %}
+              <div style="text-align: -moz-center;padding-top: 3px;">
+                <a href="/"><img src="{{ logo }}" class="img-responsive" style="max-height: 38px;"></a>
+              </div>
+            {% else %}
+              <div>
+                <a href="/" style="text-decoration: none;color: white;"><span><h2>SHOFFEX</h2></span></a>
+              </div>
+            {% endif %}
         </div>
-        </a>
-    </div>
-      </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-        </li>
-      {% if user and not user.is_anonymous %}
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="{% url 'account:user_account' %}">Account</a></li>
-            <li><a href="{% url 'orders' %}">Orders</a></li>
-            <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></li>
-          </ul>
-        </li>
+        <div class="col-sm-6 hidden-xs">
+          <div style="padding-top: 3px;">
+            <form role="search" method="GET" action='{% url "products:product_list" %}'>
+                <div class="input-group"> 
+                    <input type="text" class="form-control" placeholder="Search" name="q">
+                  <span class="input-group-btn">
+                  <button type="submit" class="btn btn-warning" style="color: #565656;">SEARCH</button>
+                  </span>
+                </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-sm-3 text-center col-xs-6">
+          <div class="row">
+            <div class="btn" style="background-color: #006cb4;">
+              <a class="fa-navbar-cart" href='{% url "cart" %}'>
+                <i class="fa fa-shopping-cart fa-navbar-cart" style="color: white; font-size: 24px;"></i> 
+                <span id="cart-count-badge" class="badge">{{ request.session.cart_item_count }}</span>
+              </a>
+            </div>
 
-      {% else %}
-      <li><a href="{% url 'account:signup_mobile' %}">Signup</a></li>
-      {% if not "/accounts/login" in request.get_full_path %}
-       <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Login<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">              
-                  <form class='navbar-form' method='POST' action='{% url "account:login_user" %}?next={{ request.path }}'>{% csrf_token %}
-                    {% if next %}
-                    <input type="hidden" name="next" value="{{ next }}" />
-                    {% endif %}
-                    <div class='form-group' style="margin-bottom: 5px;">
-                        <input type='text' class='form-control' name='username' placeholder='Mobile or Email' /> 
-                    </div>
-                    <div class='form-group' style="margin-bottom: 5px;">
-                        <input type='password' class='form-control' name='password' placeholder='Password' />
-                    </div>
-                    <button type='submit' class='btn btn-default btn-block'>Login</button>
-                </form>
-                <p class="text-center"><a href="#">Forgot password</a>?</p>
+            <!-- Single button -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user" style="font-size: 24px;"></i><span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                {% if user and not user.is_anonymous %}
+                    <li><a href="{% url 'account:user_account' %}">Account</a></li>
+                    <li><a href="{% url 'orders' %}">Orders</a></li>
+                    <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'account:login_user' %}?next={{ request.path }}">SignUp or Login</a></li>
+                {% endif %}
+                <li role="separator" class="divider hidden-lg hidden-sm"></li>
+                <li class="hidden-lg hidden-sm">
+                  <form role="search" method="GET" action='{% url "products:product_list" %}'>
+                      <div class="input-group"> 
+                          <input type="text" class="form-control" placeholder="Search" name="q">
+                        <span class="input-group-btn">
+                        <!-- <button type="submit" class="btn btn-warning" style="color: #565656;">SEARCH</button> -->
+                        </span>
+                      </div>
+                  </form>
+                </li>
               </ul>
-            </li>
-       {% endif %}   
-      {% endif %}
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div>
+            </div>
+            <!--single button end-->
+          </div>
+        
+        </div>
+
+      </div>
+
+    </div>
+
 </nav>

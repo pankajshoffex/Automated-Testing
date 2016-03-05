@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+
+{% block head_title %}{{ object.title }}{% endblock head_title %}
+{% block meta_keyword %}{{ object.meta_keywords }} {% endblock meta_keyword %}
+{% block meta_description %} {{ object.meta_description }}  {% endblock meta_description %}
 <style>
 {% block style %}
 .pro-image{
@@ -70,6 +74,10 @@
 
 #ex2 img:hover { cursor: url({% static 'image/grab.cur' %}), default; }
 #ex2 img:active { cursor: url({% static 'image/grabbed.cur' %}), default; }
+
+div#rel:hover{
+	border:2px solid orange;
+}
 
 {% endblock style %}
 </style>
@@ -157,7 +165,7 @@ $("#submit-btn").click(function(event){
 
 {% block content %}
 
-<div class="row">
+<div class="row" style="margin-top: 30px;">
 
 	<div class="col-sm-5 hidden-xs hidden-sm">
 		<span class="pro-image zoom" id='ex1'>
@@ -211,6 +219,9 @@ $("#submit-btn").click(function(event){
   		</p>
 		{% if object.variation_set.count > 1 %}
 		<h4 id="price">Rs. {{ object.variation_set.first.price }}</h4>
+			{% if object.variation_select.first.sale_price %}
+				<br/><b>You Save </b>
+			{% endif %}
 		
 		<h4>Select Size:</h4>
 		
@@ -222,7 +233,9 @@ $("#submit-btn").click(function(event){
 		{% else %}
 		<h4 id="price">{% if object.variation_set.first.sale_price %}
 			Rs. {{ object.variation_set.first.sale_price }}
-			<small class='og-price'>Rs. {{ object.variation_set.first.price }}</small>
+			<small class='og-price'>Rs. {{ object.variation_set.first.price }}</small><br/>
+			{% load logo_tags %}
+			<h6 style="color: green;">You save {{ object.variation_set.first.price|sub:object.variation_set.first.sale_price }}</h6>
 			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">
 			{% else %}
 			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">
@@ -268,9 +281,10 @@ $("#submit-btn").click(function(event){
 		<br/>
 
 		<input id="submit-btn" type="submit" value="Add to Cart" class='btn btn-lg btn-warning btn-block'>
-		</form>
+		
 		<br/>
-		<a href="#" style="text-decoration:none;"><button class="btn btn-lg btn-success btn-block">Buy Now</button></a>
+		<a href="{% url 'cart' %}" style="text-decoration:none;"><button class="btn btn-lg btn-success btn-block">Buy Now</button></a>
+		</form>
 		<br/>
 		<hr/>
 	<h4>Share</h4><br/>
@@ -302,19 +316,55 @@ $("#submit-btn").click(function(event){
 		</div>
 	</div>
 </div>
-
-<div class="row">
-	<hr/>
+<br>
+<div class="row" style="border-top: 3px solid black;">
 	<div class="col-sm-12">
 		<h4>Related Products</h4>
-		<div class="row">
-		{% for product in related %}
-		<div class="col-xs-6">
-			{% include "products/product_thumbnail.html" with product=product price="True" %}
-		</div>
-		{% cycle '' '</div><div class="row">' %} 
-		{% endfor %}
 	</div>
 </div>
+	
+<div class="row">
+	{% for product in related %}
+	<a href="{{ product.get_absolute_url }}">
+		<div class="col-lg-2 col-sm-2" id="rel">
+		<img class="img-responsive" src="{{ product.get_image_url }}">
+		<!-- <div class="col-xs-6">
+			{% include "products/product_thumbnail.html" with product=product price="True" %}
+		</div>
+		{% cycle '' '</div><div class="row">' %} --> 
+		<h6 style="color:gray;">{{ product.title }}</h6>
+		<div style="background-color: #EAE7E7; height: 1px;"></div>
+		<img src="{% static 'image/estar.png' %}" width="15px">
+		<img src="{% static 'image/estar.png' %}" width="15px">
+		<img src="{% static 'image/estar.png' %}" width="15px">
+		<img src="{% static 'image/dstar.png' %}" width="15px">
+		<img src="{% static 'image/dstar.png' %}" width="15px">
+		<div style="background-color: #EAE7E7; height: 1px;"></div>
+		<h5 style="color:black;">Rs. {{ product.price }}</h5>
+		</div>
+
+	</a>
+	{% endfor %}
 </div>
+
+
+<div class="row" style="border-top:3px solid black;">
+	<h3>Rewiew of this product</h3>
+	<div class="col-lg-2">
+		<img src="{% static 'image/star.png' %}" style="height:200px;">
+	</div>
+	<div class="col-lg-6">
+		
+	</div>
+	<div class="col-lg-4" style="border-left: 1px dotted gray;">
+		<h4>Rate this Product</h4>
+		<h6>Your rating can help others..!</h6>
+		<img src="{% static 'image/dstar.png' %}" width="15px">
+		<img src="{% static 'image/dstar.png' %}" width="15px">
+		<img src="{% static 'image/dstar.png' %}" width="15px">
+		<img src="{% static 'image/dstar.png' %}" width="15px">
+		<img src="{% static 'image/dstar.png' %}" width="15px">
+	</div>
+</div>
+
 {% endblock content %}

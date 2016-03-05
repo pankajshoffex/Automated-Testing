@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', 
+    'django.contrib.sitemaps',
     'useraccount',
     'products',
     'django_wysiwyg',
@@ -53,6 +54,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
+    'mptt',
+    'geoposition',
+    'robots'
 ]
 
 
@@ -182,4 +186,6 @@ SOCIALACCOUNT_PROVIDERS = {
         'VERIFIED_EMAIL': False,
         }}
 
+
+ROBOTS_USE_HOST = True
 
