@@ -6,14 +6,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin, DetailView
 from django.views.generic.edit import FormMixin
+from decimal import Decimal
 
 # Create your views here.
 
 from orders.mixins import CartOrderMixin, LoginRequiredMixin
 from orders.models import  Order, UserAddress
 from products.models import Variation
-from .models import Cart, CartItem
+from .models import Cart, CartItem, Shipping, TaxInc
 from useraccount.models import SignUp
+from sms.models import SmsSetting, SmsHistory, SendSMS
 
 
 class ItemCountView(View):
@@ -39,7 +41,7 @@ class CartView(SingleObjectMixin, View):
 		cart_id = self.request.session.get("cart_id")
 		if cart_id == None:
 			cart = Cart()
-			cart.tax_percentage = 0.075
+			cart.tax_percentage = 0.07
 			cart.save()
 			cart_id = cart.id
 			self.request.session["cart_id"] = cart_id
@@ -50,10 +52,35 @@ class CartView(SingleObjectMixin, View):
 			cart.save()
 		return cart
 
+	def add_shipping(self, total):
+		cart = self.get_object()
+		ship = Shipping.objects.get()
+		print type(ship.to_val)
+		total = Decimal(total)
+		if ship.from_val < total and ship.to_val > total:
+			data = cart.cartitem_set.all()
+			product_shipping_list = []
+			for i in data:
+				if i.item.product.single_shipping:
+					product_shipping_list.append(i.item.product.single_shipping)
+			if product_shipping_list:
+				print "indivisual shipping"
+				shipping = min(product_shipping_list)
+				shipping_total = round(Decimal(total) + Decimal(shipping), 2)
+			else:
+				print "common shipping"
+				shipping = ship.ship_val
+				shipping_total = round(Decimal(total) + Decimal(shipping), 2)
+		else:
+			print "free shipping"
+			shipping = 0.00
+			shipping_total = total
+
+		return shipping, shipping_total
+
 	def get(self, request, *args, **kwargs):
 		cart = self.get_object()
 		item_id = request.GET.get("item")
-		print item_id
 		delete_item = request.GET.get("delete", False)
 		flash_message = ""
 		item_added = False
@@ -82,6 +109,11 @@ class CartView(SingleObjectMixin, View):
 				return HttpResponseRedirect(reverse("cart"))
 				#return cart_item.cart.get_absolute_url()
 
+		shipping_cost = None
+		shipping = None
+		shipping, shipping_cost = self.add_shipping(cart.total)
+		request.session['shipping'] = unicode(shipping)
+		request.session['shipping_cost'] = unicode(shipping_cost)
 		if request.is_ajax():
 			try:
 				total = cart_item.line_item_total
@@ -92,12 +124,13 @@ class CartView(SingleObjectMixin, View):
 				subtotal = cart_item.cart.subtotal
 			except:
 				subtotal = None
-
 			try:
 				cart_total = cart_item.cart.total
+				shipping, shipping_cost = self.add_shipping(cart_total)
+
 			except:
 				cart_total = None
-
+				shipping = None
 			try:
 				tax_total = cart_item.cart.tax_total
 			except:
@@ -113,15 +146,18 @@ class CartView(SingleObjectMixin, View):
 				"item_added": item_added,
 				"line_total": total,
 				"subtotal": subtotal,
-				"cart_total": cart_total,
+				"cart_total": shipping_cost,
 				"tax_total": tax_total,
 				"flash_message": flash_message,
 				"total_items": total_items,
+				"shipping": shipping,
 			}
 			return JsonResponse(data)
 
 		context = {
-			"object": self.get_object()
+			"object": self.get_object(),
+			"shipping": shipping,
+			"shipping_cost": shipping_cost,
 		}
 		template = self.template_name
 		return render(request, template, context)
@@ -154,7 +190,14 @@ class CheckoutView(LoginRequiredMixin, CartOrderMixin, DetailView):
 
 		if cart == None:
 			return redirect("cart")
+		if cart.cartitem_set.all().count() == 0:
+			return redirect("cart")
 		new_order = self.get_order()
+		if request.session.get('shipping') and request.session.get('shipping_cost'):
+			shipping = Decimal(request.session.get('shipping'))
+			order_total = Decimal(request.session.get('shipping_cost'))
+			new_order.shipping_total_price = shipping
+			new_order.save() 
 
 		if self.request.user.is_authenticated():
 			user_checkout = SignUp.objects.get(user=self.request.user)
@@ -171,14 +214,43 @@ class CheckoutView(LoginRequiredMixin, CartOrderMixin, DetailView):
 class CheckoutFinalView(CartOrderMixin, View):
 	def post(self, request, *args, **kwargs):
 		order = self.get_order()
-		if request.POST.get("payment_token") == "ABC":
+		if request.POST.get("payment_token") == "PAYU":
 			order.mark_completed()
+			order.payment_method("PAYU")
 			messages.success(request, "Thank you for your order.")
+			msg = "Your order id is %s was successfully created, payment type is %s, your total amount is %s , Have a nice day,Shoffex." % ( order.id,order.payment,order.order_total)
+			if self.request.user.is_authenticated():
+				#result = sendSMS(msg, self.request.user)
+				#if result:
+				SmsHistory.objects.create(
+					number=self.request.user,
+					recipient=self.request.user.get_full_name(),
+					sms_subject="Order Completed", 
+					sms_text=msg,
+					sms_type="Order Created"
+					)
 			del request.session["cart_id"]
 			del request.session["order_id"]
+		elif request.POST.get("payment_token") == "COD":
+			order.mark_completed()
+			order.payment_method("COD")
+			messages.success(request, "Thank you for your order.")
+			msg = "Your order id is %s was successfully created, payment type is %s, your total amount is %s , Have a nice day,Shoffex." % ( order.id,order.payment,order.order_total)
+			#result = sendSMS(msg, self.request.user)
+			#if result:
+			SmsHistory.objects.create(
+				number=self.request.user,
+				recipient=self.request.user.get_full_name(),
+				sms_subject="Order Completed", 
+				sms_text=msg,
+				sms_type="Order Created"
+				)
+			del request.session["cart_id"]
+			del request.session["order_id"]
+		else:
+			pass
+
 		return redirect("order_detail", pk=order.pk)
 
 	def get(self, request, *args, **kwargs):
 		return redirect("checkout")
-
-

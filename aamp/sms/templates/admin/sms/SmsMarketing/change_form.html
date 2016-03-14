@@ -1,0 +1,17 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block submit_buttons_bottom %}
+<div class="submit-row">
+	<form method='post' action=".">
+			{% csrf_token %}
+			<input type="Submit" value="Send Message" name="sendmessage" style="float:left" />
+	</form>
+	{% if context1 %}
+		{{ success }}
+	{% endif %}
+     
+</div>
+
+    {{ block.super }}
+{% endblock %}

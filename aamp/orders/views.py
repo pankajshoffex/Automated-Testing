@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, FormView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
@@ -13,6 +13,7 @@ from .models import UserAddress, Order
 from useraccount.models import SignUp
 from easy_pdf.views import PDFTemplateView, PDFTemplateResponseMixin
 import easy_pdf
+import datetime
 
 
 class InvoicePDFView(LoginRequiredMixin, PDFTemplateView):
@@ -33,24 +34,8 @@ class InvoicePDFView(LoginRequiredMixin, PDFTemplateView):
 
 		obj = Order.objects.get(pk=pk)
 		context['order'] = obj
+		context['now'] = datetime.datetime.now().date()
 		return context
-
-# def invoice(request, oid, **kwargs):
-# 	context = {}
-# 	try:
-# 		user_checkout = SignUp.objects.get(user=request.user)
-# 	except SignUp.DoesNotExist:
-# 		pass
-# 	except:
-# 		user_checkout = None
-# 	print oid
-# 	obj = Order.objects.get(user=user_checkout, id=oid)
-# 	context['order'] = obj
-# 	template = "orders/order_summary_short.html"
-# 	return easy_pdf.rendering.render_to_pdf(template, context, encoding=u'utf-8', **kwargs)
-
-
-
 
 class OrderDetail(LoginRequiredMixin, DetailView):
 	model = Order
@@ -96,34 +81,64 @@ class UserAddressCreateView(LoginRequiredMixin, CreateView):
 
 	def form_valid(self,form, *args, **kwargs):
 		form.instance.user = self.get_checkout_user()
-		user = User.objects.get(username=self.request.user.username)
-		user.first_name = form.cleaned_data["name"]
-		user.save()
-		self.request.session["diff"] = form.cleaned_data["different"]
-
-		if form.cleaned_data["type"] == "billing":
+		if form.cleaned_data["different"] == True:
 			form.instance.type = "billing"
-		elif form.cleaned_data["type"] == "shipping":
-			form.instance.type = "shipping"
-		else:
-			pass			
-
-		if self.request.session.get("diff") == True:
 			user_address = UserAddress(user=self.get_checkout_user())
 			user_address.type = "shipping"
+			user_address.full_name = form.cleaned_data['full_name']
 			user_address.street = form.cleaned_data['street']
 			user_address.postcode = form.cleaned_data['postcode']
+			user_address.mobile = form.cleaned_data['mobile']
 			user_address.save()
-		
+			super(UserAddressCreateView, self).form_valid(form, *args, **kwargs)
+			return redirect('checkout')
+		else:
+			form.instance.type = "billing"
+			super(UserAddressCreateView, self).form_valid(form, *args, **kwargs)
+			return redirect('user_shipping_address_create')
 
 		return super(UserAddressCreateView, self).form_valid(form, *args, **kwargs)
+
+class UserShippingAddressCreateView(LoginRequiredMixin, CreateView):
+	form_class = UserAddressForm
+	template_name = "orders/user_address_form.html"
+	success_url = "/checkout/address/"
+
+	def get_checkout_user(self):
+		user_checkout = SignUp.objects.get(user=self.request.user)
+		return user_checkout
+
+	def form_valid(self,form, *args, **kwargs):
+		form.instance.user = self.get_checkout_user()	
+		form.instance.type = "shipping"
+		super(UserShippingAddressCreateView, self).form_valid(form, *args, **kwargs)			
+		return redirect('checkout')
+
+class UserAddressUpdateView(LoginRequiredMixin, UpdateView):
+	model = UserAddress
+	fields = ["full_name", "street", "postcode", "mobile"]
+	template_name = "orders/user_address_update_form.html"
+	success_url = "/checkout/address/"
 
 class AddressSelectFormView(CartOrderMixin, FormView):
 	form_class = AddressForm
 	template_name = "orders/address_select.html"
 
+	def get_context_data(self, *args, **kwargs):
+		context = super(AddressSelectFormView, self).get_context_data(*args, **kwargs)
+		cart_id = self.request.session.get("cart_id")
+		if cart_id == None:
+			context['data'] = False
+		else:
+			context['data'] = True
+		return context
+		
+
 	def dispatch(self, *args, **kwargs):
-		b_address, s_address = self.get_addresses()
+		if self.request.user.is_authenticated():
+			b_address, s_address = self.get_addresses()
+		else:
+			return HttpResponseRedirect('/')
 
 		if b_address.count() == 0 :
 			messages.success(self.request, "Please add a billing address before continuing")

@@ -26,8 +26,8 @@
 		</tr>
 		<tr style="padding-top: 5px; border:none;">
 			<td style="background:white;">#12345</td>
-			<td style="background:white;">02/22/2016</td>
-			<td style="background:white;">02/22/2016</td>
+			<td style="background:white;">{{ now }}</td>
+			<td style="background:white;">{{ order.timestamp }}</td>
 		</tr>
 	</table>
 </div>
@@ -45,7 +45,7 @@
 		<tr style="padding-top: 5px; border:none;">
 			<td style="background:white;">{{ i.item.get_title }}</td>
 			<th style="background:white;">-</th>
-			<td style="background:white;">{{ i.item.get_html_price }}</td>
+			<td style="background:white;">{{ i.item.get_price }}</td>
 			<td style="background:white;">{{ i.quantity }}</td>
 			<td style="background:white;">{{ i.line_item_total }}</td>
 		</tr>
@@ -60,7 +60,7 @@
 				<table style="width:100%; border: solid 1px #000000; text-align: center; background-color: #d4d4d4;padding: 1px;">
 					<tr style="padding-top: 5px; border:none;">
 						<th>Payment Method</th>
-						<td style="background:white;">Cash on delivery(COD)</td>
+						<td style="background:white;">{{ order.payment }}</td>
 						<td style="background:white;">Rs {{ order.order_total }}</td>
 					</tr>
 				</table>
@@ -91,7 +91,6 @@
 		</tr>
 	</table>
 </div>
-
 <!-- <table class="table">
 <tr><td>{{ order.cart.cartitem_set.count }} Item(s): <br/><b>{% for i in order.cart.cartitem_set.all %}
 {{ i.item.get_title }}<br/> 
@@ -103,5 +102,16 @@
 <tr><td>Shipping: {{ order.shipping_total_price }}</td></tr>
 <tr><td style="font-size: 14px;">Order Total: <span>Rs.</span> {{ order.order_total }}</td></tr>
 </table> -->
+<script type="text/javascript">
+	<!--
+	function date_now(){
+	var currentTime = new Date()
+	var month = currentTime.getMonth() + 1
+	var day = currentTime.getDate()
+	var year = currentTime.getFullYear()
+	document.write(month + "/" + day + "/" + year);
+	//-->
+}
+</script>
 
 {% endblock content %}

@@ -19,51 +19,45 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from useraccount.views import index
 
-from aamp.sitemaps import ProductSitemap, CategorySitemap, StaticViewSitemap
 from django.contrib.sitemaps.views import sitemap
 from django.contrib.sitemaps import views
-
-from products.views import demo
 
 from carts.views import CartView, ItemCountView, CheckoutView, CheckoutFinalView
 from orders.views import (
                 AddressSelectFormView, 
-                UserAddressCreateView, 
+                UserAddressCreateView,
+                UserShippingAddressCreateView, 
                 OrderList, 
                 OrderDetail,
-                InvoicePDFView)
-
-sitemaps = {
-              'products' : ProductSitemap,
-              'categories': CategorySitemap,
-              'staticPages': StaticViewSitemap
-            }
+                InvoicePDFView,
+                UserAddressUpdateView
+                )
 
 
 urlpatterns = [
     url(r'^$', index, name="home"),
-    url(r'^demo/$', demo, name="demo"),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('useraccount.urls', namespace="account")),
     url(r'^products/', include('products.urls', namespace="products")),
     url(r'^ui/', include('UI.urls', namespace="ui")),
-    url(r'^categories/', include('products.urls_categories', namespace="categories")),
+
     url('', include('django.contrib.auth.urls', namespace='auth')),
+
     url(r'^orders/$', OrderList.as_view(), name="orders"),
     url(r'^orders/(?P<pk>\d+)/$', OrderDetail.as_view(), name="order_detail"),
+
     url(r'^cart/$', CartView.as_view(), name="cart"),
     url(r'^cart/count/$', ItemCountView.as_view(), name="item_count"),
     url(r'^checkout/$', CheckoutView.as_view(), name="checkout"),
     url(r'^checkout/address/$', AddressSelectFormView.as_view(), name="order_address"),
     url(r'^checkout/address/add/$', UserAddressCreateView.as_view(), name="user_address_create"),
+    url(r'^checkout/address/change/(?P<pk>\d+)/$', UserAddressUpdateView.as_view(), name="user_address_update"),
+    url(r'^checkout/shipping_address/add/$', UserShippingAddressCreateView.as_view(), name="user_shipping_address_create"),
     url(r'^checkout/final/$', CheckoutFinalView.as_view(), name="checkout_final"),
+    
     url(r'^invoice/(?P<pk>\d+)/$', InvoicePDFView.as_view(), name='invoice'),
 
     url(r'^social_accounts/', include('allauth.urls')),
-    ### SiteMap Indexing ########
-    url(r'^sitemap.xml/$', views.index, {'sitemaps': sitemaps}),
-    url(r'^sitemap-(?P<section>.+).xml/$', views.sitemap, {'sitemaps': sitemaps}),
-    url(r'^robots.txt/', include('robots.urls')),
 
 ]
 

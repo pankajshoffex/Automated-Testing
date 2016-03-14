@@ -143,6 +143,12 @@ $("#show_more").click(function(){
 $("#submit-btn").click(function(event){
     event.preventDefault();
     var formData = $("#add-form").serialize();
+    var qty = $("#pro-qty").val();
+    if (qty > {{ object.quantity }})
+    {
+    	alert(qty + " Product not available");
+    }
+    else{
     console.log(formData);
     $.ajax({
       type: "GET",
@@ -156,6 +162,7 @@ $("#submit-btn").click(function(event){
         $("#add-form").submit();
       }
     });
+	}
     //$("#add-form").submit();
 });
 
@@ -262,7 +269,7 @@ $("#submit-btn").click(function(event){
 		
 		{% endif %}
 
-		<input class="form-control" type="number" name="qty" min="1" value="1" />
+		<input id="pro-qty" class="form-control" type="number" name="qty" min="1" max="{{ object.quantity }}" value="1" />
 
 		{% if object.color.count > 0 %}
 		<h4>Select Color:</h4>
@@ -279,7 +286,6 @@ $("#submit-btn").click(function(event){
 		
 		<br/>
 		<br/>
-
 		<input id="submit-btn" type="submit" value="Add to Cart" class='btn btn-lg btn-warning btn-block'>
 		
 		<br/>
@@ -334,11 +340,14 @@ $("#submit-btn").click(function(event){
 		{% cycle '' '</div><div class="row">' %} --> 
 		<h6 style="color:gray;">{{ product.title }}</h6>
 		<div style="background-color: #EAE7E7; height: 1px;"></div>
-		<img src="{% static 'image/estar.png' %}" width="15px">
-		<img src="{% static 'image/estar.png' %}" width="15px">
-		<img src="{% static 'image/estar.png' %}" width="15px">
-		<img src="{% static 'image/dstar.png' %}" width="15px">
-		<img src="{% static 'image/dstar.png' %}" width="15px">
+		{% five_star as five %}
+		{% for i in five %}
+			{% if i <= product.title|rate:product.pk %}
+				<img src="{% static 'image/estar.png' %}" width="15px">
+			{% else %}
+				<img src="{% static 'image/dstar.png' %}" width="15px">
+			{% endif %}
+		{% endfor %}
 		<div style="background-color: #EAE7E7; height: 1px;"></div>
 		<h5 style="color:black;">Rs. {{ product.price }}</h5>
 		</div>
@@ -350,20 +359,27 @@ $("#submit-btn").click(function(event){
 
 <div class="row" style="border-top:3px solid black;">
 	<h3>Rewiew of this product</h3>
-	<div class="col-lg-2">
-		<img src="{% static 'image/star.png' %}" style="height:200px;">
+	<div class="col-lg-3 text-center">
+		<img src="{{ product.get_image_url }}" class="img-responsive" style="height:200px;display: block;margin: auto;">
+		<figcaption><b>{{ product.title }}</b></figcaption>
 	</div>
-	<div class="col-lg-6">
-		
+	<div class="col-lg-5 image text-center">
+		<img src="{% static 'image/star.png' %}"  style="height:150px;display: block;margin: auto;">
+		<figcaption>Average Rating for this Product is:{{ product.title|rate:object.pk }}</figcaption>
 	</div>
 	<div class="col-lg-4" style="border-left: 1px dotted gray;">
-		<h4>Rate this Product</h4>
+		<a href="{% url 'products:rating' object.pk  %}"><h4>Rate this Product</h4></a>
 		<h6>Your rating can help others..!</h6>
-		<img src="{% static 'image/dstar.png' %}" width="15px">
-		<img src="{% static 'image/dstar.png' %}" width="15px">
-		<img src="{% static 'image/dstar.png' %}" width="15px">
-		<img src="{% static 'image/dstar.png' %}" width="15px">
-		<img src="{% static 'image/dstar.png' %}" width="15px">
+		<a href="{% url 'products:rating' object.pk %}">
+		{% five_star as five %}
+		{% for i in five %}
+			{% if i <= product.title|rate:object.pk %}
+				<img src="{% static 'image/estar.png' %}" width="15px">
+			{% else %}
+				<img src="{% static 'image/dstar.png' %}" width="15px">
+			{% endif %}
+		{% endfor %}		
+		</a>
 	</div>
 </div>
 

@@ -24,10 +24,13 @@
 	        	$("#taxtotal").text(data.tax_total);
 	        	$("#carttotal").text(data.cart_total);
 	        }else {
+	        	$("#shipp").show();
 	        	$("#item-line-total-"+item).text(data.line_total);
 	        	$("#subtotal").text(data.subtotal);
 	        	$("#taxtotal").text(data.tax_total);
 	        	$("#carttotal").text(data.cart_total);
+	        	$("#total_with_ship").text(data.shipping);
+	        	console.log(data.shipping);
 	        }
 
 	        if(data.total_items == 0 ){
@@ -44,6 +47,7 @@
 	      }
 	    });
 	});
+
 	{% endblock %}
 </script>
 
@@ -68,7 +72,7 @@
 	</tr>
 	<tr class="success">
 
-	<td><form action="." method="GET"><input type="hidden" name="item" value="{{ item.item.id }}" />Qty:<input type="number" class="item-qty" name="qty" min="1" value="{{ item.quantity }}" style="width:50px;" /><input type="submit" class="btn-update btn btn-link" value="Update item" style="display:none;"></form></td>
+	<td><form action="{% url 'checkout' %}" method="GET"><input type="hidden" name="item" value="{{ item.item.id }}" />Qty:<input type="number" id="pro-qty" class="item-qty" name="qty" min="1" max="{{ item.item.product.quantity }}" value="{{ item.quantity }}" style="width:50px;" /><!-- <input type="submit" class="btn-update btn btn-link" value="Update item"> --></td>
 	<td id="item-line-total-{{ item.item.id }}">{{ item.line_item_total }}</td>
 	<td class="text-right"><a href="{{ item.remove }}"><i class="fa fa-times"></i></a>
 	</td>
@@ -82,19 +86,22 @@
 	<tr class="info">
 	<td colspan="4" class="text-right">Total Tax (Estimated): <span id="taxtotal">{{ object.tax_total }}</span></td>
 	</tr>
-	<tr class="info">
-	<td colspan="4" class="text-right">Total: <span id="carttotal">{{ object.total }}</span></td>
+	<tr class="info" id="shipp">
+	<td colspan="4" class="text-right">shipping charges: <span id="total_with_ship">{{ shipping }}</span></td>
 	</tr>
-
 	<tr class="info">
-	<td colspan="4" class="text-right"><a class="btn btn-warning" href="{% url 'checkout' %}">Checkout</a></td>
+	<td colspan="4" class="text-right">Total: <span id="carttotal">{{ shipping_cost }}</span></td>
 	</tr>
-
+	<tr class="info">
+	<td colspan="4" class="text-right"><button id="checkout_btn" class="btn btn-warning btn-lg" type="submit">Checkout</button></td>
+	</tr>
+	</form>
 	</table>
   </div>
 </div>
 
 {% endif %}
 
+</div>
 </div>
 {% endblock %}

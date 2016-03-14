@@ -1,9 +1,37 @@
 {% extends "base.html" %}
-
+{% load staticfiles %}
 {% block content %}
+<h3>Search Results</h3>
+<div class="row">
+{% if object_list %}
+{% for product in object_list %}
 
-<h1>All Products<small><a href='{% url "categories:categories" %}'>Categories</a></small></h1>
+	<div class="col-lg-3">
+		
 
-{% include "products/products.html" with object_list=object_list %}
+		<div class="thumbnail text-center">
+			<h4><a href="{{ product.get_absolute_url }}" style="color:black;text-transform: uppercase;font-size: 15px;"><b>{{ product.title }}</b></a></h4>
+			{% if product.get_image_url %}
+			<a href="{{ product.get_absolute_url }}">
+				<img src="{{ product.get_image_url }}" alt="cover image" class="img-responsive" style="max-height: 300px;" />
+			</a>
+			<br/>
+			{% endif %}
+
+				Rs.{{ product.variation_set.first.get_html_price }}
+
+		    
+		</div>
+	</div>
+	{% if not col_class_set %}
+	{% cycle '' '' '' '' '</div><div class="row">' %} 
+	{% endif %}
+{% endfor %}
+{% else %}
+<div class="col-lg-12 text-center">
+<h4>No result found.....</h4>
+</div>
+{% endif %}
+</div>
 
 {% endblock content %}

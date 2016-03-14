@@ -1,18 +1,72 @@
 {% extends "base.html" %}
 
-
+<style type="text/css">
+{% block style %}
+#id_shipping_address{
+	list-style: none;
+}
+#id_billing_address{
+	list-style: none;
+}
+{% endblock style %}
+</style>
+<script>
+{% block jquery %}
+function billing_check(){
+	var data = $(".billing:checked").val();
+	$("#billing_change_button").attr('href', '/checkout/address/change/'+data)
+}
+function shipping_check(){
+	var data = $(".shipping:checked").val();
+	$("#shipping_change_button").attr('href', '/checkout/address/change/'+data)
+}
+billing_check();
+shipping_check();
+$(".billing").change(function(){
+	var data = $(this).val();
+	$("#billing_change_button").attr('href', '/checkout/address/change/'+data)
+});
+$(".shipping").change(function(){
+	var data = $(this).val();
+	$("#shipping_change_button").attr('href', '/checkout/address/change/'+data)
+});
+{% endblock jquery %}
+</script>
 {% block content %}
-
-<div class="col-sm-4 col-sm-offset-4 text-center">
-<p class="lead">
-	Select addresses for this order.
-</p>
-<form method="POST" action="">{% csrf_token %}
-{{ form.as_p }}
-
-<input type="submit" class="btn btn-default" value="Select" />
-<a class="btn btn-link" href="{% url 'user_address_create' %}">Add new</a>
-</form>
+<div class="row">
+	<form method="POST" action="">{% csrf_token %}
+	<div class="text-center"><h2>Select Address</h2></div>
+	<div class="col-sm-4 col-sm-offset-2 text-center">
+		<div class="panel panel-default">
+		  <div class="panel-heading">Shipping Address</div>
+		  <div class="panel-body">
+		    {{ form.shipping_address }}
+		    {{ form.shipping_address.errors }}
+		  </div>
+		  <div class="panel-footer">
+		  	<a href="#" id="shipping_change_button" class="btn btn-warning">Change</a>
+		  </div>
+		</div>
+	</div>
+	<div class="col-sm-4 text-center">
+		<div class="panel panel-default">
+		  <div class="panel-heading">Billing Address</div>
+		  <div class="panel-body">
+		    {{ form.billing_address }}
+		    {{ form.billing_address.errors }}
+		  </div>
+		  <div class="panel-footer">
+		  	<a href="#" id="billing_change_button" class="btn btn-warning">Change</a>
+		  </div>
+		</div>
+	</div>
+	
 </div>
-
+<div class="text-center">
+	{% if data %}
+	<input type="submit" class="btn btn-success" value="Continue" />
+	{% endif %}
+<a class="btn btn-link" href="{% url 'user_address_create' %}">Add new</a>
+</div>
+</form>
 {% endblock %}

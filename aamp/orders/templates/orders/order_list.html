@@ -1,32 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- <div class="col-sm-6 col-sm-offset-3 text-center">
-<h1>Your Orders</h1>
-{% if object_list|length <= 0 %}
-
-<div class="text-center">
-	<p class="lead">
-		You do not currently have orders.
-	</p>
-</div>
-
-{% else %}
-<table>
-{% for object in object_list %}
-
-<tr><td><a href="{{ object.get_absolute_url }}">View #{% if object.order_id %}{{ object.order_id }} {% else %}{{ object.id }}{% endif %}
-</a></td><td>
-Item Count: {{ object.cart.items.count }}
-</td>
-</tr>
-
-{% endfor %}
-</table>
-{% endif %}
-</div> -->
-
-
 
 <ul class="nav nav-tabs">
 	<li class="active"><a data-toggle="pill" href="#orders" style="color: black">Orders</a></li>
@@ -57,19 +31,18 @@ Item Count: {{ object.cart.items.count }}
 			</div>
 			<div class="col-lg-3 col-md-3">
 				<h5>SHIP TO</h5>
-				<h5>{{ object.user.user.get_full_name }}</h5>
+				<h5>{{ object.shipping_address.full_name }}</h5>
 			</div>
 			<div class="col-lg-1 col-lg-1">
 				
 			</div>
 			<div class="col-lg-4 col-md-4">
 				<h5>ORDER #{% if object.order_id %}{{ object.order_id }} {% else %}{{ object.id }}{% endif %}</h5>
-				<h5><a href="{% url 'order_detail' object.pk %}">Order Details</a> | <a href="{% url 'invoice' object.id %}">Invoice</a></h5>
+				<h5><a href="{% url 'order_detail' object.pk %}">Order Details</a> | <a href="{% url 'invoice' object.id %}" target="_blank">Invoice</a></h5>
 			</div>
 		</div>
 		<div class="row" style="border: 1px solid black;">
-			<h3 style="margin-left: 25px;">Return Complete</h3>
-			<h5 style="margin-left: 25px;">Your return is complete. Your refund has been issued.</h5>
+			<h4 style="margin-left: 25px;">Product Information</h4>
 			<div class="col-lg-8 col-md-8">
 				{% for var in object.cart.items.all %}
 				<div>			

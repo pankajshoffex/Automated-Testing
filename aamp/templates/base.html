@@ -16,9 +16,15 @@
 		{% block style1 %} {% endblock style1 %}
 		<style>
 			{% block style %}{% endblock style %}
-			.dropdown-menu{
+			.dropdown-account{
 				margin-left: -135px;
 				width:200px;
+			}
+			.dropdown-mobile-search{
+				margin-top: 38px;
+				width: 202px;
+				margin-left: -72px;
+				padding: 11px;
 			}
 		</style>
 	</head>
@@ -49,6 +55,8 @@
 		<div class="container" style="padding-bottom: 100px;">
 		{% block content %}{% endblock content %}
 		</div>
+
+		{% include 'footer.html' %}
 	
 		
 		{% include "javascript.html" %}

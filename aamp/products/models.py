@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
-
+from useraccount.models import SignUp
 
 # Create your models here.
 from mptt.models import MPTTModel, TreeForeignKey, TreeManyToManyField
@@ -34,6 +34,7 @@ class Product(models.Model):
 	slug = models.SlugField(max_length=120, blank=True)
 	short_description = models.TextField(blank=True, null=True)
 	long_description = models.TextField(blank=True, null=True)
+	quantity = models.PositiveIntegerField(blank=True, null=True)
 	price = models.DecimalField(decimal_places=2, max_digits=20)
 	sale_price = models.DecimalField(decimal_places=2, max_digits=20, null=True, blank=True)
 	categories = TreeManyToManyField('Category')
@@ -43,7 +44,7 @@ class Product(models.Model):
 	active = models.BooleanField(default=True)
 	meta_keywords = models.CharField(max_length=250, blank=True, help_text="Maximum keywords should be 10 and seperate by comma")
 	meta_description = models.CharField(max_length=160, blank=True, help_text="Description should be within 160 characters.")
-
+	single_shipping = models.DecimalField(decimal_places=2, max_digits=20, null=True, blank=True)
 	objects = ProductManager()
 
 	class Meta:
@@ -62,8 +63,13 @@ class Product(models.Model):
 		return img # None
 
 	def save(self, *args, **kwargs):
-		slug = slugify(self.title)
-		self.slug = "%s-%s" %(slug, self.pk)
+		super(Product, self).save(*args, **kwargs)
+		if self.price:
+			slug = slugify(self.title)
+			self.slug = "%s-%s-%s" %(slug, int(self.price), self.pk)
+		else:
+			slug = slugify(self.title)
+			self.slug = "%s-%s-%s" %(slug, self.pk)
 		super(Product, self).save(*args, **kwargs)
 
 	def admin_thumbnail(self):
@@ -157,6 +163,7 @@ class ProductImage(models.Model):
 class Category(MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
+    image = models.ImageField(upload_to='categories', blank=True, null=True)
 
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -188,4 +195,15 @@ class ShirtSize(models.Model):
 		return self.title
 
 
+class ProductRating(models.Model):
+	product = models.ForeignKey(Product)
+	user = models.ForeignKey(SignUp)
+	rate = models.PositiveIntegerField()
+	title = models.CharField(max_length=120)
+	desc = models.TextField()
+	name = models.CharField(max_length=50)
+
+
+	def __unicode__(self):
+		return self.title
 

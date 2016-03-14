@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load logo_tags %}
+<style type="text/css">
+{% block style %}
+div#rel1:hover{
+	-webkit-box-shadow:inset 0px 0px 0px 2px orange;
+    -moz-box-shadow:inset 0px 0px 0px 2px orange;
+    box-shadow:inset 0px 0px 0px 2px orange;
+}
+{% endblock style %}
+</style>
+
+{% block content %}
+<div class="row">
+	<h3 style="font-family:  ‘Times New Roman’, Times, serif;">{{ category }}</h3>
+	<div style="background-color: black;height: 3px; width:290px;"></div>
+	
+	<div class="col-lg-3">
+		{% for cat in subcategory %}
+		<h5><a href="{% url 'products:single_category_products' cat %}" style="color: black"> {{ cat }}</a></h5>
+		<hr>
+		{% endfor %}
+	</div>
+	{% if image %}
+		<div class="col-lg-9 hidden-xs hidden-sm">
+			<img src="/media/{{ image }}" height="300" width="850" alt="category image">
+
+		</div>
+	{% else %}
+		<div class="col-lg-9 hidden-xs hidden-sm">
+			<span style="font-size: 24px;">{{ category }}</span>
+
+		</div>
+	
+	{% endif %}
+</div>
+
+<div class="row">
+	<div class="hidden-xs" style="background-color: black;height: 3px; width:290px;"></div>
+	<div class="col-lg-3 hidden-xs ">
+		<h3>CATALOG</h3>
+		<br>
+			<h4 style="font-family:  ‘Times New Roman’, Times, serif;">Categories</h4>
+			<form action="" method="post">
+			{% csrf_token %}
+			{% for cat in subcategory %}
+			<h5><input type="checkbox" name="cat" value="{{ cat }}" onchange="this.form.submit()"> {{ cat }} ( {{ cat.product_set.all.count }} )</h5>
+			{% endfor %}
+			</form>
+			<hr>
+			<h4>Price</h4>
+			<h5><a href="" style="color: black"><input type="checkbox"> Rs. 0 - 500</a></h5>
+			<h5><a href="" style="color: black"><input type="checkbox"> Rs. 501 - 1000</a></h5>
+			<h5><a href="" style="color: black"><input type="checkbox"> Rs. 1001 - 5000</a></h5>
+			<h5><a href="" style="color: black"><input type="checkbox"> Rs. 5000 and Above</a></h5>
+			<hr>
+
+	</div>
+	<div class="col-lg-9">
+	{% for product in product_list %}
+	<a href="{{ product.get_absolute_url }}" style="text-decoration: none;"><div id="rel1" class="col-lg-3">
+		<img src="{{ product.get_image_url }}" class="img-responsive" style="height: 200px;padding-top:2px; display: block;margin: auto;">
+		<figcaption>{{ product.title }}</figcaption>
+		<div style="background-color: gray; height: 1px;"></div>
+		{% if product.sale_price %}
+		<h4>Rs. {{ product.sale_price }} <span style="color:red;font-size: 15px;"><del>{{ product.price }}</del></span></h4>
+		{% else %}
+		<h4>Rs. {{ product.price }}</h4>
+		{% endif %}
+		</a>
+		<div style="background-color: gray; height: 1px;"></div>
+		<div>
+			{% five_star as five %}
+			{% if product.title|rate:product.pk %}
+			{% for i in five %}
+				{% if i <= product.title|rate:product.pk %}
+					<img src="{% static 'image/estar.png' %}" width="15px">
+				{% else %}
+					<img src="{% static 'image/dstar.png' %}" width="15px">
+				{% endif %}
+			{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	{% endfor %}
+	</div>
+</div>
+
+{% endblock content %}

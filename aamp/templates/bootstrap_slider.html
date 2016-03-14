@@ -15,12 +15,12 @@
     {% if himage %}
       {% for img in himage %}
       {% if img.id == himage.first.id %}
-      <div class="item active">
-        <a href="{{ img.url }}"><img src="{{ img.image.url }}" alt="{{ img.title }}" class="img-responsive"></a>
+      <div class="item active" style="height: 350px;">
+        <a href="{{ img.url }}"><img src="{{ img.image.url }}" alt="{{ img.title }}" style="height:350px;"></a>
       </div>
       {% else %}
-      <div class="item">
-        <a href="{{ img.url }}"><img src="{{ img.image.url }}" alt="{{ img.title }}" class="img-responsive">
+      <div class="item" style="height: 350px;">
+        <a href="{{ img.url }}"><img src="{{ img.image.url }}" alt="{{ img.title }}" style="height:350px;">
         </a>
       </div>
       {% endif %}

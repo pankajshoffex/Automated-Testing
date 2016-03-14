@@ -5,23 +5,60 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-from .forms import VariationInventoryFormSet
 from .mixins import StaffRequiredMixin
-from .models import Product, Variation, Category
+from .models import Product, Variation, Category, ProductRating
+from useraccount.models import SignUp
 import random
 
 
+@login_required(login_url="/accounts/login/")
+def product_rating(request, pk):
+	context = {}
+	product = get_object_or_404(Product, pk=pk)
+
+	if request.method == "POST":
+		title = request.POST.get("title")
+		name = request.POST.get("name")
+		desc = request.POST.get("desc")
+		star = request.POST.get("star")
+		if desc and star:
+			signup = SignUp.objects.get(user=request.user)
+			
+			
+			rating = ProductRating(product=product, user=signup)
+
+			rating.title = title
+			rating.name = name
+			rating.desc = desc
+			rating.rate = star
+			rating.save()
+			return redirect("products:product_detail", slug=product.slug )
+		
+		else:
+			messages.error(request, "Please fill all information..!")
+		
+	context['product'] = product
+	return render(request, 'products/product_rating.html', context)
 
 
-def show_demo(request):
-    return render(request, "demo.html", {'nodes':Category.objects.all()})
+def category_list(request, category):
+	context = {}
+	cat = Category.objects.get(name=category)
+	products = Product.objects.filter(categories__in=cat.get_descendants(include_self=True)).order_by("?")
+	
+	subcat = cat.get_children()
+	category_image = str(cat.image)
 
+	context['image'] = category_image
+	context['subcategory'] = subcat
+	context['category'] = category
+	context['product_list'] = products
+	return render(request, 'products/category_list.html', context)
 
-def demo(request):
-	return render(request, "demo.html", {})
 
 class ProductColorView(View):
 	def get(self, request, *args, **kwargs):
@@ -30,38 +67,6 @@ class ProductColorView(View):
 			request.session['color'] = color
 			return JsonResponse({"color":color})
 
-class VariationListView(StaffRequiredMixin, ListView):
-	model = Variation
-	queryset = Variation.objects.all()
-
-	def get_context_data(self, *args, **kwargs):
-		context = super(VariationListView, self).get_context_data(*args, **kwargs)
-		context["formset"] = VariationInventoryFormSet(queryset=self.get_queryset())
-		return context
-
-	def get_queryset(self, *args, **kwargs):
-		product_pk = self.kwargs.get("pk")
-		if product_pk:
-			product = get_object_or_404(Product, pk=product_pk)
-			queryset = Variation.objects.filter(product=product_pk)
-		return queryset
-
-	def post(self, request, *args, **kwargs):
-		formset = VariationInventoryFormSet(request.POST, request.FILES)
-		print request.POST
-		if formset.is_valid():
-			formset.save(commit=False)
-			for form in formset:
-				new_item = form.save(commit=False)
-				# if new_item.title:
-				product_pk = self.kwargs.get("pk")
-				product = get_object_or_404(Product, pk=product_pk)
-				new_item.product = product
-				new_item.save()
-
-			messages.success(request, "Your inventory and pricing has been updated.")
-			return redirect("products:product_list")
-		raise Http404
 
 class ProductListView(ListView):
 	model = Product

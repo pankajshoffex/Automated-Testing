@@ -2,6 +2,7 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from django.utils.safestring import mark_safe
+
 # Register your models here.
 from mptt.admin import DraggableMPTTAdmin
 from .models import (
@@ -12,7 +13,9 @@ from .models import (
         ProductColor,
         ShoesSize,
         ShirtSize,
+        ProductRating,
     )
+
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -44,6 +47,8 @@ class ProductResource(resources.ModelResource):
 class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     change_form_template = "admin_copies/editor/change_form.html"
     list_display = ['__unicode__', 'price','active','admin_thumbnail',]
+    list_filter = ('categories',)
+    search_fields = ['title', 'price', 'sale_price']
     
     inlines = [
         VariationInline,
@@ -51,10 +56,10 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     ]
     fieldsets = (
         ('Product Name', {
-            'fields': (('title', 'active'),),
+            'fields': (('title', 'quantity', 'active'),),
         }),
         ('Product Price', {
-            'fields': (('price', 'sale_price'),),
+            'fields': (('price', 'sale_price', 'single_shipping'),),
         }),
         ('Product Description', {
             'classes': ('collapse',),
@@ -83,18 +88,17 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         model = Product
 
 
+class ProductRatingAdmin(admin.ModelAdmin):
+    list_display = ['name', 'title', 'rate']
 
 
-# class ProductAdmin(ImportExportModelAdmin):
-#     resource_class = ProductResource
-#     pass 
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductColor)
-# admin.site.register(ProductImage)
 admin.site.register(ShoesSize)
 admin.site.register(ShirtSize)
 admin.site.register(ProductImage)
+admin.site.register(ProductRating, ProductRatingAdmin)
 admin.site.register(Category, 
     DraggableMPTTAdmin,
     list_display=(

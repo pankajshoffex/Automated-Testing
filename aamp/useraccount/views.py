@@ -14,7 +14,9 @@ import base64
 import hmac, base64, struct, time
 import hashlib, random, datetime
 from .models import SignUp, HomePageSlider
-from UI.models import UploadLogo
+from UI.models import UploadLogo, TopOffers, BottomOffers
+from sms.models import SmsSetting, SmsHistory
+from products.models import Category
 
 
 def index(request):
@@ -22,7 +24,20 @@ def index(request):
 	slider = True
 	image = HomePageSlider.objects.all().order_by("-id")
 	products = Product.objects.all().order_by("?")[:20]
+	offers = TopOffers.objects.all()
+	bt_offer = BottomOffers.objects.all()
 
+	demo = {}
+
+	cat = Category.objects.all()
+	for c in cat:
+		if c.is_root_node():
+			demo[c] = Product.objects.filter(categories__in=c.get_descendants(include_self=True)).order_by("?")[:6] 
+
+
+	context['cat'] = demo
+	context['bottom'] = bt_offer
+	context['offers'] = offers
 	context['slider'] = slider
 	context['himage'] = image
 	context['products'] = products
@@ -66,17 +81,6 @@ def get_token():
     h = (struct.unpack(">I", h[o:o+4])[0] & 0x7fffffff) % 1000000
     return h
 
-
-def sendSMS(uname, hashCode, numbers, sender, message):
-    #data =  urllib.urlencode({'username': sotari.biz@gmail.com, 'hash': hashCode, 'numbers': numbers, 'message' : message, 'sender': sender})
-    data =  urllib.urlencode({'username': uname, 'hash': hashCode, 'numbers': numbers,
-        'message' : message, 'sender': sender})
-    data = data.encode('utf-8')
-    request = urllib2.Request("http://api.textlocal.in/send/?")
-    f = urllib2.urlopen(request, data)
-    fr = f.read()
-    return(fr)
-
 def signup_mobile(request):
 	if request.is_ajax():
 		data = ""
@@ -93,7 +97,7 @@ def signup_mobile(request):
 				print token
 				msg_token = str(token)
 				request.session['var'] = msg_token
-				# sendSMS('sotari.biz@gmail.com', 'da1e1331d30c4dcff5a4780b52fa9fb327764bb1', mobile,'TXTLCL', msg_token)
+				# sendSMS(msg_token,mobile)
 				data = "yes"
 				cnt = "no"
 		else:
@@ -124,7 +128,17 @@ def signup(request):
 		if new_user:
 			data = SignUp(user=new_user)
 			data.mobile_no = mobile
-			data.save()	
+			data.save()
+			msg = "Dear Customer your account in Shoffex.com is successfully created. Your username:" + mobile + ". Cheers!!!"
+			#result = sendSMS(msg, numbers=mobile)
+			#if result:
+			SmsHistory.objects.create(
+				number=data.mobile_no,
+				recipient=new_user.get_full_name(),
+				sms_subject="New Account Created", 
+				sms_text=msg,
+				sms_type = "New User"
+				)
 			user = authenticate(username=mobile, password=password)
 			if user is not None:
 				if user.is_active:
@@ -139,10 +153,6 @@ def signup(request):
 @login_required(login_url='/accounts/login/')
 def user_account(request):
 	return render(request, 'account/User_Account.html', {})
-	
-@login_required(login_url='/accounts/login/')
-def order_history(request):
-	return render(request, 'account/order_history.html', {})
 
 @login_required(login_url='/accounts/login/')
 def user_settings(request):
@@ -194,3 +204,6 @@ def user_settings(request):
 			token = "False"
 		return JsonResponse({"data": token})
 	return render(request, 'account/user_settings.html', context)
+
+
+	

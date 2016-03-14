@@ -41,6 +41,20 @@ post_save.connect(cart_item_post_save_receiver, sender=CartItem)
 
 post_delete.connect(cart_item_post_save_receiver, sender=CartItem)
 
+class Shipping(models.Model):	
+	from_val = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
+	to_val = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
+	ship_val = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
+
+	def __unicode__(self):
+		return str(self.ship_val)
+
+class TaxInc(models.Model):
+	tax_val = models.DecimalField(max_digits=50, decimal_places=5, default=0.00)
+
+	def __unicode__(self):
+		return str(self.tax_val)
+
 class Cart(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
 	items = models.ManyToManyField(Variation, through=CartItem)
@@ -68,6 +82,8 @@ class Cart(models.Model):
 
 def do_tax_and_total_receiver(sender, instance, *args, **kwargs):
 	subtotal = Decimal(instance.subtotal)
+	tax = TaxInc.objects.get()
+	instance.tax_percentage = tax.tax_val
 	tax_total = round(subtotal * Decimal(instance.tax_percentage), 2) #8.5%
 	total = round(subtotal + Decimal(tax_total), 2)
 	instance.tax_total = "%.2f" %(tax_total)

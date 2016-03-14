@@ -462,7 +462,7 @@ a.button {
     float: right;
     border: none;
     font-weight: 400;
-    background: #417690;
+    background: #1A2124;
 }
 
 .button.default:active, input[type=submit].default:active,
@@ -507,9 +507,9 @@ input[type=button][disabled].default {
     margin: 0;
     padding: 8px;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 14px;
     text-align: left;
-    background: #79aec8;
+    background: #273C47;
     color: #fff;
 }
 
@@ -633,7 +633,7 @@ div.system-message p.system-message-title {
 /* BREADCRUMBS */
 
 div.breadcrumbs {
-    background: #79aec8;
+    background: #29373E;
     padding: 10px 40px;
     border: none;
     font-size: 14px;
@@ -718,7 +718,7 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 .object-tools a:focus, .object-tools a:hover {
-    background-color: #417690;
+    background-color: #1A2124;
 }
 
 .object-tools a:focus{
@@ -813,7 +813,7 @@ table#change-history tbody th {
     width: auto;
     height: 40px;
     padding: 10px 40px;
-    background: #417690;
+    background: #1A2124;
     line-height: 40px;
     color: #ffc;
     overflow: hidden;
