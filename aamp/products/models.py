@@ -164,12 +164,19 @@ class Category(MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     image = models.ImageField(upload_to='categories', blank=True, null=True)
+    slug = models.SlugField()
 
     class MPTTMeta:
         order_insertion_by = ['name']
 
     def __unicode__(self):
-    	return self.name	
+    	return self.name
+
+    def save(self, *args, **kwargs):
+    	super(Category, self).save(*args, **kwargs)
+    	slug = slugify(self.name)
+    	self.slug = "%s-%s" %(slug, self.pk)
+    	super(Category, self).save(*args, **kwargs)	
 
 
 class ProductColor(models.Model):

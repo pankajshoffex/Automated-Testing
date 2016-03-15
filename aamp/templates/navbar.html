@@ -64,7 +64,7 @@
               </button>
               <ul class="dropdown-menu dropdown-account">
                 {% if user and not user.is_anonymous %}
-                    <li><a href="{% url 'account:user_account' %}">Account</a></li>
+                    <li><a href="{% url 'account:user_account' %}">{{ request.user }}</a></li>
                     <li><a href="{% url 'orders' %}">Orders</a></li>
                     <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}

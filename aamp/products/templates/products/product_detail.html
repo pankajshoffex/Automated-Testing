@@ -213,8 +213,10 @@ $("#submit-btn").click(function(event){
 		<h3>{{ object.title }}</h3>
 
 		<p class="lead">
+			{% if object.short_description %}
 			<h4>Short Description:</h4>
 			{{ object.short_description|safe }}
+			{% endif %}
 		</p>
 	</div>
 
@@ -316,8 +318,10 @@ $("#submit-btn").click(function(event){
 	<div class="text-center"><button class="btn btn-info" id="show_more">show more</button></div>
 		<div id="full_desc">
 			<p class="lead">
+				{% if object.long_description %}
 				<h3>Long Description</h3>
 				{{ object.long_description|safe }}
+				{% endif %}
 			</p>
 		</div>
 	</div>

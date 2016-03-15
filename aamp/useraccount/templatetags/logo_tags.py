@@ -28,6 +28,7 @@ def five_star():
 	five = range(1,6)
 	return five
 
+
 def rate_average(value, arg):
 	"Subtracts the arg from the value"
 	product = Product.objects.get(pk=arg)

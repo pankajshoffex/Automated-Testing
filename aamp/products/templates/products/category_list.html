@@ -18,7 +18,7 @@ div#rel1:hover{
 	
 	<div class="col-lg-3">
 		{% for cat in subcategory %}
-		<h5><a href="{% url 'products:single_category_products' cat %}" style="color: black"> {{ cat }}</a></h5>
+		<h5><a href="{% url 'products:single_category_products' cat.slug %}" style="color: black"> {{ cat }}</a></h5>
 		<hr>
 		{% endfor %}
 	</div>

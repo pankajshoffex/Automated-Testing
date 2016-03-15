@@ -45,9 +45,9 @@ def product_rating(request, pk):
 	return render(request, 'products/product_rating.html', context)
 
 
-def category_list(request, category):
+def category_list(request, slug):
 	context = {}
-	cat = Category.objects.get(name=category)
+	cat = Category.objects.get(slug=slug)
 	products = Product.objects.filter(categories__in=cat.get_descendants(include_self=True)).order_by("?")
 	
 	subcat = cat.get_children()
@@ -55,7 +55,7 @@ def category_list(request, category):
 
 	context['image'] = category_image
 	context['subcategory'] = subcat
-	context['category'] = category
+	context['category'] = cat.name
 	context['product_list'] = products
 	return render(request, 'products/category_list.html', context)
 

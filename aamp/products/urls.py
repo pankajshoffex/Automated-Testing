@@ -7,5 +7,5 @@ urlpatterns = [
 	url(r'^rating/(?P<pk>\d+)/$', product_rating, name="rating"),
 	url(r'^color_view/$', ProductColorView.as_view(), name="color_view"),
     url(r'^(?P<slug>[-\w]+)/$', ProductDetailView.as_view(), name="product_detail"),
-    url(r'^category/(?P<category>[-\w]+)/$', category_list, name="single_category_products"),
+    url(r'^category/(?P<slug>[-\w]+)/$', category_list, name="single_category_products"),
 ]

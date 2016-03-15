@@ -250,7 +250,7 @@ Mobile style's
         <div class="menu">
             <ul>
 				{% recursetree nodes %}
-			   <li><a href="{% url 'products:single_category_products' node.name %}">{{ node.name }}</a>
+			   <li><a href="{% url 'products:single_category_products' node.slug %}">{{ node.name }}</a>
 			   		{% if not node.is_leaf_node %}
 			   		<ul>
 			        	{{ children }}
