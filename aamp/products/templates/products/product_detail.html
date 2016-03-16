@@ -244,7 +244,7 @@ $("#submit-btn").click(function(event){
 			Rs. {{ object.variation_set.first.sale_price }}
 			<small class='og-price'>Rs. {{ object.variation_set.first.price }}</small><br/>
 			{% load logo_tags %}
-			<h6 style="color: green;">You save {{ object.variation_set.first.price|sub:object.variation_set.first.sale_price }}</h6>
+			<h6 style="color: green;">You save Rs. {{ object.variation_set.first.price|sub:object.variation_set.first.sale_price }}</h6>
 			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">
 			{% else %}
 			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">

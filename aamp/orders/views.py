@@ -24,13 +24,13 @@ class InvoicePDFView(LoginRequiredMixin, PDFTemplateView):
 		# print self.request.session.get("demo")
 		# context["order"] = self.request.session.get("demo")
 		# print context["order"]
-		try:
-			user_checkout = SignUp.objects.get(user=request.user)
-		except SignUp.DoesNotExist:
-			pass
-		except:
-			user_checkout = None
-			print pk
+		# try:
+		# 	user_checkout = SignUp.objects.get(user=request.user)
+		# except SignUp.DoesNotExist:
+		# 	pass
+		# except:
+		# 	user_checkout = None
+		# 	print pk
 
 		obj = Order.objects.get(pk=pk)
 		context['order'] = obj
@@ -43,18 +43,18 @@ class OrderDetail(LoginRequiredMixin, DetailView):
 
 	def dispatch(self, request, *args, **kwargs):
 		
-		try:
-			user_checkout = SignUp.objects.get(user=request.user)
-		except SignUp.DoesNotExist:
-			pass
-		except:
-			user_checkout = None
+		# try:
+		# 	user_checkout = SignUp.objects.get(user=request.user)
+		# except SignUp.DoesNotExist:
+		# 	pass
+		# except:
+		# 	user_checkout = None
 
 		obj = self.get_object()
 		print obj
 
 		if self.request.user.is_authenticated():
-			if obj.user == user_checkout and user_checkout is not None:
+			if obj.user == request.user:
 				return super(OrderDetail, self).dispatch(request, *args, **kwargs)
 			else:
 				raise Http404
@@ -66,8 +66,8 @@ class OrderList(LoginRequiredMixin, ListView):
 	queryset = Order.objects.all()
 
 	def get_queryset(self):
-		user_checkout = SignUp.objects.get(user=self.request.user)
-		return super(OrderList, self).get_queryset().filter(user=user_checkout)
+		# user_checkout = SignUp.objects.get(user=self.request.user)
+		return super(OrderList, self).get_queryset().filter(user=self.request.user)
 
 
 class UserAddressCreateView(LoginRequiredMixin, CreateView):
@@ -76,7 +76,7 @@ class UserAddressCreateView(LoginRequiredMixin, CreateView):
 	success_url = "/checkout/address/"
 
 	def get_checkout_user(self):
-		user_checkout = SignUp.objects.get(user=self.request.user)
+		user_checkout = self.request.user
 		return user_checkout
 
 	def form_valid(self,form, *args, **kwargs):
@@ -105,7 +105,7 @@ class UserShippingAddressCreateView(LoginRequiredMixin, CreateView):
 	success_url = "/checkout/address/"
 
 	def get_checkout_user(self):
-		user_checkout = SignUp.objects.get(user=self.request.user)
+		user_checkout = self.request.user
 		return user_checkout
 
 	def form_valid(self,form, *args, **kwargs):
@@ -150,7 +150,7 @@ class AddressSelectFormView(CartOrderMixin, FormView):
 			return super(AddressSelectFormView, self).dispatch(*args, **kwargs)
 
 	def get_addresses(self, *args, **kwargs):
-		user_checkout = SignUp.objects.get(user=self.request.user)
+		user_checkout = self.request.user
 
 		b_address = UserAddress.objects.filter(
 			user=user_checkout,

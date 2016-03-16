@@ -10,6 +10,7 @@ from django.utils.html import mark_safe
 # Create your models here.
 from carts.models import Cart, Shipping
 from useraccount.models import SignUp
+from django.contrib.auth.models import User
 
 
 ADDRESS_TYPE = (
@@ -20,7 +21,7 @@ ADDRESS_TYPE = (
 
 class UserAddress(models.Model):
 	full_name = models.CharField(max_length=120)
-	user = models.ForeignKey(SignUp)
+	user = models.ForeignKey(User)
 	type = models.CharField(max_length=120, choices=ADDRESS_TYPE, default='billing', blank=True, null=True)
 	street = models.TextField()
 	postcode = models.CharField(max_length=6)
@@ -44,7 +45,7 @@ ORDER_STATUS_CHOICES = (
 class Order(models.Model):
 	status = models.CharField(max_length=120, choices=ORDER_STATUS_CHOICES, default='received')
 	cart = models.ForeignKey(Cart)
-	user = models.ForeignKey(SignUp, null=True)
+	user = models.ForeignKey(User, null=True)
 	billing_address = models.ForeignKey(UserAddress, related_name='billing_address', null=True)
 	shipping_address = models.ForeignKey(UserAddress, related_name='shipping_address', null=True)
 	shipping_total_price = models.DecimalField(decimal_places=2, max_digits=50, default=0.00)
@@ -57,6 +58,10 @@ class Order(models.Model):
 
 	class Meta:
 		ordering = ['-id']
+
+	def invoice(self):
+		url = '<a href="/invoice/%s" target="_blank">Invoice</a>' %(self.pk)
+		return mark_safe(url)
 
 	def get_absolute_url(self):
 		return reverse("order_detail", kwargs={"pk": self.pk})

@@ -34,7 +34,7 @@ class UserAddressForm(forms.ModelForm):
 		]
 		widgets={
 			'full_name': forms.TextInput(attrs={ 'class': 'form-control', }),
-			'street': forms.Textarea(attrs={ 'class': 'form-control', }),
+			'street': forms.Textarea(attrs={ 'class': 'form-control', 'rows':1, 'cols':10},),
 			'postcode': forms.TextInput(attrs={ 'id': 'postcode', 'class': 'form-control' }),
 			'type': forms.Select(attrs={ 'class': 'form-control'}),
 			'mobile': forms.TextInput(attrs={ 'id': 'mobile', 'class': 'form-control', }),

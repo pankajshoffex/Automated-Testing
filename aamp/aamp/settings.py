@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'mptt',
     'sms',
+    'geoposition',
 ]
 
 
@@ -183,7 +184,12 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['email',],
         'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
         'VERIFIED_EMAIL': False,
-        }}
+        },
+    'google':
+        { 'SCOPE': ['email'],
+          'AUTH_PARAMS': { 'access_type': 'online' } 
+        }
+    }
 
 
 ROBOTS_USE_HOST = True

@@ -15,7 +15,7 @@ import hmac, base64, struct, time
 import hashlib, random, datetime
 from .models import SignUp, HomePageSlider
 from UI.models import UploadLogo, TopOffers, BottomOffers
-from sms.models import SmsSetting, SmsHistory
+from sms.models import SmsSetting, SmsHistory, SendSMS
 from products.models import Category
 
 
@@ -97,18 +97,20 @@ def signup_mobile(request):
 				print token
 				msg_token = str(token)
 				request.session['var'] = msg_token
-				# sendSMS(msg_token,mobile)
+				obj = SendSMS()
+				obj.sendsms(msg_token,mobile)
 				data = "yes"
 				cnt = "no"
 		else:
 			data = "no"
 
 		return JsonResponse({'data': data, 'count': cnt})
-		
+
 	# return render(request, "account/mobile_no.html", {'form': form})
 
 def signup(request):
 	print request.POST.get('next')
+	request.session.set_expiry(300)
 	if request.is_ajax():
 		data = ""
 		token = request.GET.get('data')
@@ -122,31 +124,39 @@ def signup(request):
 	if request.method == 'POST':
 		mobile = request.POST.get('mobile_no')
 		password = request.POST.get('sign_password')
-		new_user = User.objects.create_user(username=mobile)
-		new_user.set_password(password)
-		new_user.save()
-		if new_user:
-			data = SignUp(user=new_user)
-			data.mobile_no = mobile
-			data.save()
-			msg = "Dear Customer your account in Shoffex.com is successfully created. Your username:" + mobile + ". Cheers!!!"
-			#result = sendSMS(msg, numbers=mobile)
-			#if result:
-			SmsHistory.objects.create(
-				number=data.mobile_no,
-				recipient=new_user.get_full_name(),
-				sms_subject="New Account Created", 
-				sms_text=msg,
-				sms_type = "New User"
-				)
-			user = authenticate(username=mobile, password=password)
-			if user is not None:
-				if user.is_active:
-					login(request, user)
-					if request.POST.get('next') is not None and request.POST.get('next') != 'None':
-						return HttpResponseRedirect(request.POST.get('next'))
-					else:
-						return HttpResponseRedirect("/")
+		otp = request.POST.get('otp')
+		if otp == request.session.get('var'):
+			new_user = User.objects.create_user(username=mobile)
+			new_user.set_password(password)
+			new_user.save()
+			
+			if new_user:
+				data = SignUp(user=new_user)
+				data.mobile_no = mobile
+				data.save()
+				obj = SendSMS()
+				msg = "Dear Customer your account in Shoffex.com is successfully created. Your username:" + mobile + ". Cheers!!!"
+				result = obj.sendsms(msg, numbers=mobile)
+				if result:
+					SmsHistory.objects.create(
+						number=data.mobile_no,
+						recipient=new_user.get_full_name(),
+						sms_subject="New Account Created", 
+						sms_text=msg,
+						sms_type = "New User"
+						)
+				user = authenticate(username=mobile, password=password)
+				if user is not None:
+					if user.is_active:
+						login(request, user)
+						if request.POST.get('next') is not None and request.POST.get('next') != 'None':
+							return HttpResponseRedirect(request.POST.get('next'))
+						else:
+							return HttpResponseRedirect("/")
+		else:
+			messages.error(request, "Incorrect verification code")
+			return HttpResponseRedirect("/accounts/login")
+
 	return HttpResponseRedirect("account:login")
 
 
@@ -206,4 +216,62 @@ def user_settings(request):
 	return render(request, 'account/user_settings.html', context)
 
 
+### Forget Password ##########
+
+def forget_pass(request):
+	
+	return render(request, "forget_pass.html",{})
+
+def pass_reset(request):
+	if request.is_ajax():
+		data = ""
+		exist_mob = ""
+		# mobile = request.POST.get("mobile")
+		mobile = request.GET.get('mobile')
+		print mobile
+		otp = request.POST.get("otp")
+		if mobile:
+			try:
+				exist_mob = SignUp.objects.get(mobile_no=mobile)
+				request.session['mobile2'] = mobile
+				token = get_token()
+				print token
+				msg_token = str(token)
+				request.session['var2'] = msg_token
+				data = "yes"
+			except:
+				data = "no"
+		else:
+			data = "no"
+	return JsonResponse({'data': data,})
+
+def replace_pass(request):
+	print request.POST.get('next')
+	otp = request.POST.get('otp')
+	if request.is_ajax():
+		data = ""
+		token = request.GET.get('data')
+		if token == request.session.get('var2'):
+			data = "yes"
+		else:
+			data = "no"
+
+		return JsonResponse({'token': data})
+
+	if request.method == 'POST':
+		mobile = request.POST.get('mobile_no')
+		password = request.POST.get('reset_password')
+		if otp == request.session.get('var2'):
+			try:
+				exist_user = User.objects.get(username=mobile)
+			except:
+				messages.error(request, "Account does not exist...")
+				return HttpResponseRedirect("/accounts/password/")
+			exist_user.set_password(password)
+			exist_user.save()
+			messages.success(request, "Password updated successfully.")
+		else:
+			messages.error(request, "Incorrect verification code")
+			return HttpResponseRedirect("/accounts/password")
+	return HttpResponseRedirect("/")
 	

@@ -1,3 +1,5 @@
+{% load mptt_tags %}
+{% load logo_tags %}
 {% load staticfiles %}
 <style type="text/css">
 	.footer-distributed{
@@ -184,14 +186,20 @@
 
       	<h3>Shoffex.com<span></span></h3>
       <div class="col-md-6 col-sm-6">
+      <h4 style="color: #ffffff;">Information</h4>
       {% load ui_extras %}
 			{% footer_tag as pages %}
 			<ul class="footer-links" style="list-style: none; ">
 			{% for i in pages %}
 				{% if i.url %}
-	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="{{ i.url }}">{{ i }}</a></li>
+				
+				{% if i.is_it_location %}
+				<li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="{{ i.url }}">{{ i }}&nbsp;<span><i class="fa fa-map-marker fa-1x"></i></span></a></li>
 	          <hr>
-	        
+	          	{% else %}
+	          	<li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="{{ i.url }}">{{ i }}</a></li>
+	          <hr>
+	          	{% endif %}
 				{% else %}
 				<li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="{% url 'ui:info' %}?id={{i.id}}" style="color: white;text-decoration: none;">{{ i }}</a></li>
 				<hr>
@@ -202,21 +210,13 @@
       </div>
       
        <div class="col-md-6 col-sm-6">
+       <h4 style="color: #ffffff;">Categories</h4>
+       {% set_node as nodes %}
       	<ul class="footer-links" style="list-style: none; ">
-	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="#">Home</a></li>
+      		{% recursetree nodes %}
+	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="#">{{ node.name }}</a></li>
 	          <hr>
-	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="#">Blog</a></li>
-	          <hr>
-	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="#">Privacy & Policy</a></li><hr>
-	          
-	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="#">About</a></li>
-	          <hr>
-	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="#">Faq</a></li>
-	          <hr>
-	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="#">Contact</a></li>
-	          <hr>
-	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="#">Sitemap</a></li>
-	          <hr>
+	        {% endrecursetree %}
 	        </ul>
       	
       </div>
@@ -253,10 +253,10 @@
         </p>
         <div class="footer-icons">
 
-          <a href="#"><i class="fa fa-facebook"></i></a>
+         <!--  <a href="#"><i class="fa fa-facebook"></i></a>
           <a href="#"><i class="fa fa-twitter"></i></a>
           <a href="#"><i class="fa fa-linkedin"></i></a>
-          <a href="#"><i class="fa fa-github"></i></a>
+          <a href="#"><i class="fa fa-github"></i></a> -->
 
         </div>
         

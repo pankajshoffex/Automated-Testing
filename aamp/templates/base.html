@@ -10,7 +10,9 @@
 	    <title>{% block head_title %}Shoffex Online Shopping Website{% endblock head_title %}</title>
 	    <meta name="keywords" content="{% block meta_keyword %} {% endblock meta_keyword %}" />
 	    <meta name="description" content="{% block meta_description %} {% endblock meta_description %}"/>
-	    <link rel="shortcut icon" type="image/x-icon" href="#"/>
+	    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
+		<link rel="icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
+
 
 		{% include "head_css.html" %}
 		{% block style1 %} {% endblock style1 %}

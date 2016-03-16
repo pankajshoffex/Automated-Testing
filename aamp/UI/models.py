@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from geoposition.fields import GeopositionField
 # Create your models here.
 
 class SitePageManager(models.Manager):
@@ -57,7 +58,7 @@ class SitePage(models.Model):
 	date = models.DateTimeField(auto_now_add=True, auto_now=False)
 	modified = models.DateTimeField(auto_now_add=False, auto_now=True)
 	show_on_page = models.BooleanField(default=True)
-
+	is_it_location = models.BooleanField(default=False)
 	objects = SitePageManager()
 
 	def __unicode__(self):
@@ -69,3 +70,13 @@ class SitePage(models.Model):
 
 		self.modified = timezone.now()
 		return super(SitePage, self).save(*args, **kwargs)
+
+class PointOfInterest(models.Model):
+	    name = models.CharField(max_length=100)
+	    address = models.CharField(max_length=255)
+	    city = models.CharField(max_length=50)
+	    zipcode = models.CharField(max_length=10)
+	    position = GeopositionField(blank=True)
+
+	    class Meta:
+	    	verbose_name_plural = 'points of interest'

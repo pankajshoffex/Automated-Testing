@@ -59,6 +59,7 @@ $('#signup_next').click(function(){
 $('#xyz').hide();
 $('#abc').show();
 {% else %}
+$('#xyz').show();
 $('#abc').hide();
 {% endif %}
 
@@ -75,11 +76,13 @@ $("#otp").change(function(){
 			{
 				$(".ok").css('display', 'inline-block');
 				$(".remove").css('display', 'none');
+				$("#sign_up").removeClass('disabled', '');
 			}
 			else
 			{
 				$(".ok").css('display', 'none');
 				$(".remove").css('display', 'inline-block');
+				$("#sign_up").addClass('disabled');
 			}
 			console.log(data.token);
 		},
@@ -161,7 +164,7 @@ confirm_password.onkeyup = validatePassword;
 							<input type="password" maxlength="10" class="form-control" id="sign_c_password" name="sign_c_password" placeholder="Confirm Password" required>
 						</div>
 						<span class="help-block"></span>
-						<button class="btn btn-lg btn-primary btn-block" id="sign_up" type="submit">SIGNUP</button>
+						<button class="btn btn-lg btn-primary btn-block disabled" id="sign_up" type="submit">SIGNUP</button>
 					</form>
 				</div>
 			  </div>
@@ -172,7 +175,7 @@ confirm_password.onkeyup = validatePassword;
 			        <i class="fa fa-facebook-square fa-3x"></i>
 
 		        	</a>
-		        	<a href="#" style="color: red;"><i class="fa fa-google-plus-square fa-3x"></i>
+		        	<a href='{% provider_login_url "google" %}' style="color: red;"><i class="fa fa-google-plus-square fa-3x"></i>
 					</a>
 			  </div>
 			</div>
@@ -201,7 +204,7 @@ confirm_password.onkeyup = validatePassword;
 					<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 				</form>
 				<span class="help-block"></span>
-					<p><a href="#">Forgot Password ?</a></p>
+					<p><a href="{% url 'account:forget_pass' %}">Forgot Password ?</a></p>
 			  </div>
 			</div>
 		</div>

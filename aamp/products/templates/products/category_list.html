@@ -50,10 +50,11 @@ div#rel1:hover{
 			</form>
 			<hr>
 			<h4>Price</h4>
-			<h5><a href="" style="color: black"><input type="checkbox"> Rs. 0 - 500</a></h5>
-			<h5><a href="" style="color: black"><input type="checkbox"> Rs. 501 - 1000</a></h5>
-			<h5><a href="" style="color: black"><input type="checkbox"> Rs. 1001 - 5000</a></h5>
-			<h5><a href="" style="color: black"><input type="checkbox"> Rs. 5000 and Above</a></h5>
+			<h5><a href="{% url 'products:single_category_products' slug %}" style="color: black"> All</a></h5>
+			<h5><a href="{% url 'products:single_category_products' slug %}?from=0&to=500" style="color: black"> Rs. 0 - 500</a></h5>
+			<h5><a href="{% url 'products:single_category_products' slug %}?from=501&to=1000" style="color: black"> Rs. 501 - 1000</a></h5>
+			<h5><a href="{% url 'products:single_category_products' slug %}?from=1001&to=5000" style="color: black"> Rs. 1001 - 5000</a></h5>
+			<h5><a href="{% url 'products:single_category_products' slug %}?from=5000&to=100000" style="color: black"> Rs. 5000 and Above</a></h5>
 			<hr>
 
 	</div>

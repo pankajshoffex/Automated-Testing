@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from useraccount.models import SignUp
+from django.contrib.auth.models import User
 
 # Create your models here.
 from mptt.models import MPTTModel, TreeForeignKey, TreeManyToManyField
@@ -164,7 +165,7 @@ class Category(MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     image = models.ImageField(upload_to='categories', blank=True, null=True)
-    slug = models.SlugField()
+    slug = models.SlugField(blank=True, null=True)
 
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -204,7 +205,7 @@ class ShirtSize(models.Model):
 
 class ProductRating(models.Model):
 	product = models.ForeignKey(Product)
-	user = models.ForeignKey(SignUp)
+	user = models.ForeignKey(User)
 	rate = models.PositiveIntegerField()
 	title = models.CharField(max_length=120)
 	desc = models.TextField()

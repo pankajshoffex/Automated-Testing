@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-
+from decimal import Decimal
 # Create your views here.
 
 from .mixins import StaffRequiredMixin
@@ -26,7 +26,7 @@ def product_rating(request, pk):
 		desc = request.POST.get("desc")
 		star = request.POST.get("star")
 		if desc and star:
-			signup = SignUp.objects.get(user=request.user)
+			signup = request.user
 			
 			
 			rating = ProductRating(product=product, user=signup)
@@ -48,11 +48,20 @@ def product_rating(request, pk):
 def category_list(request, slug):
 	context = {}
 	cat = Category.objects.get(slug=slug)
-	products = Product.objects.filter(categories__in=cat.get_descendants(include_self=True)).order_by("?")
+	price_from = request.GET.get('from')
+	price_to = request.GET.get('to')
+
+	if price_from is not None and price_to is not None:
+		print "yes"
+		products = Product.objects.filter(categories__in=cat.get_descendants(include_self=True), sale_price__range=[Decimal(price_from), Decimal(price_to)])
+	else:
+		print "No"
+		products = Product.objects.filter(categories__in=cat.get_descendants(include_self=True)).order_by("?")
 	
 	subcat = cat.get_children()
 	category_image = str(cat.image)
 
+	context['slug'] = slug
 	context['image'] = category_image
 	context['subcategory'] = subcat
 	context['category'] = cat.name
@@ -75,6 +84,7 @@ class ProductListView(ListView):
 	def get_context_data(self, *args, **kwargs):
 		context = super(ProductListView, self).get_context_data(*args, **kwargs)
 		context["query"] = self.request.GET.get("q")
+		context["recommended"] = Product.objects.all().order_by("?")[:6]
 		return context
 
 	def get_queryset(self, *args, **kwargs):

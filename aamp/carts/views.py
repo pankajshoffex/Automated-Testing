@@ -199,12 +199,12 @@ class CheckoutView(LoginRequiredMixin, CartOrderMixin, DetailView):
 			new_order.shipping_total_price = shipping
 			new_order.save() 
 
-		if self.request.user.is_authenticated():
-			user_checkout = SignUp.objects.get(user=self.request.user)
+		# if self.request.user.is_authenticated():
+		# 	user_checkout = SignUp.objects.get(user=self.request.user)
 			if new_order.billing_address == None or new_order.shipping_address == None:
 			 	return redirect("order_address")
 
-			new_order.user = user_checkout
+			new_order.user = request.user
 			new_order.save()
 		return get_data
 
@@ -220,15 +220,16 @@ class CheckoutFinalView(CartOrderMixin, View):
 			messages.success(request, "Thank you for your order.")
 			msg = "Your order id is %s was successfully created, payment type is %s, your total amount is %s , Have a nice day,Shoffex." % ( order.id,order.payment,order.order_total)
 			if self.request.user.is_authenticated():
-				#result = sendSMS(msg, self.request.user)
-				#if result:
-				SmsHistory.objects.create(
-					number=self.request.user,
-					recipient=self.request.user.get_full_name(),
-					sms_subject="Order Completed", 
-					sms_text=msg,
-					sms_type="Order Created"
-					)
+				obj = SendSMS()
+				result = obj.sendsms(msg, self.request.user)
+				if result:
+					SmsHistory.objects.create(
+						number=self.request.user,
+						recipient=self.request.user.get_full_name(),
+						sms_subject="Order Completed", 
+						sms_text=msg,
+						sms_type="Order Created"
+						)
 			del request.session["cart_id"]
 			del request.session["order_id"]
 		elif request.POST.get("payment_token") == "COD":
@@ -236,15 +237,16 @@ class CheckoutFinalView(CartOrderMixin, View):
 			order.payment_method("COD")
 			messages.success(request, "Thank you for your order.")
 			msg = "Your order id is %s was successfully created, payment type is %s, your total amount is %s , Have a nice day,Shoffex." % ( order.id,order.payment,order.order_total)
-			#result = sendSMS(msg, self.request.user)
-			#if result:
-			SmsHistory.objects.create(
-				number=self.request.user,
-				recipient=self.request.user.get_full_name(),
-				sms_subject="Order Completed", 
-				sms_text=msg,
-				sms_type="Order Created"
-				)
+			obj = SendSMS()
+			result = obj.sendsms(msg, self.request.user)
+			if result:
+				SmsHistory.objects.create(
+					number=self.request.user,
+					recipient=self.request.user.get_full_name(),
+					sms_subject="Order Completed", 
+					sms_text=msg,
+					sms_type="Order Created"
+					)
 			del request.session["cart_id"]
 			del request.session["order_id"]
 		else:

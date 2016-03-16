@@ -53,3 +53,20 @@ class SmsMarketing(models.Model):
 	def __unicode__(self):
 		return self.sms_subject
 
+class BulkSms(models.Model):
+	name = models.CharField(max_length=30)
+	numbers = models.CharField(max_length=30)
+	date = models.DateField(auto_now_add=True, auto_now=False)
+	def __unicode__(self):
+		return self.numbers
+
+class BulkSmsHistory(models.Model):
+	number = models.CharField(max_length=10)
+	recipient = models.CharField(max_length=50)
+	sms_subject = models.CharField(max_length=80)
+	sms_text = models.CharField(max_length=512)
+	sms_type = models.CharField(max_length=32)
+	date = models.DateTimeField(auto_now_add=True, auto_now=False)
+
+	def __unicode__(self):
+		return self.number
