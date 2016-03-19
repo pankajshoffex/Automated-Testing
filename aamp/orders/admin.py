@@ -3,7 +3,8 @@ from django.contrib import admin
 # Register your models here.
 from .models import UserAddress, Order
 from .forms import OrderForm
-from sms.models import SendSMS
+from sms.models import SendSMS, SmsHistory
+from django.contrib.auth.models import User
 
 class OrderAdmin(admin.ModelAdmin):
 	form = OrderForm
@@ -22,6 +23,7 @@ class OrderAdmin(admin.ModelAdmin):
 		obj = SendSMS()
 		if request.method == 'POST':
 			form = OrderForm(request.POST)
+			result = ""
 			if form.is_valid():
 				status = form.cleaned_data['status']
 				if status == "received":

@@ -17,6 +17,7 @@ from .models import SignUp, HomePageSlider
 from UI.models import UploadLogo, TopOffers, BottomOffers
 from sms.models import SmsSetting, SmsHistory, SendSMS
 from products.models import Category
+from orders.models import Order
 
 
 def index(request):
@@ -98,7 +99,8 @@ def signup_mobile(request):
 				msg_token = str(token)
 				request.session['var'] = msg_token
 				obj = SendSMS()
-				obj.sendsms(msg_token,mobile)
+				new_msg = "Dear %s ,your OTP is: %s" %(mobile, msg_token)
+				obj.sendsms(new_msg,mobile)
 				data = "yes"
 				cnt = "no"
 		else:
@@ -163,6 +165,18 @@ def signup(request):
 @login_required(login_url='/accounts/login/')
 def user_account(request):
 	return render(request, 'account/User_Account.html', {})
+
+
+@login_required
+def order_tracking(request):
+	context = {}	
+	
+	order = Order.objects.filter(user=request.user)
+	count = order.count()
+	context['order'] = order
+	context['count'] = range(0, count)
+
+	return render(request, "account/order_tracking.html", context)
 
 @login_required(login_url='/accounts/login/')
 def user_settings(request):

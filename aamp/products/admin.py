@@ -48,7 +48,7 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     change_form_template = "admin_copies/editor/change_form.html"
     list_display = ['__unicode__', 'price','active','admin_thumbnail',]
     list_filter = ('categories',)
-    search_fields = ['title', 'price', 'sale_price']
+    search_fields = ['title', 'price', 'sale_price', 'quantity']
     
     inlines = [
         VariationInline,

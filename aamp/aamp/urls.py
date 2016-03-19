@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from useraccount.views import index
 
+from aamp.sitemaps import ProductSitemap, CategorySitemap, StaticViewSitemap
 from django.contrib.sitemaps.views import sitemap
 from django.contrib.sitemaps import views
 
@@ -33,6 +34,11 @@ from orders.views import (
                 UserAddressUpdateView
                 )
 
+sitemaps = {
+              'products' : ProductSitemap,
+              'categories': CategorySitemap,
+              'staticPages': StaticViewSitemap
+            }
 
 urlpatterns = [
     url(r'^$', index, name="home"),
@@ -58,6 +64,11 @@ urlpatterns = [
     url(r'^invoice/(?P<pk>\d+)/$', InvoicePDFView.as_view(), name='invoice'),
 
     url(r'^social_accounts/', include('allauth.urls')),
+
+    ### SiteMap Indexing ########
+    url(r'^sitemap.xml/$', views.index, {'sitemaps': sitemaps}),
+    url(r'^sitemap-(?P<section>.+).xml/$', views.sitemap, {'sitemaps': sitemaps}),
+    url(r'^robots.txt/', include('robots.urls')),
 
 ]
 

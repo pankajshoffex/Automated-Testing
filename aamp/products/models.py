@@ -71,7 +71,18 @@ class Product(models.Model):
 		else:
 			slug = slugify(self.title)
 			self.slug = "%s-%s-%s" %(slug, self.pk)
+
+		if not self.meta_keywords or not self.meta_description:
+			keyword_data = [x.split(',') for x in self.title.split(' ')]
+			p = ""
+			for i in keyword_data:
+				p = p + ''.join(i) + ','
+
+			self.meta_keywords = p
+			self.meta_description = self.title
+
 		super(Product, self).save(*args, **kwargs)
+
 
 	def admin_thumbnail(self):
 		img = self.productimage_set.first()
@@ -179,6 +190,8 @@ class Category(MPTTModel):
     	self.slug = "%s-%s" %(slug, self.pk)
     	super(Category, self).save(*args, **kwargs)	
 
+    def get_absolute_url(self):
+    	return reverse("products:single_category_products", kwargs={"slug": self.slug})
 
 class ProductColor(models.Model):
 	title = models.CharField(max_length=120)
