@@ -13,13 +13,12 @@
 	<form method="POST" action="{% url 'checkout_final' %}">{% csrf_token %}
 	<button type="submit" class="btn btn-warning btn-lg btn-block" name="payment_token" value="COD">COD</button>
 	</form>
-	<form method="POST" action="{% url 'checkout_final' %}">{% csrf_token %}
+	<form method="POST" action="{% url 'payu:order_checkout' %}">{% csrf_token %}
 	<button type="submit" class="btn btn-primary btn-lg btn-block" name="payment_token" value="PAYU">PAYU MONEY</button>
 	</form>
 	<input type="hidden" name="payment_token" value="ABC" />
 	<p><b><button type="submit">Complete Order</button></b></p>
-	
+	<span>{{ random }}</span>
 	</div>
-
 </div>
 {% endblock %}

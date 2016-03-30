@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block jquery %}
+
+$("#reason_form").hide();
+$("#reason_submit").hide();
+$("#choice").show();	
+
+$("#default").click(function(){
+	$("#reason_form").show(1000);
+	$("#choice_form").hide(1000);
+	$("#reason_submit").show(1000);
+	$("#button").hide(1000);
+	$("#choice").hide(1000);
+	$("#choice_submit").hide(1000)
+});
+$("#list").click(function(){
+	$("#choice").show(1000);
+	$("#reason_form").hide(1000);
+	$("#choice_form").show(1000);
+	$("#reason_submit").hide(1000);
+	$("#choice_submit").show(1000)
+	$("#button").show(1000);
+});
+$("#choice").click(function(){
+	$("#button").hide(1000);
+});
+{% endblock jquery %}
+<script>
+function myFunction() {
+    document.getElementById("#choice").disabled = true;
+}
+</script>
+{% block content %}
+<h2>User Cancellation Form</h2>
+<hr>
+<br>
+<form method="post" action="" id="choice_form">{% csrf_token %}
+<div class="panel panel-default">
+  <div class="panel-heading"></div>
+  <div class="panel-body">
+	<div id="choice">
+				<input type="radio" name="reason_choice" value="Delay In Order" required>Delay In Order<br>
+				<input type="radio" name="reason_choice" value="Got Better Offer">Got Better Offer<br>
+				<input type="radio" name="reason_choice" value="Want to Buy Another Product">Want to Buy Another Product<br>
+	</div>
+		<div id="default">
+			
+			<input type="button" id="button" value="Other">
+		</div>
+		
+		<br>
+				
+  </div>
+  <button id="choice_submit">Submit</button>
+</div>
+</form>
+
+<form method="post" action="" id="reason_form">{% csrf_token %}
+<div class="panel panel-default">
+  <div class="panel-heading"></div>
+  <div class="panel-body">
+		<div id="reason">
+				Reason: <input type="text" name="reason_text" required>
+				<input type="button" id="list" value="List">
+		</div>
+		<br>
+				
+  </div>
+  <button id="reason_submit">Submit</button>
+</div>
+	
+</form>
+{% endblock content %}

@@ -4,13 +4,13 @@ from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal
 # Create your views here.
 
 from .mixins import StaffRequiredMixin
-from .models import Product, Variation, Category, ProductRating
+from .models import Product, Variation, Category, ProductRating, Availability
 from useraccount.models import SignUp
 import random
 
@@ -115,5 +115,16 @@ class ProductDetailView(DetailView):
 		context["related"] = sorted(Product.objects.get_related(instance)[:6], key= lambda x: random.random())
 		return context
 
-
-
+def availability(request):
+	avail = request.GET.get('data')
+	print avail
+	if not avail:
+		da = "please enter pincode"
+	else:
+		data = Availability.objects.filter(pin=avail)
+		if not data:
+			da = "Not Available"
+		else:
+			da = "Available"
+	return HttpResponse(da)
+	

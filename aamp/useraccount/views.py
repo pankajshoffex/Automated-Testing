@@ -99,7 +99,7 @@ def signup_mobile(request):
 				msg_token = str(token)
 				request.session['var'] = msg_token
 				obj = SendSMS()
-				new_msg = "Dear %s ,your OTP is: %s" %(mobile, msg_token)
+				new_msg = "Dear %s ,your OTP is: %s  www.shoffex.com" %(mobile, msg_token)
 				obj.sendsms(new_msg,mobile)
 				data = "yes"
 				cnt = "no"

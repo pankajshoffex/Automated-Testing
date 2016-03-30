@@ -228,3 +228,9 @@ class ProductRating(models.Model):
 	def __unicode__(self):
 		return self.title
 
+class Availability(models.Model):
+	pin = models.TextField(blank=True, max_length=200)
+	location = models.CharField(max_length=200)
+	
+	def __unicode__(self):
+		return self.pin

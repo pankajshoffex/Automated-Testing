@@ -11,6 +11,7 @@ from django.utils.html import mark_safe
 from carts.models import Cart, Shipping
 from useraccount.models import SignUp
 from django.contrib.auth.models import User
+import random 
 
 
 ADDRESS_TYPE = (
@@ -43,6 +44,7 @@ ORDER_STATUS_CHOICES = (
 )
 
 class Order(models.Model):
+	order_id = models.CharField(max_length=10, unique=True)
 	status = models.CharField(max_length=120, choices=ORDER_STATUS_CHOICES, default='received')
 	cart = models.ForeignKey(Cart)
 	user = models.ForeignKey(User, null=True)
@@ -54,20 +56,30 @@ class Order(models.Model):
 	timestamp = models.DateField(auto_now_add=True, auto_now=False)
 
 	def __unicode__(self):
-		return str(self.cart.id)
+		return str(self.order_id)
 
 	class Meta:
 		ordering = ['-id']
 
+	def save(self, *args, **kwargs):
+		super(Order, self).save(*args, **kwargs)
+		order_id = "OD%s" %(random.randrange(1, 100000))
+		self.order_id = order_id
+		super(Order, self).save()
+
 	def invoice(self):
 		url = '<a href="/invoice/%s" target="_blank">Invoice</a>' %(self.pk)
+		return mark_safe(url)
+
+	def detail(self):
+		url = '<a href="/adminorders/%s">Detail</a>' %(self.pk)
 		return mark_safe(url)
 
 	def get_absolute_url(self):
 		return reverse("order_detail", kwargs={"pk": self.pk})
 
 	def mark_completed(self):
-		self.status = "completed"
+		self.status = "received"
 		self.save()
 
 	def payment_method(self, method):
@@ -92,9 +104,11 @@ class Order(models.Model):
 
 	def products(self):
 		data = self.cart.cartitem_set.all()
-		li = ''
+		print data
+		li = ""
 		for i in data:
-			li = mark_safe("%s<br/>" %(i.item.get_title()))
+			print i.item.product.title
+			li = mark_safe("<a href='%s' target='_blank'>%s</a><br/>" %(i.item.get_absolute_url(), i.item.get_title()))
 			return li
 
 
@@ -105,3 +119,25 @@ def order_pre_save(sender, instance, *args, **kwargs):
 	instance.order_total = order_total
 
 pre_save.connect(order_pre_save, sender=Order)
+
+
+class UserComplaint(models.Model):
+	order_id = models.IntegerField(blank=True)
+	reason = models.TextField(max_length=300, blank=False)
+	order_name = models.CharField(max_length=300, blank=True)
+	order_price = models.DecimalField(decimal_places=2, max_digits=50, default=0.00)
+	user = models.CharField(max_length=300, blank=True)
+
+	def __unicode__(self):
+		return str(self.order_id)
+
+class AdminComplaint(models.Model):
+	admin_order_id = models.IntegerField(blank=True)
+	admin_reason = models.TextField(max_length=300, blank=False)
+	admin_order_name = models.CharField(max_length=300, blank=True)
+	admin_order_price = models.DecimalField(decimal_places=2, max_digits=50, default=0.00)
+	admin_user = models.CharField(max_length=300, blank=True)
+
+	def __unicode__(self):
+		return str(self.admin_user)
+

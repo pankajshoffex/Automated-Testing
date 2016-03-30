@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+  <form method="post" name="order_form">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Proceed to Make Payment" />
+  </form>
+</div>
+{% endblock content %}

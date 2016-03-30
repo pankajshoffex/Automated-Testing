@@ -11,8 +11,7 @@ class SmsMarketingForm(forms.ModelForm):
 		}
 
 class SendSMSForm(forms.ModelForm):
-	user_choices = [(c.pk, c.mobile_no) for c in SignUp.objects.all()]
-	select_users = forms.MultipleChoiceField(choices=user_choices, widget=forms.CheckboxSelectMultiple)
+	select_users = forms.ModelMultipleChoiceField(queryset=SignUp.objects.all(), widget=forms.CheckboxSelectMultiple)
 	class Meta:
 		model = SendSMS
 		fields = ['sms_subject','sms_text']

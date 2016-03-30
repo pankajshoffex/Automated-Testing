@@ -18,6 +18,7 @@ from useraccount.models import SignUp
 from sms.models import SmsSetting, SmsHistory, SendSMS
 
 
+
 class ItemCountView(View):
 	def get(self, request, *args, **kwargs):
 		if request.is_ajax():
@@ -202,7 +203,7 @@ class CheckoutView(LoginRequiredMixin, CartOrderMixin, DetailView):
 		# if self.request.user.is_authenticated():
 		# 	user_checkout = SignUp.objects.get(user=self.request.user)
 			if new_order.billing_address == None or new_order.shipping_address == None:
-			 	return redirect("order_address")
+				return redirect("order_address")
 
 			new_order.user = request.user
 			new_order.save()
@@ -214,34 +215,16 @@ class CheckoutView(LoginRequiredMixin, CartOrderMixin, DetailView):
 class CheckoutFinalView(CartOrderMixin, View):
 	def post(self, request, *args, **kwargs):
 		order = self.get_order()
-		if request.POST.get("payment_token") == "PAYU":
-			order.mark_completed()
-			order.payment_method("PAYU")
-			messages.success(request, "Thank you for your order.")
-			msg = "Your order id is %s was successfully created, payment type is %s, your total amount is %s , Have a nice day,Shoffex." % ( order.id,order.payment,order.order_total)
-			if self.request.user.is_authenticated():
-				obj = SendSMS()
-				result = obj.sendsms(msg, self.request.user)
-				if result:
-					SmsHistory.objects.create(
-						number=self.request.user,
-						recipient=self.request.user.get_full_name(),
-						sms_subject="Order Completed", 
-						sms_text=msg,
-						sms_type="Order Created"
-						)
-			del request.session["cart_id"]
-			del request.session["order_id"]
-		elif request.POST.get("payment_token") == "COD":
+		if request.POST.get("payment_token") == "COD":
 			order.mark_completed()
 			order.payment_method("COD")
 			messages.success(request, "Thank you for your order.")
-			msg = "Your order id is %s was successfully created, payment type is %s, your total amount is %s , Have a nice day,Shoffex." % ( order.id,order.payment,order.order_total)
+			msg = "Your order id is %s was successfully created, payment type is %s, your total amount = %s . Have a nice day!!! Shoffex.com" % ( order.id,order.payment,order.order_total)
 			obj = SendSMS()
 			result = obj.sendsms(msg, self.request.user)
 			if result:
 				SmsHistory.objects.create(
-					number=self.request.user,
+					number=order.billing_address.mobile,
 					recipient=self.request.user.get_full_name(),
 					sms_subject="Order Completed", 
 					sms_text=msg,

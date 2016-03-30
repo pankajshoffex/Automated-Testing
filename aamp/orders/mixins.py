@@ -16,12 +16,12 @@ class CartOrderMixin(object):
 		if cart is None:
 			return None
 		new_order_id = self.request.session.get("order_id")
+
 		if new_order_id is None:
 			new_order = Order.objects.create(cart=cart)
 			self.request.session["order_id"] = new_order.id
 		else:
 			new_order = Order.objects.get(id=new_order_id)
-
 		return new_order
 
 

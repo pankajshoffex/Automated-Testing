@@ -1,0 +1,44 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<h3>Commission</h3>
+<hr/>
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-responsive">
+			<tr style="background-color: rgb(213, 213, 213);">
+				<td><b>Category</b></td>
+				<td><b>Commission(%)</b></td>
+			</tr>
+			<tr>
+				<td>Mens</td>
+				<td>10%</td>
+			</tr>
+			<tr>
+				<td>Womens</td>
+				<td>12%</td>
+			</tr>
+			<tr>
+				<td>Electronincs</td>
+				<td>15%</td>
+			</tr>
+			<tr>
+				<td>Footwear</td>
+				<td>1%</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<h3>Offers</h3>
+<hr/>
+<div class="row">
+	<div class="col-sm-6 col-xs-12">
+		<img src="{% static 'image/offer1.jpg' %}" alt="offer" height="70%" width="70%">
+	</div>
+	<div class="col-sm-6 col-xs-12">
+		<div style="background-color: orange;">
+			<marquee><h5>Get <span style="font-size: 30px; color: red;">20% Extra</span> by delivered 10 products in 1 month!!!</h5></marquee>			
+		</div>
+	</div>
+</div>
+{% endblock content %}

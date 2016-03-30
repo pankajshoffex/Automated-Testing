@@ -1,20 +1,22 @@
 from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, FormView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.core.urlresolvers import reverse
 # Create your views here.
-
-from .forms import AddressForm, UserAddressForm
+from products.models import Availability
+from django.contrib.admin.views.decorators import staff_member_required
+from .forms import AddressForm, UserAddressForm, OrderForm
 from .mixins import CartOrderMixin, LoginRequiredMixin
-from .models import UserAddress, Order
+from .models import UserAddress, Order, UserComplaint, AdminComplaint
 from useraccount.models import SignUp
 from easy_pdf.views import PDFTemplateView, PDFTemplateResponseMixin
 import easy_pdf
 import datetime
-
 
 class InvoicePDFView(LoginRequiredMixin, PDFTemplateView):
 	template_name = "pdf/invoice.html"
@@ -89,9 +91,14 @@ class UserAddressCreateView(LoginRequiredMixin, CreateView):
 			user_address.street = form.cleaned_data['street']
 			user_address.postcode = form.cleaned_data['postcode']
 			user_address.mobile = form.cleaned_data['mobile']
-			user_address.save()
-			super(UserAddressCreateView, self).form_valid(form, *args, **kwargs)
-			return redirect('checkout')
+			pin = Availability.objects.filter(pin=user_address.postcode)
+			if pin:
+				user_address.save()
+				super(UserAddressCreateView, self).form_valid(form, *args, **kwargs)
+				return redirect('checkout')
+			else:
+				messages.error(self.request,"postcode is not available for shipping.")
+				return redirect("user_address_create")
 		else:
 			form.instance.type = "billing"
 			super(UserAddressCreateView, self).form_valid(form, *args, **kwargs)
@@ -119,6 +126,28 @@ class UserAddressUpdateView(LoginRequiredMixin, UpdateView):
 	fields = ["full_name", "street", "postcode", "mobile"]
 	template_name = "orders/user_address_update_form.html"
 	success_url = "/checkout/address/"
+
+	def get_checkout_user(self):
+		user_checkout = self.request.user
+		return user_checkout
+
+	def form_valid(self,form, *args, **kwargs):
+		form.instance.user = self.get_checkout_user()
+		if form.is_valid():
+			form.instance.full_name = form.cleaned_data['full_name']
+			form.instance.street = form.cleaned_data['street']
+			form.instance.postcode = form.cleaned_data['postcode']
+			form.instance.mobile = form.cleaned_data['mobile']
+			pin = Availability.objects.filter(pin=form.instance.postcode)
+			if pin:
+				form.save()
+				super(UserAddressUpdateView, self).form_valid(form, *args, **kwargs)
+				return redirect('order_address')
+			else:
+				messages.error(self.request, "postcode is not available for shipping.")
+				return redirect("user_address_update", pk=form.instance.pk)
+		return super(UserAddressUpdateView, self).form_valid(form, *args, **kwargs)
+
 
 class AddressSelectFormView(CartOrderMixin, FormView):
 	form_class = AddressForm
@@ -184,3 +213,69 @@ class AddressSelectFormView(CartOrderMixin, FormView):
 	def get_success_url(self, *args, **kwargs):
 		return "/checkout/"
 
+
+def cancel_order(request,pk):
+	order = Order.objects.get(id=pk)
+	if request.method == "POST":
+		reason_choice = request.POST.get("reason_choice")
+		reason_text = request.POST.get("reason_text")
+		order_id = order.id
+		order_price = order.order_total
+		product = order.cart.cartitem_set.all()
+		for i in product:
+			order_name = i.item.product.title
+		instance = UserComplaint()
+		if reason_choice:
+			instance.reason = reason_choice
+		else:
+			instance.reason = reason_text
+		instance.order_id = order_id
+		instance.order_price = order_price
+		instance.order_name = order_name
+		instance.user = order.user
+		order.status = "cancelled"
+		order.save()
+		instance.save()
+		messages.success(request, "your order has been cancelled.")
+		return redirect("orders")
+	return render(request, "orders/cancel_order.html", {})
+
+@staff_member_required
+def admin_orders(request, pk):
+	order = get_object_or_404(Order, pk=pk)
+	form = OrderForm(request.POST or None, instance=order)
+	if form.is_valid():
+		if order.status == "cancelled":
+			return redirect('admin_cancel_order', pk=order.pk)
+		else:
+			form.save()
+			messages.success(request, "status has been changed.")
+			return redirect("/admin/orders/order/")
+	return render(request, "orders/admin_orders.html", {'form':form, 'order':order})
+
+@staff_member_required
+def admin_cancel_order(request, pk):
+	order = Order.objects.get(id=pk)
+	if request.method == "POST":
+		reason_choice = request.POST.get("reason_choice")
+		reason_text = request.POST.get("reason_text")
+		admin_order_id = order.id
+		admin_order_price = order.order_total
+		product = order.cart.cartitem_set.all()
+		for i in product:
+			order_name = i.item.product.title
+		instance = AdminComplaint()
+		if reason_choice:
+			instance.admin_reason = reason_choice
+		else:
+			instance.admin_reason = reason_text
+		instance.admin_order_id = admin_order_id
+		instance.admin_order_price = admin_order_price
+		instance.admin_order_name = order_name
+		instance.admin_user = request.user
+		order.status = "cancelled"
+		order.save()
+		instance.save()
+		messages.success(request, "Order has been cancelled.")
+		return redirect("/admin/orders/order/")
+	return render(request, "orders/admin_cancel_order.html",{'order':order})

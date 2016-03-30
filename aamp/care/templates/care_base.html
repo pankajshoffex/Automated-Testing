@@ -1,0 +1,133 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Simple Sidebar - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+    .navbar-default .navbar-nav > li > a:hover {
+    color: #fff;
+    }
+    .navbar-default .navbar-brand:hover {
+    color: #fff;
+    background-color: transparent;
+    }
+    .navbar{
+        margin-bottom: 0px;
+    }
+    .navbar-default .navbar-brand {
+        color: #fff;
+    }
+    .navbar-default .navbar-nav > li > a {
+    color: #FFF;
+    }
+    .navbar-fixed-top {
+    top: 0;
+    border-width: 0 0 0px;
+    }
+
+    .placeholders {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .placeholders h4 {
+      margin-bottom: 0;
+    }
+    .placeholder {
+      margin-bottom: 20px;
+    }
+    .placeholder img {
+      display: inline-block;
+      border-radius: 50%;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover {
+    color: #ED7E1F;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: #FFFDFD;
+    }
+    .navbar-default .navbar-nav > li > a {
+    color: #FFF;
+    }
+    {% block care_style %}
+
+    {% endblock care_style %}
+    </style>
+    {% block css %}
+
+    {% endblock css %}
+
+</head>
+
+<body style="padding-top: 50px;">
+    <!-- care_navbar -->
+    {% include 'care_navbar.html' %}
+    <!-- end care_navbar -->
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        {% include 'care_sidebar.html' %}
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+            <div>
+            <a href="#menu-toggle" style="margin-left:-25px; z-index:999; position: fixed;" class="btn btn-default hidden-lg hidden-sm " id="menu-toggle">Menu</a>
+            </div> 
+                {% block content %}
+
+                {% endblock content %}
+               
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script src="{% static 'js/docs.min.js' %}"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+
+    </script>
+    {% block jquery %}
+
+    {% endblock jquery %}
+
+</body>
+
+</html>

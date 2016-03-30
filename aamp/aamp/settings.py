@@ -59,6 +59,8 @@ INSTALLED_APPS = [
     'geoposition',
     'robots',
     'payu',
+    'care',
+    
 ]
 
 
@@ -197,9 +199,10 @@ SOCIALACCOUNT_PROVIDERS = {
 ROBOTS_USE_HOST = True
 
 
-PAYU_INFO = {'merchant_key': "C0Dr8m",
-             'merchant_salt': "3sf0jURk",
-             # for production environment use 'https://secure.payu.in/_payment'
-             'payment_url': 'https://test.payu.in/_payment',
-}
+PAYU_MERCHANT_KEY = "gtKFFx" #"C0Dr8m"
+
+PAYU_MERCHANT_SALT = "eCwWELxi" #"3sf0jURk"
+
+# Change the PAYU_MODE to 'LIVE' for production.
+PAYU_MODE = "TEST"
 
