@@ -4,13 +4,15 @@ from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal
+from django.core.urlresolvers import reverse
 # Create your views here.
 
 from .mixins import StaffRequiredMixin
-from .models import Product, Variation, Category, ProductRating, Availability
+from orders.mixins import LoginRequiredMixin
+from .models import Product, Variation, Category, ProductRating, Availability, Whishlist
 from useraccount.models import SignUp
 import random
 
@@ -128,3 +130,30 @@ def availability(request):
 			da = "Available"
 	return HttpResponse(da)
 	
+
+
+@login_required(login_url="/accounts/login/")
+def add_wishlist(request, pk):
+	user = request.user
+	product = Product.objects.get(pk=pk)
+
+	wid, created = Whishlist.objects.get_or_create(user=user, product=product)
+
+	if created:
+		messages.success(request, "Successfully added to wishlist.")
+	else:
+		messages.error(request, "Already added to wishlist.")
+
+	return HttpResponseRedirect(reverse('products:product_detail', kwargs={'slug': product.slug}))
+
+
+class Wishlist(LoginRequiredMixin, ListView):
+	model = Whishlist
+	template_name = "products/wishlist.html"
+
+	def get_queryset(self, *args, **kwargs):
+		qs = super(Wishlist, self).get_queryset(*args, **kwargs)
+		user = self.request.user
+		qs = self.model.objects.filter(user=user)
+		return qs
+

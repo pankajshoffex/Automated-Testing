@@ -335,7 +335,12 @@ $("#buy-btn").removeClass('disabled');
 		
 		{% endif %}
 
+		<!-- Out of Stock -->
+
+		{% if object.quantity < 1 %}
+		{% else %}
 		<input id="pro-qty" class="form-control" type="number" name="qty" min="1" max="{{ object.quantity }}" value="1" />
+		{% endif %}
 
 		{% if object.color.count > 0 %}
 		<h4>Select Color:</h4>
@@ -352,11 +357,19 @@ $("#buy-btn").removeClass('disabled');
 		
 		<br/>
 		<br/>
+
+		<!-- Out of Stock -->
+
+		{% if object.quantity < 1 %}
+			<h3>Out Of Stock !</h3>
+		{% else %}
 		<input id="submit-btn" type="submit" value="Add to Cart" class='btn btn-lg btn-warning btn-block disabled '>
 		
 		<br/>
 		<a href="{% url 'cart' %}" style="text-decoration:none;"><button id="buy-btn" class="btn btn-lg btn-success btn-block disabled">Buy Now</button></a>
+		{% endif %}
 		</form>
+		<a href="{% url 'products:add_wishlist' product.pk %}"><button class="btn btn-lg btn-danger"><i class="glyphicon glyphicon-heart-empty"></i> WHISHLIST</button></a>
 		<br/>
 		<hr/>
 	<h4>Share</h4><br/>

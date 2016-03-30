@@ -7,6 +7,8 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 from products.models import Availability
 from django.contrib.admin.views.decorators import staff_member_required
@@ -279,3 +281,19 @@ def admin_cancel_order(request, pk):
 		messages.success(request, "Order has been cancelled.")
 		return redirect("/admin/orders/order/")
 	return render(request, "orders/admin_cancel_order.html",{'order':order})
+
+@login_required
+def feedback(request):
+	if request.method == 'POST':
+		email = request.POST.get('email')
+		feedback = request.POST.get('feedback')
+		name = request.POST.get('name')
+		mobile = request.POST.get('mobile')
+		print email, feedback, name, mobile
+		send_mail('Feedback', feedback, email, ['abhilash.shoffex@gmail.com'], fail_silently=False)
+	return render(request, "orders/user_feedback.html", {})
+
+
+@login_required
+def get_feedback(request):
+	return render(request, "orders/feedback_submited.html", {})

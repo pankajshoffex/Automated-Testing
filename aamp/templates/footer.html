@@ -178,9 +178,34 @@
 	}
 
 }
+.footer-distributed .container .row
+{
+	margin-top: -50px;
+}
+#trust
+{
+	margin-right: 20px; 
+	margin-left: 0px;
+	width : 200px ;
+	height : 100px;
+}
+#express{
+	margin-right: 10px;
+}
 
 </style>
+
+
 <footer class="footer-distributed">
+	<div class="container hidden-xs" >
+		<div class="row">
+	    	<img id="trust" src="{% static 'image/TrustPay.png' %}" >
+	    	<img id="payu" src="{% static 'image/Payu.jpg' %}">
+	    	<img id="paytm" src="{% static 'image/Paytm.png' %}">
+	    	<img id="express" src="{% static 'image/express-1.png' %}">
+	    	<img src="{% static 'image/master.png' %}">
+	    </div>
+	</div>
 
       <div class="footer-left">
 

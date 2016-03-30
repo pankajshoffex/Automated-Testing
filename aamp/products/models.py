@@ -234,3 +234,12 @@ class Availability(models.Model):
 	
 	def __unicode__(self):
 		return self.pin
+
+
+class Whishlist(models.Model):
+	product = models.ForeignKey(Product)
+	user = models.ForeignKey(User)
+	whishlist_date = models.DateTimeField(auto_now_add=True, auto_now=False)
+
+	def __unicode__(self):
+		return self.product.title

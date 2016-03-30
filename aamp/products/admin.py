@@ -14,7 +14,8 @@ from .models import (
 		ShoesSize,
 		ShirtSize,
 		ProductRating,
-		Availability
+		Availability,
+		Whishlist,
 	)
 
 
@@ -93,6 +94,10 @@ class ProductRatingAdmin(admin.ModelAdmin):
 	list_display = ['name', 'title', 'rate']
 
 
+class WhishlistAdmin(admin.ModelAdmin):
+    list_display = ['product', 'user', 'whishlist_date']
+
+
 class AvailabilityAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 	list_display = ['__unicode__', 'location',]
 	class Meta:
@@ -104,6 +109,7 @@ admin.site.register(ProductColor)
 admin.site.register(ShoesSize)
 admin.site.register(ShirtSize)
 admin.site.register(ProductImage)
+admin.site.register(Whishlist)
 admin.site.register(ProductRating, ProductRatingAdmin)
 admin.site.register(Category, 
 	DraggableMPTTAdmin,

@@ -67,6 +67,7 @@
                     <li><a href="{% url 'account:user_account' %}">{{ request.user }}</a></li>
                     <li><a href="{% url 'orders' %}">Orders</a></li>
                     <li><a href="{% url 'account:order_tracking' %}">Track My Order</a></li>
+                    <li><a href="{% url 'products:wishlist' %}">My Wishlist</a></li>
                     <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'account:login_user' %}?next={{ request.path }}">SignUp or Login</a></li>

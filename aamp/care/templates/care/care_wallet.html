@@ -1,0 +1,35 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<h3>My Wallet</h3>
+<hr/>
+<div class="row">
+	<div class="col-sm-6">
+		<div class="panel panel-primary">
+			<div class="panel-heading">Monthly Earning</div>
+			<div class="panel-body">
+				<table class="table table-responsive">
+				<tr>
+				<td>Earning Rs:<b> 216.00</b></td>
+				<td>Orders:<b> 2</b></td>
+				</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6">	
+		<div class="panel panel-primary">
+		  <div class="panel-heading">Total Earning</div>
+		  <div class="panel-body">
+		    <table class="table table-responsive">
+					<tr>
+						<td>Earning Rs:<b> 520.00</b></td>
+						<td>Orders:<b> 4</b></td>
+					</tr>
+				</table>
+		  </div>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}

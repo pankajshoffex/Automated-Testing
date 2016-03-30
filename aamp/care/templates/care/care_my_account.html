@@ -1,0 +1,112 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+{% block content %}
+
+<h3>My Account</h3>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-info">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Personal Info</h3>
+		  </div>
+		  
+		  <div class="panel-body">
+		  	<div class="col-lg-2"> 
+		    	<img src="{% static 'image/2.jpg' %}" style="height:100px; width: 100px;">
+		    	<br>
+		    	<br>
+		    	<!-- <button class="btn btn-default"><span class="glyphicon glyphicon-remove" alt="remove photo"></span> Remove</button>
+		    	<br>
+		    	<br> -->
+		    	<button class="btn btn-default"><span class="glyphicon glyphicon-open"></span> Change</button>
+		    </div>
+		    <form action="" method="">
+		    <div class="col-lg-5">
+		    	First Name: <input type="text" class="form-control">
+		    	<br>
+		    	Email : <input type="email" class="form-control">
+		    	<br>
+		    	Date Of Birth: <input type="date" class="form-control">
+		    </div>
+		    <div class="col-lg-5">
+		    	Last Name: <input type="text" class="form-control">
+		    	<br>
+		    	Mobile Number : <input type="text" class="form-control">
+		    	<br>
+		    	Gender: &nbsp &nbsp <input type="radio" name="gender"> Male
+		    	&nbsp &nbsp &nbsp		<input type="radio" name="gender"> Female
+		    	<br>
+		    	<div align="right">
+		    		<button class="btn btn-success">Submit</button>
+		    	</div>
+		    </div>
+		    
+		    </form>
+		  </div>
+		</div>
+	</div>
+</div>
+
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Bank Detail</h3>
+  </div>
+  <div class="panel-body">
+  <form>
+	  <div class="col-lg-6">
+	  	Pan Number: <input type="text" class="form-control">
+	  	<br>
+	  	Beneficiary Name: <input type="text" class="form-control">
+	  	<br>
+	  	RTGS/NEFT: <input type="text" class="form-control">
+	  	<br>
+	  	Type Of Account: <select  class="form-control">
+	  	<option>Saving</option>	
+	  	<option>Current</option>
+	  	</select><br>
+	  	Branch: <input type="text" class="form-control">
+
+
+	  </div>
+	  <div class="col-lg-6">
+	  	VAT/TIN/CST No: <input type="text" class="form-control">
+	  	<br>
+	  	Account Number: <input type="text" class="form-control">
+	  	<br>
+	  	IFSC Code: <input type="text" class="form-control">
+	  	<br>
+	  	Bank Name: <input type="text" class="form-control"><br><br>
+	  	<div align="right">
+			<button class="btn btn-success">Submit</button>
+		</div>
+	  </div>
+		
+  </form>  
+  </div>
+</div>
+<div class="panel panel-info">
+	  <div class="panel-heading">
+	      <h3 class="panel-title">Documents	</h3>
+	  </div>
+	  <div class="panel-body">
+		  <form>
+			  <div class="col-lg-6">
+				  ID Proof(Only 1): <select  class="form-control">
+				  	<option>Aadhar Card</option>	
+				  	<option>Voter ID</option>
+				  	</select><br>
+				  PAN Card Copy: <input type="file" name="" id=""></input>
+			  </div>
+			  <div class="col-lg-6">
+			  	Upload Id Proof: <input type="file" name="" id=""></input><br>
+			  	Bank Passbook Copy: <input type="file" name="" id=""></input>
+			  	<br>
+			  	<div align="right">
+					<button class="btn btn-success">Submit</button>
+				</div>
+			  </div>
+		  </form>
+	  </div>
+</div>
+{% endblock content %}

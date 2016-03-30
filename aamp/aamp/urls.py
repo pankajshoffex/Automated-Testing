@@ -34,7 +34,9 @@ from orders.views import (
 				UserAddressUpdateView,
 				cancel_order,
 				admin_orders,
-				admin_cancel_order
+				admin_cancel_order,
+				feedback,
+                get_feedback,
 				)
 
 sitemaps = {
@@ -54,6 +56,8 @@ urlpatterns = [
 
 	url(r'^orders/$', OrderList.as_view(), name="orders"),
 	url(r'^orders/(?P<pk>\d+)/$', OrderDetail.as_view(), name="order_detail"),
+	url(r'^user-feedback/$', feedback, name="feedback"),
+    url(r'^feedback-sent/$', get_feedback, name="feedback_send"),
 	url(r'^cancel/(?P<pk>\d+)/$', cancel_order, name="cancel_order"),
 	url(r'^adminorders/(?P<pk>\d+)/$', admin_orders, name="admin_orders"),
 	url(r'^admincancel/(?P<pk>\d+)/$', admin_cancel_order, name="admin_cancel_order"),
