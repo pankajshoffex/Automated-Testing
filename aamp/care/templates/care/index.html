@@ -1,0 +1,26 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<h3>Dashboard</h3>
+<hr/>
+<div class="row placeholders">
+	<div class="col-xs-12 col-sm-3 placeholder">
+	  <h3>Pending</h3><hr>
+	  <h4>Earnings | Orders</h4><br/>
+	  <div style="background-color:orange; width: 200px; height: 200px; line-height: 200px; border-radius: 50%;display: inline-block;text-align: center;" >
+	  <!-- <img src="{% static 'image/care_dash1.jpg' %}" class="img-responsive" alt="Generic placeholder thumbnail"> -->
+	  <span style="color: white;font-family: bold; font-size: large;">{{ total_pending_commission }} | {{ pending_order_count }}</span>
+	  </div>
+	  <hr/>
+	</div>
+	<div class="col-xs-12 col-sm-3 placeholder">
+	  <h3>Completed</h3><hr>
+	  <h4>Earnings | Orders</h4><br/>
+	  <div style="background-color:green; width: 200px; height: 200px; line-height: 200px; border-radius: 50%;display: inline-block;text-align: center;" >
+	  <!-- <img src="{% static 'image/care_dash1.jpg' %}" class="img-responsive" alt="Generic placeholder thumbnail"> -->
+	  <span style="color: white;font-family: bold; font-size: large;">{{ total_commission }} | {{ order_count }}</span>
+	  </div>
+	  <hr/>
+	</div>
+</div>
+{% endblock content %}

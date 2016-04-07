@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block jquery %}
+
+{% endblock jquery %}
+{% block content %}
+
+<ul class="nav nav-tabs">
+	<li class="active"><a data-toggle="pill" href="#orders" style="color: black">Orders</a></li>
+	<!-- <li><a data-toggle="pill" href="#open" style="color: black">Open</a></li>
+	<li><a data-toggle="pill" href="#cancel" style="color: black">Cancelled Orders</a></li> -->
+ </ul>
+{% if object_list|length <= 0 %}
+
+<div class="text-center">
+	<p class="lead">
+		You do not currently have orders.
+	</p>
+</div>
+
+{% else %}
+<br/>
+ {% for object in object_list %}
+ {% if not object.status == 'cancelled' %}
+<div class="tab-content">
+	<div id="orders" class="tab-pane fade in active">
+		<div class="row" style="background-color: #ccccb3;border: 1px solid black;border-bottom: 0px;">
+			<div class="col-lg-2 col-md-2">
+				<h5>ORDER PLACED</h5>
+				<h5>{{ object.timestamp }}</h5>
+			</div>
+			<div class="col-lg-2 col-md-2">
+				<h5>TOTAL</h5>
+				<h5>Rs.{{ object.order_total }}</h5>
+			</div>
+			<div class="col-lg-3 col-md-3">
+				<h5>SHIP TO</h5>
+				<h5>{{ object.shipping_address.full_name }}</h5>
+			</div>
+			<div class="col-lg-1 col-lg-1">
+				
+			</div>
+			<div class="col-lg-3 col-md-3">
+				<h5>ORDER #{% if object.order_id %}{{ object.order_id }} {% else %}{{ object.id }}{% endif %}</h5>
+				<h5><a href="{% url 'order_detail' object.pk %}">Order Details</a> | <a href="{% url 'invoice' object.id %}" target="_blank">Invoice</a></h5>
+				<h5><a href="{% url 'cancel_order' object.pk %}">Cancel Order</a> </h5>
+			</div>
+			<div class="col-lg-1 col-md-1" style="margin-top: 8px;">
+				<span id="show_{{ object.id }}" style="font-size: 12px;" class="label label-success">Show</span>
+
+			</div>
+		</div>
+		<div id="upper_{{ object.id }}" class="row" style="border: 1px solid black;">
+			<h4 style="margin-left: 25px;">Product Information</h4>
+			<div class="col-lg-8 col-md-8">
+				{% for var in object.cart.items.all %}
+				<div>			
+					<img src="{{ var.product.get_image_url }}" height="100" width="100">
+				</div>
+				<div>
+					<h6><a href="{{ var.product.get_absolute_url }}">{{ var.product.title }}</a></h6>
+					{% if var.product.sale_price %}
+					<h6>Rs. {{ var.product.sale_price }}</h6>
+					{% else %}
+					<h6>Rs. {{ var.product.price }}</h6>
+					{% endif %}
+				</div>
+				{% endfor %}
+			</div>	
+		
+			<div class="col-lg-4 col-md-4">
+				<button style="background-color: orange; height: 32px; width:250px"> View Retur/Refund Status</button>
+				<a href="{% url 'feedback' %}" style="color:black"><button style="background-color:#ebebe0; height: 32px; width:250px"> Leave Feedback</button></a>
+				{% for var in object.cart.items.all %}
+				<a href="{% url 'products:rating' var.product.id %}" style="color:black"><button style="background-color:#ebebe0; height: 32px; width:250px"> Write a product review</button></a>
+				{% endfor %}
+			</div>
+		</div>
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script type="text/javascript">
+			$("#show_{{ object.id }}").click(function(){
+				$("#upper_{{ object.id }}").toggle(1000);
+			});
+			$("#upper_{{ object.id }}").hide();
+		</script>
+	</div>
+</div>
+{% else %}
+<div class="tab-content">
+	<div id="orders" class="tab-pane fade in active">
+		<div class="row" style="background-color: #ccccb3;border: 1px solid black;border-bottom: 0px;">
+			<div class="col-lg-2 col-md-2">
+				<h5>ORDER PLACED</h5>
+				<h5>{{ object.timestamp }}</h5>
+			</div>
+			<div class="col-lg-2 col-md-2">
+				<h5>TOTAL</h5>
+				<h5>Rs.{{ object.order_total }}</h5>
+			</div>
+			<div class="col-lg-3 col-md-3">
+				<h5>SHIP TO</h5>
+				<h5>{{ object.shipping_address.full_name }}</h5>
+			</div>
+			<div class="col-lg-1 col-lg-1">
+				
+			</div>
+			<div class="col-lg-3 col-md-3">
+				<h5>ORDER #{% if object.order_id %}{{ object.order_id }} {% else %}{{ object.id }}{% endif %}</h5>
+			</div>
+			<div class="col-lg-1 col-md-1" style="margin-top: 8px;">
+				<span id="show2_{{ object.id }}" style="font-size: 12px;" class="label label-success">Show</span>
+
+			</div>
+		</div>
+		<div id="lower_{{ object.id }}" class="row" style="border: 1px solid black;">
+			<h4 style="margin-left: 25px;">Product Information</h4>
+			<div class="col-lg-8 col-md-8">
+				{% for var in object.cart.items.all %}
+				<div>			
+					<img src="{{ var.product.get_image_url }}" height="100" width="100">
+				</div>
+				<div>
+					<h6><a href="{{ var.product.get_absolute_url }}">{{ var.product.title }}</a></h6>
+					{% if var.product.sale_price %}
+					<h6>Rs. {{ var.product.sale_price }}</h6>
+					{% else %}
+					<h6>Rs. {{ var.product.price }}</h6>
+					{% endif %}
+				</div>
+				{% endfor %}
+			</div>	
+		
+			<div class="col-lg-3 col-md-3">
+				<span style="font-size: 15px;" class="label label-danger">Order Cancelled</span>
+							
+				<h5>{{ object.cancel}}</h5>
+					
+				
+					
+			</div>
+			
+		</div>
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script>
+		$("#lower_{{ object.id }}").hide();
+		$(document).ready(function(){
+			$("#show2_{{ object.id }}").click(function(){
+				$("#lower_{{ object.id }}").toggle(1000);
+			});
+		});
+			// $("#lower_{{ object.id }}").hide();
+		</script>
+		
+	</div>
+
+	
+
+</div>
+{% endif %}
+
+{% endfor %}
+<br/>
+<br/>
+{% endif %}
+{% endblock content %}

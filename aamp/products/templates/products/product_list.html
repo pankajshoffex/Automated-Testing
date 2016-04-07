@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+<style type="text/css">
+{% block style %}
+.pro_link:hover{
+	padding: 3px;
+	border: 1px solid #d58512;
+}
+{% endblock style %}
+</style>
+{% block content %}
+<h3>Search Results</h3>
+<div class="row">
+{% if object_list %}
+{% for product in object_list %}
+
+	<div class="col-sm-3 col-xs-12">
+		
+
+		<div class="thumbnail text-center">
+			<h4><a href="{{ product.get_absolute_url }}" style="color:black;text-transform: uppercase;font-size: 15px;"><b>{{ product.title }}</b></a></h4>
+			{% if product.get_image_url %}
+			<a href="{{ product.get_absolute_url }}">
+				<img src="{{ product.get_image_url }}" alt="cover image" class="img-responsive" style="height: 200px;" />
+			</a>
+			<br/>
+			{% endif %}
+
+				Rs.{{ product.variation_set.first.get_html_price }}
+
+		    
+		</div>
+	</div>
+	{% if not col_class_set %}
+	{% cycle '' '' '' '' '' '</div><div class="row">' %} 
+	{% endif %}
+{% endfor %}
+{% else %}
+<div class="col-lg-12 text-center">
+<h4>No result found.....</h4>
+</div>
+{% endif %}
+</div>
+<div class="row">
+<h3>Recommended Product</h3>
+	{% for pro in recommended %}
+	<a href="{{ pro.get_absolute_url }}">
+		<div class="col-lg-2 col-sm-3 col-xs-12 text-center">
+			<div class="pro_link">
+			<img src="{{ pro.get_image_url }}" style="height: 200px;max-width: 100%;">
+			<figcaption style="color:black;">{{ pro.title }}</figcaption>
+			<h5>{{ pro.sale_price }} <small style="color:red;"><del> {{ pro.price }}</del></small></h5>
+			</div>
+		</div>
+		</a>
+	{% endfor %}
+</div>
+
+{% endblock content %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<h3 align="center" style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;">
+	{%for i in 'xxx' %}
+	<img src="{% static 'image/estar.png' %}" style="height: 20px;">
+	{% endfor %}
+		My Wishlist
+	{%for i in 'xxx' %}
+	<img src="{% static 'image/estar.png' %}" style="height: 20px;">
+	{% endfor %}
+</h3>
+<hr>
+
+{% for i in object_list %}
+<div class="row" style="border: 1px solid gray; border-radius: 10px;">
+	<div class="col-lg-3 text-center" >
+		<a href="{{ i.product.get_absolute_url }}">
+		<h3 style="color:black">{{ i.product.title }}</h3>
+		<img src="{{ i.product.get_image_url }}" class="img-responsive" style="height: 200px;">
+		</a>
+	</div>
+
+	<div class="col-lg-3">
+		<h3>Price</h3>
+		<a href="{{ i.product.get_absolute_url }}">
+		{% if i.product.sale_price %}
+		<h5 style="color: black;">Rs. <b>{{ i.product.sale_price }}</b><br> <del style="color:red;font-size: 12px;">{{ i.product.price }}</del></h5>
+		{% else %}
+		<h5 style="color:black;">Rs. {{ i.product.price }}</h5>
+		{% endif %}
+		</a>
+	</div>
+
+	
+	<div class="col-lg-4">
+		<h3>Detail</h3>
+		{% if i.product.short_description %}
+			<h5>{{ i.product.short_description|safe }}</h5>
+		{% else %}
+			<h5>No Description Available </h5>
+		{% endif %}
+	</div>
+	
+
+	<div class="col-lg-2" style="margin-top: 100px;">
+		<a href="{{ i.product.get_absolute_url }}" style="text-decoration: none;"><button class="btn btn-block btn-lg btn-warning">Show Product</button></a>
+	</div>
+
+</div>
+<br>
+{% endfor %}
+
+
+{% endblock content %}

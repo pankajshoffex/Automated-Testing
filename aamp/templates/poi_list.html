@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <head>
+        <meta charset="utf-8">
+        <title>Our Strore </title>
+        <style>
+            #map-canvas {
+                border: solid grey 2px;
+                height: 400px;
+                width: 700px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                <h1>Our Store</h1><hr>
+
+                <dl>
+                    {% for poi in pois %}
+                        <dt><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"> {{ poi.name }}</span></dt>
+                        
+                    {% endfor %}
+                </dl>
+                </div>
+                <div style="margin-top: 76px;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                    <div id="map-canvas"></div>
+                </div>
+        </div>
+        </body>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+        <script>
+            function initialize() {
+                var map = new google.maps.Map(document.getElementById('map-canvas'));
+                var bounds = new google.maps.LatLngBounds();
+
+                function addMarker(lat, lng, title) {
+                    var position = new google.maps.LatLng(lat, lng);
+                    var marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: title
+                    });
+                    bounds.extend(position);
+                }
+
+                {% for poi in pois %}
+                    addMarker({{ poi.position.latitude }}, {{ poi.position.longitude }}, "{{ poi.name }}");
+                {% endfor %}
+
+                map.fitBounds(bounds);
+            }
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+{% endblock content %}

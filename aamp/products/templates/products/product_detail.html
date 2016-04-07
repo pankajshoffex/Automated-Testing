@@ -1,0 +1,513 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head_title %}{{ object.title }}{% endblock head_title %}
+{% block meta_keyword %}{{ object.meta_keywords }} {% endblock meta_keyword %}
+{% block meta_description %} {{ object.meta_description }}  {% endblock meta_description %}
+<style>
+{% block style %}
+
+.pro-image{
+	width: 100%;
+	height: auto;
+	border-width: 1px;
+    border-style: solid;
+    border-color:  #111109;
+}
+.image-thumb{
+	float: left;
+	width: 80px;
+	height: 80px;
+    margin: 5px;
+    border-width: 1px;
+    border-style: solid;
+    border-color:  #111109;
+}
+.image-thumb:hover{
+	border-width: 2px;
+    border-style: solid;
+    border-color: red;
+}
+
+.pro-color{
+	float: left;
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+.pro-color:hover{
+	border-width: 2px;
+	border-color: red;
+}
+.color-selected{
+	border-width: 2px;
+	border-color: red;
+}
+
+/* styles unrelated to zoom */
+
+/* these styles are for the demo, but are not required for the plugin */
+.zoom {
+	display:inline-block;
+	position: relative;
+}
+
+/* magnifying glass icon */
+.zoom:after {
+	content:'';
+	display:block; 
+	width:33px; 
+	height:33px; 
+	position:absolute; 
+	top:0;
+	right:0;
+	background:url({% static 'image/icon.png' %});
+}
+
+.zoom img {
+	display: block;
+}
+
+.zoom img::selection { background-color: transparent; }
+
+#ex2 img:hover { cursor: url({% static 'image/grab.cur' %}), default; }
+#ex2 img:active { cursor: url({% static 'image/grabbed.cur' %}), default; }
+
+div#rel:hover{
+	border:2px solid orange;
+}
+
+#avail-label{
+	line-height: 26px;
+	font-family: Museo,san-serif;
+	font-size: 17px;
+	padding: -1 0 0 20px;
+	position: relative;
+	display: inline-block;
+	color:#867d7d;
+}
+.pincode{
+	padding: 6px 10px;
+	margin: 0 0 0 10px;
+	box-shadow: inset 1px 1px 6px 0 #e4e4e4;
+	width: 128px;
+	font-size: 15px;
+	color: #666;
+	height: 34px;
+	border-radius: -8px;
+}
+.btn-check{
+	padding: 0 15px 0;
+	height: 32px;
+	border-radius: 5px;
+	background: #848484;
+}
+.btn-check:hover {
+    background: #848484;
+    color: black;
+}
+.fa-2x {
+    font-size: 1.5em;
+}
+.avail_div{
+	margin-top: 8px;border-top: 1px solid #d3d3d3;
+	border-bottom: 1px solid #d3d3d3;box-shadow: inset 0 8px 10px -7px #e4e4e4;
+	background: -moz-linear-gradient(top,#fff,#f1f5f8);padding: 10px 0;
+}
+{% endblock style %}
+</style>
+<script>
+{% block jquery %}
+
+$('#ex1').zoom();
+
+$(".image-thumb img").hover(function(){
+	var loc = $(this).attr("src");
+	$(".pro-image img").attr("src", loc);
+});
+
+
+$(".pro-color").click(function(){
+	var color = $(this).attr("data-color");
+	var col = $(this);
+	$(".pro-color").removeClass("color-selected");
+	$.ajax({
+		type: "GET",
+		url: "{% url 'products:color_view' %}",
+		data:{
+			"data": color,
+		},
+		success:function(data){
+			if(color == data.color){
+				$(col).addClass("color-selected");
+			}
+		},
+		error:function(response, error){
+			console.log(error);
+		}
+	});
+});
+
+function setPrice(){
+	var price = $(".variation_select option:selected").attr("data-price");
+
+	var sale_price = $(".variation_select option:selected").attr("data-sale-price");
+	if(sale_price != "" && sale_price != "None" && sale_price != null){
+		$("#price").html('<h3>Rs.' + sale_price + ' <small class="og-price">Rs.' + price + '</small></h3>');
+	}else{
+		if(price != "" && price != "None" && price != null)
+		{
+			$("#price").html('Rs. ' + price);
+		}
+	}
+}
+
+setPrice();
+
+$(".variation_select").change(function(){
+	setPrice();
+});
+
+$("#full_desc").hide();
+
+$("#show_more").click(function(){
+	$("#full_desc").toggle(1000);
+});
+
+// Add to cart
+$("#submit-btn").click(function(event){
+    event.preventDefault();
+    var formData = $("#add-form").serialize();
+    var qty = $("#pro-qty").val();
+    if (qty > {{ object.quantity }})
+    {
+    	alert(qty + " Product not available");
+    }
+    else{
+    console.log(formData);
+    $.ajax({
+      type: "GET",
+      url: "{% url 'cart' %}",
+      data: formData,
+      success: function(data){
+        showFlashMessage(data.flash_message);
+        updateCartItemCount();
+      },
+      error: function(response, error){
+        $("#add-form").submit();
+      }
+    });
+	}
+    //$("#add-form").submit();
+});
+
+$("#submit-btn").removeClass('disabled');
+$("#buy-btn").removeClass('disabled');
+	$("#check").click(function(){
+        $.ajax({
+        	url: "/products/availability/",
+        	type: "get",
+        	data: {
+        		'data': $("#avail").val()
+        	}, 
+        	success: function(result){
+
+        		if(result == 'Available'){
+        			$("#submit-btn").removeClass('disabled');
+        			$("#buy-btn").removeClass('disabled');
+        			$("#avail_msg").html(result);
+        		}
+        		else{
+        			$("#submit-btn").addClass('disabled');
+        			$("#buy-btn").addClass('disabled');
+        			$("#avail_msg").html(result);
+        		}
+            
+        	}
+    	});
+    });
+{% endblock jquery %}
+</script>
+
+{% block content %}
+
+<div class="row" style="margin-top: 30px;">
+
+	<div class="col-sm-5 hidden-xs hidden-sm">
+		<span class="pro-image zoom" id='ex1'>
+		{% if object.get_image_url %}
+
+		<div style="width:470px; height:470px;" align="center"><!-- display: table-cell;vertical-align: middle; -->
+			<img class="center-block" src="{{ object.get_image_url }}" width='auto' height='auto'  style="max-width: 100%; max-height:100%;" alt='Daisy'/>
+		</div>
+		{% endif %}
+		</span>
+		
+		<div class="clearfix" align="center">
+        {% for img in object.productimage_set.all %}
+            <div class="image-thumb">
+            	<img  src="{{ img.image.url }}" alt="image thumbnail" class="thumb" width="76" height="76">
+            </div>
+        {% endfor %}
+		</div>
+	</div>
+	<div class="col-sm-5 hidden-lg hidden-md ">
+		{% if object.get_image_url %}
+
+		<div class="pro-image"><!-- display: table-cell;vertical-align: middle; -->
+			<img src="{{ object.get_image_url }}" class="img-responsive" alt='Daisy'/>
+		</div>
+		{% endif %}
+		
+		<div class="clearfix" align="center">
+        {% for img in object.productimage_set.all %}
+            <div class="image-thumb">
+            	<img  src="{{ img.image.url }}" alt="image thumbnail" class="thumb" width="76" height="76">
+            </div>
+        {% endfor %}
+		</div>
+	</div>
+
+	<div class="col-sm-4">
+		<h3>{{ object.title }}</h3>
+
+		<p class="lead">
+			{% if object.short_description %}
+			<h4>Short Description:</h4>
+			{{ object.short_description|safe }}
+			{% endif %}
+		</p>
+			
+	
+	</div>
+
+	<!-- Product Sidebar -->
+	<div class="col-sm-3 well">
+		<form id='add-form' method="GET" action="{% url 'cart' %}">
+		<p id="jquery-message" class="lead">
+    
+  		</p>
+		{% if object.variation_set.count > 1 %}
+		<h4 id="price">Rs. {{ object.variation_set.first.price }}</h4>
+			{% if object.variation_select.first.sale_price %}
+				<br/><b>You Save </b>
+			{% endif %}
+		
+		<h4>Select Size:</h4>
+		
+		<select class="form-control variation_select">
+		{% for vari_obj in object.variation_set.all %}
+		<option name="item" data-sale-price="{{ vari_obj.sale_price }}" data-price="{{ vari_obj.price }}" value="{{ vari_obj.id }}">{{ vari_obj }}</option>
+		{% endfor %}
+		</select>
+		{% else %}
+		<h4 id="price" style="font-size: 25px;">{% if object.variation_set.first.sale_price %}
+			Rs. {{ object.variation_set.first.sale_price }}
+			<small class='og-price'>Rs. {{ object.variation_set.first.price }}</small><br/>
+			{% load logo_tags %}
+			<h6 style="color: green;">You save Rs. {{ object.variation_set.first.price|sub:object.variation_set.first.sale_price }}</h6>
+			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">
+			{% else %}
+			<input type="hidden" name="item" value="{{ object.variation_set.first.id }}">
+
+			Rs. {{ object.variation_set.first.price }}
+			{% endif %}
+		</h4>
+		{% endif %}
+		{% if object.shoessizes.count > 0 %}
+		<h4>Select Size:</h4>
+		<select class="form-control">
+			{% for shoessize in object.shoessizes.all %}
+				<option value="{{ shoessize.id }}">{{ shoessize.title }}</option>
+			{% endfor %}
+		</select>
+		{% endif %}
+		{% if object.shirtsizes.count > 0 %}
+		<h4>Select Size:</h4>
+		<select class="form-control">
+			{% for shirtsize in object.shirtsizes.all %}
+				<option value="{{ shirtsize.id }}">{{ shirtsize.title }}</option>
+			{% endfor %}
+		</select>
+		
+		{% endif %}
+
+		<!-- Out of Stock -->
+
+		{% if object.quantity < 1 %}
+		{% else %}
+		<input id="pro-qty" class="form-control" type="number" name="qty" min="1" max="{{ object.quantity }}" value="1" />
+		{% endif %}
+
+		{% if object.color.count > 0 %}
+		<h4>Select Color:</h4>
+		<p class="lead">
+		{% for color in object.color.all %}
+			{% if color.title == request.session.color %}
+			<a href="javascript:void(0)"><span data-color="{{ color.title }}" class="pro-color color-selected" style="background-color:{{ color.title }};"></span></a>
+			{% else %}
+			<a href="javascript:void(0)"><span data-color="{{ color.title }}" class="pro-color" style="background-color:{{ color.title }};"></span></a>
+			{% endif %}			
+		{% endfor %}
+		</p>
+		{% endif %}
+		
+		<br/>
+		<br/>
+
+		<!-- Out of Stock -->
+
+		{% if object.quantity < 1 %}
+			<h3>Out Of Stock !</h3>
+		{% else %}
+		<input id="submit-btn" type="submit" value="Add to Cart" class='btn btn-lg btn-warning btn-block disabled '>
+		
+		<br/>
+		<a href="{% url 'cart' %}" style="text-decoration:none;"><button id="buy-btn" class="btn btn-lg btn-success btn-block disabled">Buy Now</button></a>
+		{% endif %}
+		</form>
+		<a href="{% url 'products:add_wishlist' product.pk %}"><button class="btn btn-lg btn-danger"><i class="glyphicon glyphicon-heart-empty"></i> WHISHLIST</button></a>
+		<br/>
+		<hr/>
+	<h4>Share</h4><br/>
+		<p>
+		<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+	<i class="fa fa-facebook-square fa-3x"></i>
+		</a>
+		<a href="https://twitter.com/home?status={{ request.build_absolute_uri }}">
+	<i class="fa fa-twitter-square fa-3x"></i>
+		</a>
+		<a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'>
+	<i class="fa fa-google-plus-square fa-3x"></i>
+		</a>
+		</p>
+		<form>
+			<div class="avail_div">
+				<span style="padding-left: 23px;" class="glyphicon glyphicon-map-marker fa-2x"></span><h5 id="avail-label"> Check Availability at</h5>
+				<input id="avail" maxlength="6" placeholder="Enter your Pincode" autocomplete="off" value="" class="pincode" type="text">
+				<input id="check" class="btn-check" value="Check" type="button">
+				<div id="avail_msg" style="color:green;"></div>
+
+			</div>
+			</form>
+		<hr/>
+	</div>
+	<!-- End Product Sidebar -->
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+	<div class="text-center"><button class="btn btn-info" id="show_more">show more</button>
+		
+	</div>
+		<div id="full_desc">
+			<p class="lead">
+				{% if object.long_description %}
+				<h3>Long Description</h3>
+				{{ object.long_description|safe }}
+				{% endif %}
+			</p>
+		</div>
+	</div>
+</div>
+<br>
+<div class="row" style="border-top: 3px solid black;">
+	<div class="col-sm-12">
+		<h4>Related Products</h4>
+	</div>
+</div>
+	
+<div class="row">
+	{% for product in related %}
+	<a href="{{ product.get_absolute_url }}">
+		<div class="col-lg-2 col-sm-2" id="rel">
+		<img class="img-responsive" src="{{ product.get_image_url }}" style="height:250px; max-height: 100%; max-width: 100%;">
+		<!-- <div class="col-xs-6">
+			{% include "products/product_thumbnail.html" with product=product price="True" %}
+		</div>
+		{% cycle '' '</div><div class="row">' %} --> 
+		<h6 style="color:gray;">{{ product.title }}</h6>
+		<div style="background-color: #EAE7E7; height: 1px;"></div>
+		{% five_star as five %}
+		{% for i in five %}
+			{% if i <= product.title|rate:product.pk %}
+				<img src="{% static 'image/estar.png' %}" width="15px">
+			{% else %}
+				<img src="{% static 'image/dstar.png' %}" width="15px">
+			{% endif %}
+		{% endfor %}
+		<div style="background-color: #EAE7E7; height: 1px;"></div>
+		<h5 style="color:black;">Rs. {{ product.price }}</h5>
+		</div>
+
+	</a>
+	{% endfor %}
+</div>
+
+
+
+<div class="row" style="border-top:3px solid black;">
+	<h3>Review of this product</h3>
+	<div class="col-lg-3 text-center">
+		<img src="{{ product.get_image_url }}" class="img-responsive" style="height:200px;display: block;margin: auto;">
+		<figcaption><b>{{ product.title }}</b></figcaption>
+	</div>
+	<div class="col-lg-5 image text-center">
+		<img src="{% static 'image/star.png' %}"  style="height:150px;display: block;margin: auto;">
+		<figcaption>Average Rating for this Product is:{{ product.title|rate:object.pk }}</figcaption>
+	</div>
+	<div class="col-lg-4" style="border-left: 1px dotted gray;">
+		<a href="{% url 'products:rating' object.pk  %}"><h4>Rate this Product</h4></a>
+		<h6>Your rating can help others..!</h6>
+		<a href="{% url 'products:rating' object.pk %}">
+		{% five_star as five %}
+		{% for i in five %}
+			{% if i <= product.title|rate:object.pk %}
+				<img src="{% static 'image/estar.png' %}" width="15px">
+			{% else %}
+				<img src="{% static 'image/dstar.png' %}" width="15px">
+			{% endif %}
+		{% endfor %}		
+		</a>
+	</div>
+</div>
+
+
+{% if product_rating %}
+<div class="row" style="border-top:3px solid black;">	
+<h3>Review List</h3>
+<div style="border: 1px dashed gray;"></div>
+	{% for rating in product_rating %}
+	<div class="col-lg-3">
+		<h5 style="color:#222622;">{{ rating.name }}</h5>
+		{% if rating.rate %}
+			{% for i in five %}
+				{% if i <= rating.rate %}
+				<img src="{% static 'image/estar.png' %}" width="15px">
+				{% else %}
+				<img src="{% static 'image/dstar.png' %}" width="15px">
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+
+		{% if rating.comment_date %}
+		<br>
+		<h6 style="color:gray;">{{ rating.comment_date }}</h6>
+		{% endif %}
+	</div>
+	<div class="col-lg-9">
+		<h5><b>{{ rating.title|safe }}</b></h5>
+		<h5 style="color: gray;">{{ rating.desc|safe }}</h5>
+	</div>
+
+	<br>
+	&nbsp
+	<br>
+	{% endfor %}
+</div>
+{% endif %}
+
+{% endblock content %}

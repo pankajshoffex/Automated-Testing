@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<h3>Feedback Form</h3>
+<div class="row well">
+	<div class="col-lg-8" id="feedback" style="border-right: 1px dashed black;">
+	<form action="/feedback-sent/" method="post">
+	{% csrf_token %}
+		<input class="form-control" type="email" name="email" placeholder="Enter Your Email" required><br>
+		<textarea class="form-control" rows="8" name="feedback" placeholder="Your Feedback" style="resize: none;" required></textarea><br>
+		<input class="form-control" type="text" name="name" placeholder="Enter Your Name" required><br>
+		<input class="form-control" type="text" name="mobile" placeholder="Enter Your Mobile Number" required><br>
+		<input type="submit" class="btn btn-warning btn-block" value="Send Feedback">
+	</form>
+	</div>
+	<div class="col-lg-4">
+		<h4>Why Give Feedback ?</h4>
+		<hr>
+		<p>-Your Feedback can help us to improve Shoffex.
+		<br>-Dont Hesitate to give Feedback.
+		<br>-Feel Free to give Feedback.
+		</p>
+	</div>
+</div>
+{% endblock content %}

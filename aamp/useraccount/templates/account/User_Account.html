@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+
+<div class="row" style="border: 1px solid #d0d0e2; background-color: #efeff5;margin-top: 30px;">
+	<h3 style="margin-left: 25px;color: brown; text-shadow: 1px 1px black;">Orders</h3>
+	<div class="col-lg-4 col-md-4">
+		<img src="{% static 'image/orders.png' %}" height="120" width="150">
+	</div>
+	<div class="col-lg-8 col-md-8" >
+		<h4><a href="{% url 'orders' %}" style="color:black">Order History</a></h4>
+	</div>
+</div>
+<br>
+<div class="row" style="border: 1px solid #d0d0e2;background-color: #efeff5;">
+	<h3 style="margin-left: 25px;color: brown; text-shadow: 1px 1px black;">Settings</h3>
+	<div class="col-lg-4 col-md-4">
+		<img src="{% static 'image/settings.png' %}" height="150" width="150">
+	</div>
+	<div class="col-lg-4 col-md-4">	
+		<h4><a href="{% url 'account:user_settings' %}" style="color: black">Account</a></h4>
+		<h5><a href="{% url 'account:user_settings' %}">-Name</a></h5>
+		<h5><a href="{% url 'account:user_settings' %}">-Email</a></h5>
+		<h5><a href="{% url 'account:user_settings' %}">-Password</a></h5>
+		<h5><a href="{% url 'account:user_settings' %}">-Mobile Number</a></h5>
+
+	</div>
+	<div class="col-lg-4 col-md-4">
+		<h4><a href="{% url 'order_address' %}" style="color: black">Address Book</a></h4>
+	</div>
+</div>
+<!-- <br>
+<div class="row" style="border: 1px solid #d0d0e2; background-color: #efeff5;">
+	<h3 style="margin-left: 25px;color: brown; text-shadow: 1px 1px black;">Payments</h3>
+	<div class="col-lg-4 col-md-4">
+		<img src="{% static 'image/payment.png' %}" height="120" width="150">
+	</div>
+	<div class="col-lg-8 col-md-8" >
+		<h4 style="color: black">Payment Mode</h4>
+		<h5><a href="">-Add Payment Method</a></h5>
+		<h5><a href="">-Edit Or Delete Payment Method</a></h5>
+		<h5><a href="">-Add Credit or Debit Card</a></h5>
+		<h5><a href="">-Manage Your Banck Account for Refund</a></h5>
+
+	</div>
+</div>
+ -->
+
+
+{% endblock %}

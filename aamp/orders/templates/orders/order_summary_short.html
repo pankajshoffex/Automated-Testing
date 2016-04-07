@@ -1,0 +1,63 @@
+<p class="lead">Order Summary</p>
+
+<table class="table">
+<tr><td>{{ order.cart.cartitem_set.count }} Item(s): <br/><b>{% for i in order.cart.cartitem_set.all %}
+{{ i.item.get_title }}<br/> 
+{% endfor %}
+</b></td></tr>
+<tr><td>Cart Subtotal: {{ order.cart.subtotal }}</td></tr>
+<tr><td>Tax: {{ order.cart.tax_total }}</td></tr>
+<tr><td>Items Total: {{ order.cart.total }}</td></tr>
+<tr><td>Shipping: {{ order.shipping_total_price }}</td></tr>
+<tr><td>Order Total: {{ order.order_total }}</td></tr>
+</table>
+
+<table class="table table-responsive">
+	<tr><td>Billing to</td><td>Shipping to</td></tr>
+	<tr>
+		<td>{{ order.billing_address.get_address|safe }}</td>
+		<td>{{ order.shipping_address.get_address|safe }}</td>
+	</tr>
+</table>
+
+{% if product %}
+<hr>
+<div class="row">
+	<div class="col-lg-1"></div>
+	<div class="col-lg-3">
+		<a href="{% url 'account:user_account' %}" style="text-decoration: none;"><button class="btn btn-primary btn-lg btn-block">Account</button></a>
+	</div>
+	<div class="col-lg-1"></div>
+	<div class="col-lg-3">
+		<a href="{% url 'orders' %}" style="text-decoration: none;"><button class="btn btn-warning btn-lg btn-block">Your Orders</button></a>
+	</div>
+	<div class="col-lg-1"></div>
+	<div class="col-lg-3">
+		<a href="/" style="text-decoration: none;"><button class="btn btn-lg btn-success btn-block">Continue Shopping</button></a>
+	</div>
+</div>
+<hr>
+
+	
+<h4>User also brought this</h4> 
+<div class="row" style="border: 1px solid #e6e6e6;">
+
+	{% for i in product %}
+	<div class="col-lg-2" align="center">
+
+		<a href="{{ get_absolute_url }}" class="text-center">
+			<div style="overflow: hidden; height: 25px;">
+				<h6>{{ i.title }}</h6>
+			</div>
+		<img src="{{ i.get_image_url }}" style="height:200px; max-width: 100%;"></a>
+		<br>
+		{% if i.sale_price %}
+		<span>Rs. {{ i.sale_price }} <del style="color:red;font-size: 13px;">{{ i.price }}</del></span>
+		{% else %}
+		<span>Rs. {{ i.price }}</span>
+		{% endif %}	
+	</div>
+	{% endfor %}
+</div>
+{% endif %}
+<br>

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<br>
+<div class="row well">
+	<div class="col-lg-8" id="thanx" align="center" style="border-right: 1px dashed black;">
+		<h3>Thank You for your</h3>
+		<h3>Feedback</h3>
+		<img src="{% static 'image/thanx.png' %}" class="img-responsive" style="height:200px">
+		<br>
+		<a href="/"><button class="btn btn-warning">Continue Shopping</button></a>
+		<a href="{% url 'account:user_account' %}"><button class="btn btn-info">My Account</button>
+		<a href="{% url 'orders' %}"><button class="btn btn-success">My Orders</button></a>
+	</div>
+	<div class="col-lg-4">
+		<h4>Why Give Feedback ?</h4>
+		<hr>
+		<p>-Your Feedback can help us to improve Shoffex.
+		<br>-Dont Hesitate to give Feedback.
+		<br>-Feel Free to give Feedback.
+		</p>
+	</div>
+</div>
+{% endblock content %}

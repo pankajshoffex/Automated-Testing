@@ -1,0 +1,38 @@
+{% load staticfiles %}
+{% load custom_tags %}
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">
+        {% get_care_user request as care_user %}
+            <a href="#">
+                <img src="{{ care_user.profile_pic.url }}" style="height: 70px; width: 70px;border-radius: 50px;">
+                <span style="color: orange; ">{{ care_user.get_full_name }}</span>
+            </a>
+        </li>
+        <hr>
+        <li>
+            <a href="{% url 'care:care_dashboard' %}">Dashboard</a>
+        </li>
+        <li>
+            <a href="{% url 'care:care_orders' %}">Orders</a>
+        </li>
+        <li>
+            <a href="{% url 'care:care_commission' %}">Commission</a>
+        </li>
+        <li>
+            <a href="{% url 'care:care_wallet' %}">My Wallet</a>
+        </li>
+        <li>
+            <a href="{% url 'care:care_my_account' %}">My Account</a>
+        </li>
+        <li>
+            <a href="{% url 'care:care_myArea' %}">My Area</a>
+        </li>
+        <li>
+            <a href="{% url 'care:care_faqs' %}">FAQs</a>
+        </li>
+        <li>
+            <a href="{% url 'care:care_contact' %}">Help / Contact Us</a>
+        </li>
+    </ul>
+</div>

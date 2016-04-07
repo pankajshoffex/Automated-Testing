@@ -1,0 +1,118 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+{% block css %}
+<link href="{% static 'css/datepicker.css' %}" rel="stylesheet">
+<style type="text/css">
+#datepicker{width:180px; margin: 0 20px 20px 20px;}
+#datepicker > span:hover{cursor: pointer;}
+</style>
+{% endblock css %}
+
+{% block script %}
+ <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+ <script>
+ 	$(function () {
+	  $("#datepicker_from").datepicker({ 
+	        autoclose: true, 
+	        todayHighlight: true,
+	        startDate: '-2m',
+    		endDate: 'd'
+	  });//.datepicker('update', new Date());
+	});
+	$(function () {
+	  $("#datepicker_to").datepicker({ 
+	        autoclose: true, 
+	        todayHighlight: true,
+	        startDate: '2016-01-01',
+    		endDate: 'd'
+	  });//.datepicker('update', new Date());
+	});
+ </script>
+{% endblock script %}
+
+{% block jquery %}
+$("#status_selector").change(function(){
+	$("#status_form").submit();
+});
+{% endblock jquery %}
+
+{% block content %}
+<h3>Order List</h3>
+<hr/>
+<div class="row" style="background-color:#F29552; color:white; border-radius: 4px;">
+	<div class="col-sm-4 col-xs-12">
+		<form action="" class="navbar-form navbar-right" role="search">
+	        <div class="form-group">
+	          <input type="text" value="{{ request.GET.q }}" class="form-control" name="q" placeholder="Search">
+	        </div>
+	        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+	</div>
+	<div class="col-sm-5 col-xs-12">
+	<form class="navbar-form navbar-left" role="form">
+		<div class="form-group">
+		<label for="datepicker_from">From:</label>
+		<div id="datepicker_from" class="input-group date" data-date-format="yyyy-mm-dd">
+		    <input class="input-group-addon" id="from" name="from" style="width:100px;" type="text" placeholder="YYYY-MM-DD" value="{{ request.GET.from }}" readonly />
+		</div>
+		</div>
+		<div class="form-group">
+		<label for="datepicker_to">To:</label>
+		<div id="datepicker_to" class="input-group date" data-date-format="yyyy-mm-dd">
+		    <input class="input-group-addon" id="to" name="to" placeholder="YYYY-MM-DD" style="width:100px;" type="text" value="{{ request.GET.to }}" readonly />
+		</div>
+		</div>
+		<button type="submit" class="btn btn-default">Submit</button>
+	  </form>
+	</div>
+	<div class="col-sm-3 col-xs-12">
+		<form name="status_form" id="status_form" class="navbar-form navbar-left" role="form">
+		<select class="form-control" id="status_selector" name="status_selector">
+		{% for i, j in status %}
+			{% if i == request.GET.status_selector %}
+			<option value="{{ i }}" selected="">{{ j }}</option>		
+			{% else %}
+			<option value="{{ i }}" >{{ j }}</option>
+			{% endif %}
+		{% endfor %}
+		</select>
+		</form>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<div style="overflow-x: auto;padding-top: 10px;">
+			<table class="table table-responsive" style="background-color:#A8E3C3;">
+				<tr style="background-color:#337ab7;color:white;">
+					<td><b>Order ID</b></td>
+					<td><b>Customer Name</b></td>
+					<td><b>Order Total(Rs)</b></td>
+					<td><b>Commission(Rs)</b></td>
+					<td><b>Mobile No</b></td>
+					<td><b>Payment Type</b></td>
+					<td><b>Status</b></td>
+					<td><b>Pincode</b></td>
+					<td><b>Invoice</b></td>
+					<td><b>Commission Details</b></td>
+				</tr>
+				{% if order_list %}
+				{% for order in order_list %}
+				<tr>
+					<td>{{ order.order_id }}</td>
+					<td>{{ order.customer_name }}</td>
+					<td>{{ order.order_total }}</td>
+					<td>{{ order.get_commission }}</td>
+					<td>{{ order.mobile_no }}</td>
+					<td>{{ order.payment }}</td>
+					<td>{{ order.status }}</td>
+					<td>{{ order.get_pincode }}</td>
+					<td>{{ order.invoice }}</td>
+					<td><a href="{% url 'care:care_order_detail' order.pk %}" target="_blank">details</a></td>
+				</tr>
+				{% endfor %}
+				{% endif %}
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock content %}

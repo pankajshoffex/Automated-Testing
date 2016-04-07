@@ -1,0 +1,191 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
+
+    <title>Shoffex Care Point</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+    .navbar-default .navbar-nav > li > a:hover {
+    color: #fff;
+    }
+    .navbar-default .navbar-brand:hover {
+    color: #fff;
+    background-color: transparent;
+    }
+    .navbar{
+        margin-bottom: 0px;
+    }
+    .navbar-default .navbar-brand {
+        color: #fff;
+    }
+    .navbar-default .navbar-nav > li > a {
+    color: #FFF;
+    }
+    .navbar-fixed-top {
+    top: 0;
+    border-width: 0 0 0px;
+    }
+
+    .placeholders {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .placeholders h4 {
+      margin-bottom: 0;
+    }
+    .placeholder {
+      margin-bottom: 20px;
+    }
+    .placeholder img {
+      display: inline-block;
+      border-radius: 50%;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover {
+    color: #ED7E1F;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: #FFFDFD;
+    }
+    .navbar-default .navbar-nav > li > a {
+    color: #FFF;
+    }
+
+    /* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+  padding: 0 0 60px;
+}
+
+.footer {
+  position:fixed;
+  bottom: 0;
+  width: 81%;
+  /* Set the fixed height of the footer here */
+  height: 50px;
+  background-color: #f5f5f5;
+}
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container1 {
+  width: auto;
+  max-width: 680px;
+  padding: 0 15px;
+}
+.container1 .credit1 {
+  margin: 20px 0;
+}
+
+{% block care_style %}
+
+{% endblock care_style %}
+</style>
+{% block css %}
+
+{% endblock css %}
+
+</head>
+
+<body style="padding-top: 50px;">
+    <!-- care_navbar -->
+    {% include 'care_navbar.html' %}
+    <!-- end care_navbar -->
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        {% include 'care_sidebar.html' %}
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+            {% if messages %}
+            <div>
+              {% for message in messages %}             
+                <div class='alert alert-{% if message.tags == "success" %}success{% else %}danger{% endif %} text-center alert-dismissible'>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                </div>          
+              {% endfor %}
+           
+          </div>
+        {% endif %}
+            <div>
+            <a href="#menu-toggle" style="margin-left:-25px; z-index:999; position: fixed;" class="btn btn-default hidden-lg hidden-sm " id="menu-toggle">Menu</a>
+            </div> 
+                {% block content %}
+
+                {% endblock content %}
+                <br><br><br>
+            </div>
+            
+        </div>
+        <!-- /#page-content-wrapper -->
+
+        <div class="footer">
+        <div class="container1 text-center">
+        <p class="text-muted credit1">&copy; All rights reserved by shoffex.com </p>
+        </div>
+    </div>
+    </div>
+    
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script src="{% static 'js/docs.min.js' %}"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+
+    </script>
+    <script>
+    $(document).ready(function(){
+    {% block jquery %}
+    {% endblock jquery %}
+});
+    </script>
+
+    {% block script %}
+
+    {% endblock script %}
+</body>
+
+</html>

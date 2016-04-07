@@ -1,0 +1,134 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+
+{% block jquery %}
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#pic').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+$("#image").change(function(){
+	readURL(this);
+});
+
+{% endblock jquery %}
+
+{% block content %}
+
+<h3>My Account</h3>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-info">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Personal Info</h3>
+		  </div>
+		  
+		  <div class="panel-body">
+		  <form action="{% url 'care:update_info' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+		  	<div class="col-lg-2"> 
+		    	<img id="pic" name="pic" src="{{ care_user.profile_pic.url }}" style="height:100px; width: 100px;">
+		    	<br>
+		    	<br>
+		    	<!-- <button class="btn btn-default"><span class="glyphicon glyphicon-remove" alt="remove photo"></span> Remove</button>
+		    	<br>
+		    	<br> -->
+		    	<input type="file" id="image" name="image"></input>
+		    </div>
+		    <div class="col-lg-5">
+		    	First Name: <input name="firstname" type="text" class="form-control" value="{{ care_user.firstname }}">
+		    	<br>
+		    	Email : <input name="email" type="email" class="form-control" value="{{ care_user.email }}">
+		    	<br>
+		    	Date Of Birth: <input name="dob" type="date" class="form-control" value="{{ care_user.dob|date:"Y-m-d" }}" placeholder="YYYY-MM-DD">
+		    </div>
+		    <div class="col-lg-5">
+		    	Last Name: <input name="lastname" type="text" class="form-control" value="{{ care_user.lastname }}">
+		    	<br>
+		    	Mobile Number : <input name="mobile_no" type="text" class="form-control" value="{{ care_user.mobile_no }}">
+		    	<br>
+		    	Gender: &nbsp &nbsp <input type="radio" name="gender" checked=""> Male
+		    	&nbsp &nbsp &nbsp		<input type="radio" name="gender"> Female
+		    	<br>
+		    	<div align="right">
+		    		<button class="btn btn-success">Submit</button>
+		    	</div>
+		    </div>
+		    
+		    </form>
+		  </div>
+		</div>
+	</div>
+</div>
+
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Bank Detail</h3>
+  </div>
+  <div class="panel-body">
+  <form action="{% url 'care:update_bank_info' %}" method="post" >{% csrf_token %}
+	  <div class="col-lg-6">
+	  	Pan Number: {{ form.pan_no }}
+	  	<br>
+	  	Beneficiary Name:{{ form.benifit_name }}
+	  	<br>
+	  	RTGS/NEFT: {{ form.neft }}
+	  	<br>
+	  	Type Of Account: {{ form.acc_type }}
+	  	<br>
+	  	Branch: {{ form.branch }}
+	  </div>
+	  <div class="col-lg-6">
+	  	VAT/TIN/CST No: {{ form.vat_no }}
+	  	<br>
+	  	Account Number: {{ form.acc_no }}
+	  	<br>
+	  	IFSC Code: {{ form.ifsc_code }}
+	  	<br>
+	  	Bank Name: {{ form.bank_name }}
+	  	<br><br>
+	  	<div align="right">
+			<button class="btn btn-success">Submit</button>
+		</div>
+	  </div>
+		
+  </form>  
+  </div>
+</div>
+<div class="panel panel-info">
+	  <div class="panel-heading">
+	      <h3 class="panel-title">Documents	</h3>
+	  </div>
+	  <div class="panel-body">
+		  <form action="{% url 'care:upadate_bank_docs' %}" method="post" enctype="multipart/form-data" >{% csrf_token %}
+			  <div class="col-lg-12">
+			  <div>
+		
+			  	<div style="background-color:#bce8f1; color:#31708f; text-align: center;">ID Proof</div><br>
+			  	{{ docs.id_proof }}
+			  	<hr>
+			  	<div style="background-color:#bce8f1; color:#31708f; text-align: center;">Pan Card</div><br>
+			  	{{ docs.pan_card }}
+			  	<hr>
+			  	<div style="background-color:#bce8f1; color:#31708f; text-align: center;">Bank Passbook</div><br>
+			  	{{ docs.bank_pass }}
+			  	<hr>
+			  	<div align="right">
+					<button class="btn btn-success">Submit</button>
+				</div>
+			  </div>
+		  </form>
+	  </div>
+</div>
+<div class="row">
+	<div class="col-lg">
+		
+	</div>
+</div>
+{% endblock content %}

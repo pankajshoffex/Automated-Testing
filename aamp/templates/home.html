@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+<style>
+{% block style %}
+.home_products{
+	padding-top: 20px;
+}
+
+
+.button_go {
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 16px;
+  padding: 10px;
+  width: 150px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button_go span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button_go span:after {
+  content: '»';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button_go:hover span {
+  padding-right: 25px;
+}
+
+.button_go:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+{% endblock style %}
+</style>
+{% block content %}
+
+{% if offers %}
+<div class="row">
+	<div class="col-lg-12">
+		<h3 style="font-family: ‘Times New Roman’, Times, serif;">Best in Products</h3>
+	</div>
+</div>
+
+<div class="row">
+{% for offer in offers %}
+	{% if offer.active %}
+	<div class="col-lg-3 text-center">
+		<a href="{{ offer.url }}"><img src="media/{{ offer.offer }}" style="width:270px; height: 190px;"></a>
+		<a href="{{ offer.url }}"><button style="margin-top: -40px;" class="btn btn-warning">Shop Now</button></a>
+		<br>
+		<br>
+	</div>
+	{% endif %}
+{% endfor %}
+</div>
+
+
+
+
+{% endif %}
+
+
+<br>
+{% if cat %}
+{% for key, value in cat.items %}
+{% if value %}
+<div class="container-fluied" style="box-shadow: 1px 4px 6px 5px #888888;">
+	<div class="row">
+		<div class="col-lg-4">
+			<h3 class="visible-lg visible-md" style="text-transform: uppercase;margin-left: 20px;text-align: left;">{{ key }}</h3>
+			<h3 class="visible-xs" style="text-transform: uppercase;text-align: center;">{{ key }}</h3>
+		</div>
+		<div class="col-lg-6">
+			
+		</div>
+		<div class="col-lg-2 text-center">
+			<a href="{% url 'products:single_category_products' key.slug %}" target="_blank"><button class="btn btn-primary" style="margin-top: 10px;">View All</button></a>
+			
+		</div>
+	</div>
+	<hr style="margin-top: 0px;margin-bottom: 0px;">
+	<div class="row">
+		{% for product in value %}
+		{% if product.active %}
+		<a href="{{ product.get_absolute_url }}">
+		<div class="col-lg-2 text-center">
+			<img src="{{ product.get_image_url }}" style="height: 200px;max-width: 95%;max-height:100%;">
+			<figcaption style="color:black;">{{ product.title }}</figcaption>
+			{% if product.sale_price %}
+			<h5>{{ product.sale_price }} <small style="color:red;"><del> {{ product.price }}</del></small></h5>
+			{% else %}
+			<h5>{{ product.price }}</h5>
+			{% endif %}
+		</div>
+		</a>
+		{% endif %}
+		{% endfor %}
+	</div>
+</div>
+<br>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+
+
+
+
+{% if bottom %}
+<div class="row">
+	<div class="col-lg-12 hidden-md hidden-sm hidden-xs">
+		<span style="font-family: ‘Times New Roman’, Times, serif;font-size: 22px;">New Shoffex Offers</span>
+	</div>
+</div>
+<div class="row">
+{% for offer in bottom %}
+{% if offer.active %}
+	<div class="col-lg-6 col-md-6 hidden-sm hidden-xs text-center">
+		<a href="{{ offer.url }}"><img src="media/{{ offer.offer }}" style="width:570px; height: 180px;"></a>
+		<a href="{{ offer.url }}"><button class="button_go"><span> Shop Now</span> </button></a>
+	</div>
+{% endif %}
+{% endfor %}
+</div>
+<br>
+{% endif %}
+
+{% endblock content %}

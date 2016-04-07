@@ -1,0 +1,18 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<h3>FAQs</h3>
+<hr/>
+		
+<ol>
+{% for que in object_list %}
+	
+		<li><b>{{ que.question }}</b><br/>{{ que.answer }}</li><br/>
+	
+	
+{% endfor %}
+</ol>
+
+
+
+{% endblock content %}

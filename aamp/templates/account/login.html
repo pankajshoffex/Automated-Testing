@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+<style>
+{% block style %}
+.ok {
+	color: green;
+	display: none;
+}
+.remove{
+	color: red;
+	display: none;
+}
+{% endblock style %}
+</style>
+
+<script>
+{% block jquery %}
+$("#mobile").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        $("#mobile_error").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+ });
+$("#username").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        $("#username-error").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+ });
+$('#signup_next').click(function(){
+
+	$.ajax({
+		type: "get",
+		url: "{% url 'account:signup_mobile' %}",
+		data:{
+			'mobile': $('#mobile').val(),
+		},
+		success:function(data){
+			if (data.data == "yes"){
+				$('#mobile_no').val($('#mobile').val());
+				$('#xyz').hide();
+				$('#abc').show();
+			}
+			if (data.data == "no" && data.count == "yes"){
+				$('#mobile_error').html("This mobile no already registered. please login..")
+			}
+		},
+		error:function(response, error){
+			console.log(error);
+		}
+	});
+});
+{% if request.session.mobile %}
+$('#xyz').hide();
+$('#abc').show();
+{% else %}
+$('#xyz').show();
+$('#abc').hide();
+{% endif %}
+
+$("#otp").change(function(){
+	$.ajax({
+		type: "GET",
+		url: "{% url 'account:signup' %}",
+		data: {
+			'data': $("#otp").val(),
+		},
+		success: function(data){
+
+			if (data.token == "yes")
+			{
+				$(".ok").css('display', 'inline-block');
+				$(".remove").css('display', 'none');
+				$("#sign_up").removeClass('disabled', '');
+			}
+			else
+			{
+				$(".ok").css('display', 'none');
+				$(".remove").css('display', 'inline-block');
+				$("#sign_up").addClass('disabled');
+			}
+			console.log(data.token);
+		},
+		error: function(response, error){
+			console.log(response);
+			console.log(error);
+		},
+
+	});
+});
+var password = document.getElementById("sign_password")
+var confirm_password = document.getElementById("sign_c_password");
+
+$("#sign_up").click(function(){
+	if(password.value.length < 6)
+  	{
+  		password.setCustomValidity("Password length minimum 6");
+  	}
+  	else{
+  		password.setCustomValidity('');
+  	}
+  });
+
+
+function validatePassword(){
+
+  if(password.value != confirm_password.value) {
+    confirm_password.setCustomValidity("Passwords Don't Match");
+  } else {
+    confirm_password.setCustomValidity('');
+  }
+}
+
+password.onchange = validatePassword;
+confirm_password.onkeyup = validatePassword;
+{% endblock jquery %}
+</script>
+
+{% block content %}
+	<div class="row" style="margin-top: 20px;">
+		<div class="col-sm-6">
+			<div class="panel panel-primary">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">SIGNUP</h3>
+			  </div>
+			  <div class="panel-body">
+			  	<div id="xyz">
+				    <div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
+						<input type="text" maxlength="10" class="form-control" id="mobile" name="mobile" placeholder="Mobile No" required>
+					</div>
+					<span class="help-block"></span>
+					<span id="mobile_error" style="color: red;"></span>
+
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="signup_next">Next</button>
+				</div>
+				<div id="abc">
+					<form method="POST" action="{% url 'account:signup' %}">{% csrf_token %}
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="text" maxlength="10" class="form-control" id="mobile_no" name="mobile_no" placeholder="Mobile No" value="{{ request.session.mobile }}" required>
+						</div>
+						<input type="hidden" name="next" value="{{ next }}" />
+						<span class="help-block"></span>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="text" maxlength="10" class="form-control" id="otp" name="otp" placeholder="Enter Otp send on your Mobile" required>
+							<span class="glyphicon glyphicon-ok ok" aria-hidden=true></span>
+	    					<span class="glyphicon glyphicon-remove remove" aria-hidden=true></span>
+						</div>
+						<span class="help-block"></span>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="password" maxlength="15" min="6" max="15" class="form-control" id="sign_password" name="sign_password" placeholder="Password" required>
+						</div>
+						<span class="help-block"></span>
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="password" maxlength="15" min="6" max="15" class="form-control" id="sign_c_password" name="sign_c_password" placeholder="Confirm Password" required>
+						</div>
+						<span class="help-block"></span>
+						<button class="btn btn-lg btn-primary btn-block disabled" id="sign_up" type="submit">SIGNUP</button>
+					</form>
+				</div>
+			  </div>
+			  <div class="panel-footer">
+			  		{% load socialaccount %}
+			  		<a href='{% provider_login_url "facebook" method="oauth2" %}'>
+			        
+			        <i class="fa fa-facebook-square fa-3x"></i>
+
+		        	</a>
+		        	<a href='{% provider_login_url "google" %}' style="color: red;"><i class="fa fa-google-plus-square fa-3x"></i>
+					</a>
+			  </div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="panel panel-primary">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">LOGIN</h3>
+			  </div>
+			  <div class="panel-body">
+			   	<form action="{% url 'account:login_user' %}?next={{ next }}" autocomplete="off" method="POST">{% csrf_token %}
+			    	<input type="hidden" name="next" value="{{ next }}" />
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
+						<input type="text" maxlength="10" class="form-control" name="username" id="username" placeholder="Mobile No" required>
+					</div>
+					<span class="help-block"></span>
+					<span class="help-block" id="username-error" style="color: red;"></span>
+										
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+						<input  type="password" class="form-control" name="password" placeholder="Password" required>
+					</div>
+                    <span class="help-block"></span>
+
+					<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+				</form>
+				<span class="help-block"></span>
+					<p><a href="{% url 'account:forget_pass' %}">Forgot Password ?</a></p>
+			  </div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+<style>
+{% block style %}
+form .stars {
+  background: url(/static/image/stars.png) repeat-x 0 0;
+  width: 150px;
+ /* margin: 0 auto;*/
+}
+ 
+form .stars input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+form .stars input[type="radio"].star-5:checked ~ span {
+  width: 100%;
+}
+form .stars input[type="radio"].star-4:checked ~ span {
+  width: 80%;
+}
+form .stars input[type="radio"].star-3:checked ~ span {
+  width: 60%;
+}
+form .stars input[type="radio"].star-2:checked ~ span {
+  width: 40%;
+}
+form .stars input[type="radio"].star-1:checked ~ span {
+  width: 20%;
+}
+form .stars label {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 0!important;
+  padding: 0!important;
+  text-indent: -999em;
+  float: left;
+  position: relative;
+  z-index: 10;
+  background: transparent!important;
+  cursor: pointer;
+}
+form .stars label:hover ~ span {
+  background-position: 0 -30px;
+}
+form .stars label.star-5:hover ~ span {
+  width: 100% !important;
+}
+form .stars label.star-4:hover ~ span {
+  width: 80% !important;
+}
+form .stars label.star-3:hover ~ span {
+  width: 60% !important;
+}
+form .stars label.star-2:hover ~ span {
+  width: 40% !important;
+}
+form .stars label.star-1:hover ~ span {
+  width: 20% !important;
+}
+form .stars span {
+  display: block;
+  width: 0;
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 30px;
+  background: url(/static/image/stars.png) repeat-x 0 -60px;
+  -webkit-transition: -webkit-width 0.5s;
+  -moz-transition: -moz-width 0.5s;
+  -ms-transition: -ms-width 0.5s;
+  -o-transition: -o-width 0.5s;
+  transition: width 0.5s;
+}
+{% endblock style %}
+</style>
+
+
+{% block content %}
+<div class="row" style="padding-top: 30px; ">
+	<div class="col-lg-3">
+		<span class="text-center lead">Review for this product</span>
+		<a href="{{ product.get_absolute_url }}"><h5>{{ product.title }}</h5>
+		<img src="{{ product.get_image_url }}" class="img-responsive" style="max-height: 250px;"></a>
+	</div>
+	<div class="col-lg-8">
+	<span class="text-center lead">Product Review for {{ product.title }} </span>
+		<form id="ratingsForm" method="post" action="">
+		{% csrf_token %}
+			<div class="form-group">
+				<label>Review Title :</label> <input class="form-control" type="text" placeholder="Enter Review Title" name="title" required>
+			</div>
+			<div class="form-group">
+				<label>Review Description :</label>
+				<textarea class="form-control" name="desc">
+					
+				</textarea>
+			</div>
+			<div class="form-group">
+			<label>Rating Star :</label>
+		    <div class="stars" align="left">
+		        <input type="radio" name="star" class="star-1 sub" id="star-1" value="1"/>
+		        <label class="star-1" for="star-1">1</label>
+		        <input type="radio" name="star" class="star-2 sub" id="star-2" value="2"/>
+		        <label class="star-2" for="star-2">2</label>
+		        <input type="radio" name="star" class="star-3 sub" id="star-3" value="3"/>
+		        <label class="star-3" for="star-3">3</label>
+		        <input type="radio" name="star" class="star-4 sub" id="star-4" value="4"/>
+		        <label class="star-4" for="star-4">4</label>
+		        <input type="radio" name="star" class="star-5 sub" id="star-5" value="5"/>
+		        <label class="star-5" for="star-5">5</label>
+		        <span> </span>
+		    </div>
+		    </div>
+		    <div class="form-group">
+				<label>Your Name :</label> <input class="form-control" type="text" placeholder="Enter Your Name" name="name" required="">
+			</div>
+			<button class="btn btn-success btn-block btn-lg">Submit Review</button>
+		</form>
+	</div>
+</div>
+{% endblock content %}
+
+<script>
+{% block jquery %}
+// $(".sub").click(function(){
+
+// 	$.ajax({
+// 		type: "get",
+// 		url: "",
+// 		data: {
+// 			'demo': $(this).val(),
+// 		},
+// 		success: function(data){
+// 			alert(data.key);
+// 		},
+// 		error: function(response, error){
+
+// 		}
+// 	});
+// });
+
+{% endblock jquery %}
+</script>

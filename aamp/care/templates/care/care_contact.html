@@ -1,0 +1,18 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+{% block content %}
+
+<h3>Contact Us</h3>
+<hr/>
+<div class="row">
+	<div class="col-sm-12"> 
+		<form action="{% url 'care:query_send' %}" method="post">
+		{% csrf_token %}
+			<div class="form-group">
+				<label>Question:</label> <textarea class="form-control" type="text" placeholder="Enter Your question" name="que" required="" cols="12" rows="10"></textarea>
+			</div>
+			<button class="btn btn-success btn-lg">Submit</button>
+		</form>
+	</div>
+</div>
+{% endblock content %}

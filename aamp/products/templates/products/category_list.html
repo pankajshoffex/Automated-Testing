@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load logo_tags %}
+<style type="text/css">
+{% block style %}
+div#rel1:hover{
+	-webkit-box-shadow:inset 0px 0px 0px 2px orange;
+    -moz-box-shadow:inset 0px 0px 0px 2px orange;
+    box-shadow:inset 0px 0px 0px 2px orange;
+}
+
+
+.image { 
+   position: relative; 
+   /*width: 100%;  for IE 6 */
+}
+
+#img_caption { 
+   position: absolute; 
+   top: 100px; 
+   /*left: 1; */
+   /*width: 100%;*/
+   margin-left: 12px;
+
+}
+
+#img_caption span { 
+   color: white; 
+   font: bold 24px/45px Helvetica, Sans-Serif; 
+   letter-spacing: -1px;  
+   background: rgb(0, 0, 0); /* fallback color */
+   background: rgba(0, 0, 0, 0.7);
+   padding: 10px; 
+}
+
+.vert{
+	overflow-y: scroll;
+	height: 300px;
+}
+{% endblock style %}
+</style>
+
+{% block content %}
+<div class="row">
+	<h3 style="font-family:  ‘Times New Roman’, Times, serif;">{{ category }}</h3>
+	<div style="background-color: black;height: 3px; width:290px;"></div>
+	
+	<div class="col-lg-3 vert">
+		{% for cat in subcategory %}
+		<h5><a href="{% url 'products:single_category_products' cat.slug %}" style="color: black"> {{ cat }}</a></h5>
+		<hr>
+		{% endfor %}
+	</div>
+	{% if image %}
+		<div class="col-lg-9 hidden-xs hidden-sm">
+			<img src="/media/{{ image }}" height="300" width="850" alt="category image">
+
+		</div>
+	{% else %}
+		<div class="col-lg-9 hidden-xs hidden-sm">
+			<span style="font-size: 24px;">{{ category }}</span>
+
+		</div>
+	
+	{% endif %}
+</div>
+
+<div class="row">
+	<div class="hidden-xs" style="background-color: black;height: 3px; width:290px;"></div>
+	<div class="col-lg-3 hidden-xs ">
+		<h3>CATALOG</h3>
+		<br>
+		{% if subcategory %}
+			<h4 style="font-family:  ‘Times New Roman’, Times, serif;">Categories</h4>
+			<form action="" method="post">
+			{% csrf_token %}
+			{% for cat in subcategory %}
+
+				
+			<h5><input type="checkbox" name="cat" value="{{ cat }}" onchange="this.form.submit()"> {{ cat }} ( {{ cat.product_set.all.count }} )</h5>
+				
+			{% endfor %}
+			</form>
+			<hr>
+			{% endif %}
+			<h4>Price</h4>
+			<h5><a href="{% url 'products:single_category_products' slug %}" style="color: black"> All</a></h5>
+			<h5><a href="{% url 'products:single_category_products' slug %}?from=0&to=500" style="color: black"> Rs. 0 - 500</a></h5>
+			<h5><a href="{% url 'products:single_category_products' slug %}?from=501&to=1000" style="color: black"> Rs. 501 - 1000</a></h5>
+			<h5><a href="{% url 'products:single_category_products' slug %}?from=1001&to=5000" style="color: black"> Rs. 1001 - 5000</a></h5>
+			<h5><a href="{% url 'products:single_category_products' slug %}?from=5000&to=100000" style="color: black"> Rs. 5000 and Above</a></h5>
+			<hr>
+
+	</div>
+	<div class="col-lg-9">
+	{% for product in product_list %}
+
+	<!-- Products Out of Quantity -->
+	{% if product.quantity < 1 %}
+	<a href="{{ product.get_absolute_url }}" style="text-decoration: none;">
+	<div id="rel1" class="col-lg-3 image" style="height: 282px">
+		<img src="{{ product.get_image_url }}" class="img-responsive" style="height: 130px;padding-top:2px; display: block; margin: auto; max-width: 90%; max-height: 90%; opacity: 0.4;">
+		<figcaption>{{ product.title }}</figcaption>
+		<h2 id="img_caption" style="color: black;"><span>Out Of Stock</span></h2>
+		<div style="background-color: gray; height: 1px;"></div>
+		{% if product.sale_price %}
+		<h4>Rs. {{ product.sale_price }} <span style="color:red;font-size: 15px;"><del>{{ product.price }}</del></span></h4>
+		{% else %}
+		<h4>Rs. {{ product.price }}</h4>
+		{% endif %}</a>
+		<div style="background-color: gray; height: 1px;"></div>
+		<div>
+			{% five_star as five %}
+			{% if product.title|rate:product.pk %}
+			{% for i in five %}
+				{% if i <= product.title|rate:product.pk %}
+					<img src="{% static 'image/estar.png' %}" width="15px">
+				{% else %}
+					<img src="{% static 'image/dstar.png' %}" width="15px">
+				{% endif %}
+			{% endfor %}
+			{% endif %}
+		</div>
+
+		<!-- Products In Quantity -->
+		{% else %}
+		<a href="{{ product.get_absolute_url }}" style="text-decoration: none;">
+		<div id="rel1" class="col-lg-3" style="height: 282px">
+		<img src="{{ product.get_image_url }}" class="img-responsive" style="height: 130px;padding-top:2px; display: block; margin: auto; max-width: 90%; max-height: 90%;">
+		<figcaption>{{ product.title }}</figcaption>
+		<div style="background-color: gray; height: 1px;"></div>
+		{% if product.sale_price %}
+		<h4>Rs. {{ product.sale_price }} <span style="color:red;font-size: 15px;"><del>{{ product.price }}</del></span></h4>
+		{% else %}
+		<h4>Rs. {{ product.price }}</h4>
+		{% endif %}
+		</a>
+		<div style="background-color: gray; height: 1px;"></div>
+		<div>
+			{% five_star as five %}
+			{% if product.title|rate:product.pk %}
+			{% for i in five %}
+				{% if i <= product.title|rate:product.pk %}
+					<img src="{% static 'image/estar.png' %}" width="15px">
+				{% else %}
+					<img src="{% static 'image/dstar.png' %}" width="15px">
+				{% endif %}
+			{% endfor %}
+			{% endif %}
+		</div>
+		{% endif %}
+	</div>
+	{% endfor %}
+	</div>
+</div>
+
+{% endblock content %}

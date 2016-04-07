@@ -1,0 +1,48 @@
+{% load staticfiles %}
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.zoom.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+     <script>
+        window.jQuery || document.write('<script src='{% static "js/jquery-1.12.0.min.js" %}'><\/script>')
+    </script>
+    <script src="{% static 'js/megamenu.js' %}"></script>
+
+
+    <script>
+    function updateCartItemCount()
+    {
+    	var badge = $("#cart-count-badge");
+
+    	$.ajax({
+    		type: "GET",
+    		url: "{% url 'item_count' %}",
+    		success: function(data){
+                if(data.count == 0)
+                {
+                    // badge.css();
+                    badge.text(data.count);
+                }
+                else
+                {
+                    badge.text(data.count);
+                    badge.css('background-color', 'red');
+                }
+    			
+                console.log(data.count);
+    		},
+    		error: function(response, error){
+    			console.log(response);
+	    		console.log(error);
+    		}
+    	});
+    }
+    $(document).ready(function(){
+    	updateCartItemCount();
+    });
+
+    </script>

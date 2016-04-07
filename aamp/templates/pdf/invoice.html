@@ -1,0 +1,117 @@
+{% extends "pdf/pdf_base.html" %}
+
+{% block content %}
+<div>
+<table style="width: 100%; text-align: left;">
+<tr><td></td></tr>
+<tr><td><b>Delivery Address</b></td><td><b>Billing Address</b></td></tr>
+<tr>
+	<td>
+		<address>{{ order.shipping_address.get_address|safe }}</address>
+	</td>
+	<td>
+		<address>{{ order.billing_address.get_address|safe }}</address>
+	</td>
+</tr>
+<tr><td></td></tr>
+</table>
+</div>
+
+<div style="width:100%; height:auto;">
+	<table style="width:100%; border: solid 1px #000000; text-align: center; background-color: #d4d4d4; padding: 1px;">
+		<tr style="padding-top: 5px; border:none;">
+			<th>Invoice Number</th>
+			<th>Invoice Date</th>
+			<th>Order Date</th>
+		</tr>
+		<tr style="padding-top: 5px; border:none;">
+			<td style="background:white;">#12345</td>
+			<td style="background:white;">{{ now }}</td>
+			<td style="background:white;">{{ order.timestamp }}</td>
+		</tr>
+	</table>
+</div>
+
+<div style="margin-top: 20px;">
+	<table style="width:100%; border: solid 1px #000000; text-align: center; background-color: #d4d4d4;padding: 1px;">
+		<tr style="padding-top: 5px; border:none;">
+			<th>Product</th>
+			<th>Tax Rate</th>
+			<th>Unit Price</th>
+			<th>Qty</th>
+			<th>Total</th>
+		</tr>
+		{% for i in order.cart.cartitem_set.all %}
+		<tr style="padding-top: 5px; border:none;">
+			<td style="background:white;">{{ i.item.get_title }}</td>
+			<th style="background:white;">-</th>
+			<td style="background:white;">{{ i.item.get_price }}</td>
+			<td style="background:white;">{{ i.quantity }}</td>
+			<td style="background:white;">{{ i.line_item_total }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+
+<div style="margin-top: 20px;">
+	<table style="width:100%;">
+		<tr>
+			<td>
+				<table style="width:100%; border: solid 1px #000000; text-align: center; background-color: #d4d4d4;padding: 1px;">
+					<tr style="padding-top: 5px; border:none;">
+						<th>Payment Method</th>
+						<td style="background:white;">{{ order.payment }}</td>
+						<td style="background:white;">Rs {{ order.order_total }}</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				
+			</td>
+			<td>
+				<table table style="width:100%; border: solid 1px #000000; text-align: right; background-color: #d4d4d4;padding: 1px;">
+					<tr style="padding-top: 5px; border:none;">
+						<td><b>Products Subtotal</b></td>
+						<td style="background:white;width:100px;">Rs {{ order.cart.subtotal }}</td>
+					</tr>
+					<tr style="padding-top: 5px; border:none;">
+						<td><b>Shipping Cost</b></td>
+						<td style="background:white;">Rs {{ order.shipping_total_price }}</td>
+					</tr>
+					<tr style="padding-top: 5px; border:none;">
+						<td><b>Tax</b></td>
+						<td style="background:white;">Rs {{ order.cart.tax_total }}</td>
+					</tr>
+					<tr style="padding-top: 5px; border:none;">
+						<td><b>Total</b></td>
+						<td style="background:white;">Rs {{ order.order_total }}</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- <table class="table">
+<tr><td>{{ order.cart.cartitem_set.count }} Item(s): <br/><b>{% for i in order.cart.cartitem_set.all %}
+{{ i.item.get_title }}<br/> 
+{% endfor %}
+</b></td></tr>
+<tr><td>Cart Subtotal: {{ order.cart.subtotal }}</td></tr>
+<tr><td>Tax: {{ order.cart.tax_total }}</td></tr>
+<tr><td>Items Total: {{ order.cart.total }}</td></tr>
+<tr><td>Shipping: {{ order.shipping_total_price }}</td></tr>
+<tr><td style="font-size: 14px;">Order Total: <span>Rs.</span> {{ order.order_total }}</td></tr>
+</table> -->
+<script type="text/javascript">
+	<!--
+	function date_now(){
+	var currentTime = new Date()
+	var month = currentTime.getMonth() + 1
+	var day = currentTime.getDate()
+	var year = currentTime.getFullYear()
+	document.write(month + "/" + day + "/" + year);
+	//-->
+}
+</script>
+
+{% endblock content %}

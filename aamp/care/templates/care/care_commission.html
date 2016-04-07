@@ -1,0 +1,36 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<h3>Commission</h3>
+<hr/>
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-responsive"  style="background-color:#A8E3C3;">
+			<tr style="background-color:#337ab7;">
+				<td style="color:white;"><b>Category</b></td>
+				<td style="color:white;"><b>Commission(%)</b></td>
+			</tr>
+			{% for category in object_list %}
+			{% if category.care_commission %}
+			<tr>
+				<td>{{ category.name }}</td>
+				<td>{{ category.care_commission }}%</td>
+			</tr>
+			{% endif %}
+			{% endfor %}
+		</table>
+	</div>
+</div>
+<h3>Offers</h3>
+<hr/>
+<div class="row">
+	<div class="col-sm-6 col-xs-12">
+		<img src="{% static 'image/offer1.jpg' %}" alt="offer" height="70%" width="70%">
+	</div>
+	<div class="col-sm-6 col-xs-12">
+		<div style="background-color: orange;">
+			<marquee><h5>Get <span style="font-size: 30px; color: red;">20% Extra</span> by delivered 10 products in 1 month!!!</h5></marquee>			
+		</div>
+	</div>
+</div>
+{% endblock content %}

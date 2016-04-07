@@ -1,0 +1,95 @@
+{% load staticfiles %}
+<nav class="nav navbar-fixed-top" style="max-height: 50px; background-color: rgb(2, 124, 213); height: 50px;">
+    <div class="container">
+      <div class="row" style="padding-top: 5px;">
+        <div class="col-sm-3 text-center col-xs-4">
+            {% load logo_tags %}
+            {% set_logo as logo %}
+            {% if logo %}
+              <div style="text-align: -moz-center;padding-top: 3px;">
+                <a href="/"><img src="{{ logo }}" class="img-responsive" style="max-height: 38px;"></a>
+              </div>
+            {% else %}
+              <div style="margin-top: -16px;" class="visible-lg">
+                <a href="/" style="text-decoration: none;color: white;"><span><h2>SHOFFEX</h2></span></a>
+              </div>
+              <div class="visible-xs">
+                <a href="/" style="text-decoration: none;color: white;"><span><h4>SHOFFEX</h4></span></a>
+              </div>
+            {% endif %}
+        </div>
+        <div class="col-sm-6 hidden-xs">
+          <div style="padding-top: 3px;">
+            <form role="search" method="GET" action='{% url "products:product_list" %}'>
+                <div class="input-group"> 
+                    <input type="text" class="form-control" placeholder="Search" name="q" value="{{ request.GET.q }}">
+                  <span class="input-group-btn">
+                  <button type="submit" class="btn btn-warning" style="color: #565656;">SEARCH</button>
+                  </span>
+                </div>
+            </form>
+          </div>
+        </div>
+
+
+        <div class="col-sm-3 text-center col-xs-8">
+          <div class="row" style="margin-top: 3px;">
+
+            <div class="btn-group visible-xs">
+            <button type="button" style="width:50px; height: 34px;" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-search-plus" style="font-size: 24px;margin-top: -2px;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-mobile-search">
+              <li>
+                <form role="search" method="GET" action='{% url "products:product_list" %}'>
+                    <div> 
+                        <input type="text" class="form-control" placeholder="Search" name="q" value="{{ request.GET.q }}">
+                    </div>
+                </form>
+              </li>
+            </ul>
+          </div>
+
+            <div id="msg-cart" class="btn" style="background-color: #006cb4;width:80px; height: 34px;">
+              <a class="fa-navbar-cart" href='{% url "cart" %}' style="">
+                <i class="fa fa-shopping-cart fa-navbar-cart" style="color: white; font-size: 20px;margin-top: -9px;"></i> 
+                <span id="cart-count-badge" class="badge" style="margin-top: -4px;">{{ request.session.cart_item_count }}</span>
+              </a>
+            </div>
+
+            <!-- Single button -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user" style="font-size: 20px;"></i><span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-account">
+                {% if user and not user.is_anonymous %}
+                    <li><a href="{% url 'account:user_account' %}">{{ request.user }}</a></li>
+                    <li><a href="{% url 'orders' %}">Orders</a></li>
+                    <li><a href="{% url 'account:order_tracking' %}">Track My Order</a></li>
+                    <li><a href="{% url 'products:wishlist' %}">My Wishlist</a></li>
+                    <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'account:login_user' %}?next={{ request.path }}">SignUp or Login</a></li>
+                {% endif %}
+                
+                
+              </ul>
+            </div>
+            <!--single button end-->
+            <div class="btn-group hidden-xs hidden-sm">
+              {% if user and not user.is_anonymous %}
+                <h5 style="color: white; margin-left: 20%;">  Hi! {{ request.user }}</h5>
+              {% else %}
+                <h5> </h5>
+              {% endif %}
+            </div>
+          </div>
+        
+        </div>
+
+      </div>
+
+    </div>
+
+</nav>

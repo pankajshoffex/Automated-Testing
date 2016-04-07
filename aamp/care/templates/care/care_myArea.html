@@ -1,0 +1,43 @@
+{% extends "care_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<h3>My Area</h3>
+<hr>
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-responsive">
+			<tr style="background-color: #00BCD4">
+				<td><b>Taluka Name(s)</b></td>
+				<td><b>Pincode</b></td>			
+			</tr>
+			{% if taluka %}
+				{% for i in taluka %}
+					{% for j in pincode %}
+					<tr style="background-color: ">
+						<td>{{ i.taluka }}</td>
+						<td>{{ j.pincode }}</td>				
+					</tr>
+					{% endfor %}
+				{% endfor %}
+			{% endif %}
+			<!-- <tr style="background-color: ">
+				<td></td>
+				<td>415508</td>
+			</tr>
+			<tr style="background-color: ">
+				<td></td>
+				<td>415509</td>
+			</tr>
+			<tr style="background-color: ">
+				<td></td>
+				<td>415023</td>
+			</tr>
+			<tr style="background-color: ">
+				<td></td>
+				<td>415040</td>
+			</tr> -->
+		</table>
+	</div>
+</div>
+
+{% endblock content %}

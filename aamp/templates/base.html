@@ -1,0 +1,74 @@
+{% load staticfiles %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	    <title>{% block head_title %}Shoffex Online Shopping Website{% endblock head_title %}</title>
+	    <meta name="keywords" content="{% block meta_keyword %} {% endblock meta_keyword %}" />
+	    <meta name="description" content="{% block meta_description %} {% endblock meta_description %}"/>
+	    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
+		<link rel="icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
+
+
+		{% include "head_css.html" %}
+		{% block style1 %} {% endblock style1 %}
+		<style>
+			{% block style %}{% endblock style %}
+			.dropdown-account{
+				margin-left: -135px;
+				width:200px;
+			}
+			.dropdown-mobile-search{
+				margin-top: 38px;
+				width: 202px;
+				margin-left: -72px;
+				padding: 11px;
+			}
+		</style>
+	</head>
+<body>
+		{% include "navbar.html" %}
+		<div style="background-color: #006cb4;width: 100%;">
+		{% include "category_menu.html" %}
+		</div>
+		{% if messages %}
+		  <div class="container">
+		      {% for message in messages %}		      	
+			    <div class='alert alert-{% if message.tags == "success" %}success{% else %}danger{% endif %} text-center alert-dismissible'>
+			    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			      <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+			    </div>		    
+		      {% endfor %}
+		   
+		  </div>
+		{% endif %}
+		
+		{% if slider and himage %}
+		<div class="hidden-xs" style="margin-top: 20px;">
+		{% include "bootstrap_slider.html" %}
+		</div>
+		{% endif %}
+		
+
+		<div class="container" style="padding-bottom: 100px;">
+		{% block content %}{% endblock content %}
+		</div>
+
+		{% include 'footer.html' %}
+	
+		
+		{% include "javascript.html" %}
+
+		<script>
+		$(document).ready(function(){
+		{% block jquery %}
+		{% endblock jquery %}
+		});
+		</script>
+		{% block script %}{% endblock script %}
+</body>
+</html>

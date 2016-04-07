@@ -1,0 +1,295 @@
+{% load mptt_tags %}
+{% load logo_tags %}
+{% load staticfiles %}
+<style type="text/css">
+	.footer-distributed{
+	background-color: #292c2f;
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+	box-sizing: border-box;
+	width: 100%;
+	text-align: left;
+	font: bold 16px sans-serif;
+
+	padding: 55px 50px;
+	margin-top: 80px;
+}
+
+.footer-distributed .footer-left,
+.footer-distributed .footer-center,
+.footer-distributed .footer-right{
+	display: inline-block;
+	vertical-align: top;
+}
+
+/* Footer left */
+
+.footer-distributed .footer-left{
+	width: 40%;
+}
+
+/* The company logo */
+
+.footer-distributed h3{
+	color:  #ffffff;
+	font: normal 36px 'Cookie', cursive;
+	margin: 0;
+}
+
+.footer-distributed h3 span{
+	color:  #5383d3;
+}
+
+/* Footer links */
+
+.footer-distributed .footer-links{
+	color:  #ffffff;
+	margin: 20px 0 12px;
+	padding: 0;
+}
+
+.footer-distributed .footer-links a{
+	/*display:inline-block;*/
+	line-height: 1.8;
+	text-decoration: none;
+	color:  inherit;
+	list-style: none;
+	font-size: small;
+	font-family: initial;
+}
+.footer-distributed .footer-links hr{ 
+	margin-top: 0px; 
+	margin-bottom: 0px;
+	border-color: #696365;
+}
+.footer-distributed .footer-company-name{
+	color:  #8f9296;
+	font-size: 14px;
+	font-weight: normal;
+	margin: 0;
+}
+
+/* Footer Center */
+
+.footer-distributed .footer-center{
+	width: 35%;
+}
+
+.footer-distributed .footer-center i{
+	background-color:  #33383b;
+	color: #ffffff;
+	font-size: 25px;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 42px;
+	margin: 10px 15px;
+	vertical-align: middle;
+}
+
+
+.footer-distributed .footer-center i.fa-envelope{
+	font-size: 17px;
+	line-height: 38px;
+}
+
+.footer-distributed .footer-center p{
+	display: inline-block;
+	color: #ffffff;
+	vertical-align: middle;
+	margin:0;
+}
+
+.footer-distributed .footer-center p span{
+	display:block;
+	font-weight: normal;
+	font-size:14px;
+	line-height:2;
+}
+
+.footer-distributed .footer-center p a{
+	color:  #5383d3;
+	text-decoration: none;;
+}
+
+
+/* Footer Right */
+
+.footer-distributed .footer-right{
+	width: 20%;
+}
+
+.footer-distributed .footer-company-about{
+	line-height: 20px;
+	color:  #92999f;
+	font-size: 13px;
+	font-weight: normal;
+	margin: 0;
+}
+
+.footer-distributed .footer-company-about span{
+	display: block;
+	color:  #ffffff;
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.footer-distributed .footer-icons{
+	margin-top: 25px;
+}
+
+.footer-distributed .footer-icons a{
+	display: inline-block;
+	width: 35px;
+	height: 35px;
+	cursor: pointer;
+	background-color:  #33383b;
+	border-radius: 2px;
+
+	font-size: 20px;
+	color: #ffffff;
+	text-align: center;
+	line-height: 35px;
+
+	margin-right: 3px;
+	margin-bottom: 5px;
+}
+
+/* If you don't want the footer to be responsive, remove these media queries */
+
+@media (max-width: 880px) {
+
+	.footer-distributed{
+		font: bold 14px sans-serif;
+	}
+
+	.footer-distributed .footer-left,
+	.footer-distributed .footer-center,
+	.footer-distributed .footer-right{
+		display: block;
+		width: 100%;
+		margin-bottom: 40px;
+		text-align: center;
+	}
+
+	.footer-distributed .footer-center i{
+		margin-left: 0;
+	}
+
+}
+.footer-distributed .container .row
+{
+	margin-top: -50px;
+}
+#trust
+{
+	margin-right: 20px; 
+	margin-left: 0px;
+	width : 200px ;
+	height : 100px;
+}
+#express{
+	margin-right: 10px;
+}
+
+</style>
+
+
+<footer class="footer-distributed">
+	<div class="container hidden-xs" >
+		<div class="row">
+	    	<img id="trust" src="{% static 'image/TrustPay.png' %}" >
+	    	<img id="payu" src="{% static 'image/Payu.jpg' %}">
+	    	<img id="paytm" src="{% static 'image/Paytm.png' %}">
+	    	<img id="express" src="{% static 'image/express-1.png' %}">
+	    	<img src="{% static 'image/master.png' %}">
+	    </div>
+	</div>
+
+      <div class="footer-left">
+
+      	<h3>Shoffex.com<span></span></h3>
+      <div class="col-md-6 col-sm-6">
+      <h4 style="color: #ffffff;">Information</h4>
+      {% load ui_extras %}
+			{% footer_tag as pages %}
+			<ul class="footer-links" style="list-style: none; ">
+			{% for i in pages %}
+				{% if i.url %}
+				
+				{% if i.is_it_location %}
+				<li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="{{ i.url }}">{{ i }}&nbsp;<span><i class="fa fa-map-marker fa-1x"></i></span></a></li>
+	          <hr>
+	          	{% else %}
+	          	<li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="{{ i.url }}">{{ i }}</a></li>
+	          <hr>
+	          	{% endif %}
+				{% else %}
+				<li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="{% url 'ui:info' %}?id={{i.id}}" style="color: white;text-decoration: none;">{{ i }}</a></li>
+				<hr>
+				{% endif %}
+			{% endfor %}
+			</ul>
+
+      </div>
+      
+       <div class="col-md-6 col-sm-6">
+       <h4 style="color: #ffffff;">Categories</h4>
+       {% set_node as nodes %}
+      	<ul class="footer-links" style="list-style: none; ">
+      		{% recursetree nodes %}
+	          <li><i class="fa fa-angle-double-right"></i>&nbsp;<a href="#">{{ node.name }}</a></li>
+	          <hr>
+	        {% endrecursetree %}
+	        </ul>
+      	
+      </div>
+      <div>
+        	<img src="{% static 'image/trusted.png' %}">
+        </div>
+
+    </div>
+
+      <div class="footer-center">
+
+        <div>
+          <i class="fa fa-map-marker"></i>
+          <p><span>Shoffex Online Retails India Pvt Ltd<br/>13, Second Floor,Indraneel Appartment,<br/>Near D-mart, Ashwamedh Nagar,<br/> Pune 411009, India.</span></p>
+        </div>
+
+       <!--  <div>
+          <i class="fa fa-phone"></i>
+          <p>+1 555 123456</p>
+        </div> -->
+
+        <div>
+          <i class="fa fa-envelope"></i>
+          <p><a href="mailto:care@shoffex.com" style="font-size: small;">care@shoffex.com</a></p>
+        </div>
+
+      </div>
+
+      <div class="footer-right">
+
+        <p class="footer-company-about">
+          <span>About the company</span>
+          The ShOffex.com is Product Of Shoffex Online Retails India Pvt Ltd , which vision is to provide service in Urban and Rural areas. Our mission is to provide best of the products/brands at the lowest prices with great online shopping experience. Especially we want to provide our best services and quality products for Rural India thorough online shopping. So Without the hassles of driving to the urban area locate the shop, rural customers will get best products at economical prices.
+        </p>
+        <div class="footer-icons">
+
+         <!--  <a href="#"><i class="fa fa-facebook"></i></a>
+          <a href="#"><i class="fa fa-twitter"></i></a>
+          <a href="#"><i class="fa fa-linkedin"></i></a>
+          <a href="#"><i class="fa fa-github"></i></a> -->
+
+        </div>
+        
+
+      </div>
+      <div>
+      	<hr style="border-color: #696365;">
+      	<p class="footer-company-name"> &copy; All rights reserved by shoffex.com </p>
+      </div>
+    </footer>
+

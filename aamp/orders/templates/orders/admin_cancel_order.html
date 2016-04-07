@@ -1,0 +1,70 @@
+{% extends "admin/base.html" %}
+{% load staticfiles %}
+{% block content %}
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+		$("#reason_form").hide();
+		$("#reason_submit").hide();
+		$("#choice").show();	
+$("#default").click(function(){
+	$("#reason_form").show(1000);
+	$("#reason_submit").show(1000);
+	$("#button").hide(1000);
+	$("#choice").hide(1000);
+	$("#choice_submit").hide(1000)
+});
+$("#list").click(function(){
+	$("#choice").show(1000);
+	$("#reason_form").hide(1000);
+	$("#reason_submit").hide(1000);
+	$("#choice_submit").show(1000)
+	$("#button").show(1000);
+});
+$("#choice").click(function(){
+	$("#button").hide(1000);
+});
+		});
+</script>
+
+<br>
+<h2>Admin Cancellation Form</h2><a href="/adminorders/{{ order.id }}/">Back Order Detail</a>
+<hr>
+<br>
+<form method="post" action="">{% csrf_token %}
+<div class="panel panel-default">
+  <div class="panel-heading"></div>
+  <div class="panel-body">
+	<div id="choice">
+				<input type="radio" name="reason_choice" value="Product Not Available" required>Product Not Available<br>
+				<input type="radio" name="reason_choice" value="PIN code Not Servicable ">PIN code Not Servicable <br>
+				<input type="radio" name="reason_choice" value="Delay in Product Arrieval">Delay in Product Arrieval<br>
+	</div>
+		<div id="default">
+			
+			<input style="font-size: 10px;margin-left:86px;margin-bottom:-55px;" type="button" id="button" value="Other">
+			
+		</div>
+				
+  </div>
+  <input style="font-size: 10px;" type="submit" id="choice_submit" value="Submit">
+</div>
+</form>
+
+<form method="post" action="" id="reason_form">{% csrf_token %}
+<div class="panel panel-default">
+  <div class="panel-heading"></div>
+  <div class="panel-body">
+		<div id="reason">
+				Reason: <input type="text" name="reason_text" required>
+				<input style="font-size: 10px;margin-left:-167px;margin-bottom:-109px;" type="button" id="list" value="List">
+		</div>
+		<br>
+				
+  </div>
+  <input style="font-size: 10px;" type="submit" id="reason_submit" value="Submit">
+</div>
+	
+</form>
+{% endblock %}
